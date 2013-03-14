@@ -1,4 +1,4 @@
 senocular.github.com
 ====================
 
-senocular github pages
+senocular github pages available @ http://senocular.github.com
