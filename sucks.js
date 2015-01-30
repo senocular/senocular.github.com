@@ -3,5 +3,5 @@ ifr.style.zIndex = 10000;
 ifr.style.width = '100%';
 ifr.style.height = '100%';
 ifr.style.position = 'absolute';
-ifr.src = 'http://www.adobesucks.com';
+ifr.src = 'https://senocular.github.io/meow.html';
 document.documentElement.appendChild(ifr);
