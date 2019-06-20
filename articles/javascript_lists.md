@@ -2,7 +2,7 @@
 
 - function creation
 - function calling
-- identifier creation (var, let, function, parameters, etc.)
+- identifier creation (var, let, const, function, class, parameters, immutable name in named function expression, import)
 - loops
 - iteration order (keys vs ownKeys vs Map, etc.)
 - primitives
