@@ -5,21 +5,20 @@ Scopes represent areas in code within which variables are available.  Locally de
 - global
 - script
 - module
-- function
+- closure
 - block
 - with
 
 ## Global Scope
 
-The highest level scope is the global scope. This is inherently accessible everywhere within JavaScript, though there may be more than one global scope available at a time (e.g. a different browser window will have its own global).  The global scope is also accessible through an object, often `global` or `window` (depending on your environment), or through a more universally available, but newer `globalThis`.
+The highest level scope is the global scope. This is inherently accessible everywhere within JavaScript.  The global scope is also accessible through an object, often represented as `global` or `window` (depending on your environment), or through a more universally available, but newer `globalThis`. JavaScript built-ins are defined in the global scope.
 
 ```javascript
-// built-ins are defined in the global scope
 Math // Math object
 globalThis.Math // Math object
 ```
 
-`var` and `function` declarations made in the top level of a non-module script automatically become properties of the global object.  In sloppy mode (non-strict) undeclared variable assignments also get added directly to the global scope.  Declarations, however, create unconfigurable properties within the global object whereas undeclared variables are configurable, just as though assigned directly to the global object directly.
+User-defined `var` and `function` declarations made in the top level of a script automatically become properties of the global object.  In sloppy mode (non-strict) undeclared variable assignments also get added directly to the global scope.  `var` and `function` declarations, however, create non-configurable properties within the global object whereas undeclared variables are configurable, just as though assigned directly to the global object directly.
 
 ```javascript
 var foo = 1
@@ -30,7 +29,7 @@ function bar () { return 2 }
 globalThis.bar // function bar
 Object.getOwnPropertyDescriptor(globalThis, 'bar').configurable // false
 
-// sloppy mode:
+// sloppy mode
 baz = 3
 globalThis.baz // 3
 Object.getOwnPropertyDescriptor(globalThis, 'baz').configurable // true
@@ -38,7 +37,7 @@ Object.getOwnPropertyDescriptor(globalThis, 'baz').configurable // true
 
 ## Script Scope
 
-The script scope represents a global-like scope that is created directly under the global scope but does not contribute to the global object.  While top level `var` and `function` declarations (in non-module scripts) get added to the global scope, declarations for `let`, `const`, and `class` get instead added to the script scope.  Though variables in the script scope are not added to the global object, this scope is available everywhere, much like the global scope (at least on Chromium & Firefox; Safari hides them from module scopes).
+The script scope represents a part of the global scope that does not contribute to the global object.  While top level `var` and `function` declarations get added to the global scope and the global object, declarations using `let`, `const`, and `class` get instead added to the script scope.  Being a part of the global scope, the script scope is available everywhere, much like the global scope as defined by the global object (note: as of this writing Safari does not expose the script scope to modules).
 
 ```javascript
 let foo = 1
@@ -48,7 +47,7 @@ foo === 1 // true
 
 ## Module Scope
 
-JavaScript modules have their own scope, a level under the global scope. This keeps module declarations from having collisions with global variables.  Any declarations made within the top level of a module become local to that module's scope.
+JavaScript modules have their own, independent scopes, a level under the global scope. The module scope keeps declarations within modules from having direct collisions with global variables.  Any declarations made within the top level of a module become local to that module's scope.
 
 ```javascript
 // in module
@@ -56,20 +55,62 @@ var foo = 1
 globalThis.foo // undefined
 ```
 
-Modules are always in strict mode, so variable assignments without declarations are considered an error and would not be added to the global scope.
+Modules are always run in strict mode, so variable assignments without declarations - which would normally result in a global definition - are considered an error.
 
 ```javascript
 // in module
-baz = 3 // Error
+bar = 2 // Error
 ```
 
-## Function Scope
+## Closure Scope
 
-TODO
+Closure scopes are non-global scopes within which all declarations are able to be scoped. Function scopes are the most common closure scopes.  Function scopes represent the top level scope of a function body.  When using `var` anywhere within the body of a function, that declaration will be scoped to that function's closure scope.  Function scopes are created for each of a function's invocations and often destroyed immediately after unless held onto by some other persisting function scope.
+
+```javascript
+function foo () {
+  var bar = 2
+  bar // 2
+}
+foo()
+bar // Error
+```
+
+`eval` can also create a closure scope when used in strict mode.  Strict mode does not allow `eval` to add declarations to the current scope, so instead the evaluated code is added to a closure.
+
+
+```javascript
+// sloppy mode
+eval(var baz = 3)
+baz // 3
+```
+
+```javascript
+// strict mode
+eval(var baz = 3) // <- run in a closure
+baz // Error
+```
 
 ## Block Scope
 
-TODO
+Block scopes are scopes available to block-level declarations including `let`, `const`, and `class` when declared within a non-function code block.  `var` (and sloppy mode `function`) declarations are not blocked scoped and are instead scoped to the next highest closure scope, or global.
+
+```javascript
+{
+  let foo = 1
+  var bar = 2
+}
+foo // Error
+bar // 2
+```
+
+`for` loop statements are exceptional in that declarations within the `for` initialization are scoped to the block even though not lexically located there.
+
+```javascript
+for (let baz = 3; baz < 4; baz++) {
+  baz // 3
+}
+baz // Error
+```
 
 ## With Scope
 
