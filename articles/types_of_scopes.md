@@ -38,7 +38,7 @@ Object.getOwnPropertyDescriptor(globalThis, 'baz').configurable // true
 
 ## Script Scope
 
-The script scope represents a global-like scope that is created directly under the global scope but does not contribute to the global object.  While top level `var` and `function` declarations (in non-module scripts) get added to the global scope, declarations for `let`, `const`, and `class` get instead added to the script scope.  Though variables in the script scope are not added to the global object, this scope is available everywhere, much like the global scope.
+The script scope represents a global-like scope that is created directly under the global scope but does not contribute to the global object.  While top level `var` and `function` declarations (in non-module scripts) get added to the global scope, declarations for `let`, `const`, and `class` get instead added to the script scope.  Though variables in the script scope are not added to the global object, this scope is available everywhere, much like the global scope (at least on Chromium & Firefox; Safari hides them from module scopes).
 
 ```javascript
 let foo = 1
@@ -102,6 +102,7 @@ TODO
 - function parameters
 - function names in named function expressions
 - import
+- catch error name
 - property assignment (undeclared to global in sloppy)
 
 ## Labels
