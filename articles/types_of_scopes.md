@@ -8,6 +8,7 @@ Scopes represent areas in code within which variables are available.  Locally de
 - closure
 - block
 - with
+- catch
 
 ## Global Scope
 
@@ -22,15 +23,18 @@ User-defined `var` and `function` declarations made in the top level of a script
 
 ```javascript
 var foo = 1
+foo // 1
 globalThis.foo // 1
 Object.getOwnPropertyDescriptor(globalThis, 'foo').configurable // false
 
 function bar () { return 2 }
+bar // function bar
 globalThis.bar // function bar
 Object.getOwnPropertyDescriptor(globalThis, 'bar').configurable // false
 
 // sloppy mode
 baz = 3
+baz // 3
 globalThis.baz // 3
 Object.getOwnPropertyDescriptor(globalThis, 'baz').configurable // true
 ```
@@ -41,8 +45,8 @@ The script scope represents a part of the global scope that does not contribute 
 
 ```javascript
 let foo = 1
+foo // 1
 globalThis.foo // undefined
-foo === 1 // true
 ```
 
 ## Module Scope
@@ -52,6 +56,7 @@ JavaScript modules have their own, independent scopes, a level under the global 
 ```javascript
 // in module
 var foo = 1
+foo // 1
 globalThis.foo // undefined
 ```
 
@@ -86,7 +91,7 @@ baz // 3
 
 ```javascript
 // strict mode
-eval(var baz = 3) // <- run in a closure
+eval(var baz = 3) // run in a closure
 baz // Error
 ```
 
@@ -103,6 +108,15 @@ foo // Error
 bar // 2
 ```
 
+Blocks are defined by uses of curly braces (`{}`) which can be added arbitrarily to create blocks around code or be parts of other statements like `if`, `while` and `for`.  Braces for object literals do not represent block scopes.
+
+```javascript
+obj = { // not a block scope
+  foo: 1,
+  bar: 2
+}
+```
+
 `for` loop statements are exceptional in that declarations within the `for` initialization are scoped to the block even though not lexically located there.
 
 ```javascript
@@ -114,11 +128,59 @@ baz // Error
 
 ## With Scope
 
-TODO
+With scopes, which are only available in sloppy mode, are created using `with` statements.  `with` blocks create bindings to an object that allow unqualified variables to implicitly target the specified object assuming the object contains a property of the same name and there is no other locally scoped variables that would shadow it.
+
+```javascript
+obj = { foo: 1, bar: 2 }
+with (obj) {
+  foo = 10
+  let bar
+  bar = 20
+  baz = 30
+}
+obj.foo // 10
+obj.bar // 2
+obj.baz // undefined
+baz // 30
+```
+
+Note that `var` declarations would not be scoped to the `with` block and would not cause variale shadowing to occur for the `with` object.
+
+```javascript
+obj = { foo: 1, bar: 2 }
+with (obj) {
+  var bar
+  bar = 20
+}
+obj.bar // 20
+bar // undefined
+```
+
+## Catch Scope
+
+`try..catch` statements are made up of 2 or more scopes, a block scope for the `try`, and an additional scope or scopes for any `catch` and/or `finally` if present.  `catch` blocks that capture exception variables are given their own block-like scope, identified as a capture scope, which automatically binds the exception variable to that scope.
+
+```javascript
+try {
+  throw 1
+} catch (error) {
+  error // 1
+}
+```
+
+Exception variable binding is optional. When not present, the catch block uses a block scope.
+
+```javascript
+try {
+  throw 1
+} catch {
+  // block scope
+}
+```
 
 ## Additional Scope Behaviors
 
-### Mutability in Scopes
+### Mutability of Scopes
 
 TODO
 
