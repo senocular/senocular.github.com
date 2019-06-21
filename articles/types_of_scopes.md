@@ -85,13 +85,13 @@ bar // Error
 
 ```javascript
 // sloppy mode
-eval(var baz = 3)
+eval('var baz = 3')
 baz // 3
 ```
 
 ```javascript
 // strict mode
-eval(var baz = 3) // run in a closure
+eval('var baz = 3') // run in a closure
 baz // Error
 ```
 
