@@ -1,8 +1,8 @@
 function addBreadcrumb (selector) {
   const trail = location.pathname
     .split('/')
-    .slice(0, -1)
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, -1);
   
   if (!trail.length) return;
   
