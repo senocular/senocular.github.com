@@ -6,14 +6,15 @@ function addBreadcrumb (selector) {
   
   if (!trail.length) return;
   
-  const trailFrag = document.createDocumentFragment();
+  const breadcrumb = document.createElement('nav');
   
   function addLink (text, href) {
     const link = document.createElement('a');
     link.text = text;
     link.href = href;
-    trailFrag.appendChild(link);
-    trailFrag.appendChild(document.createTextNode(" > "))
+    breadcrumb.appendChild(link);
+    const bridge = document.createTextNode(" > ");
+    breadcrumb.appendChild(bridge);
   }
   
   addLink(location.hostname, '/');
@@ -22,9 +23,6 @@ function addBreadcrumb (selector) {
     const href = '/' + trail.slice(0, index + 1).join('/');
     addLink(text, href);
   });
-  
-  const breadcrumb = document.createElement('div');
-  breadcrumb.appendChild(trailFrag);
   
   const target = selector && document.querySelector(selector);
   if (target) {
