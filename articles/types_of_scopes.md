@@ -1,7 +1,3 @@
----
-layout: default2
----
-
 # Types of Scopes in JavaScript
 
 Scopes represent areas in code from which variables and other identifiers are available.  Locally declared variables are kept within scopes and any access of those variables must be made within that or another scope nested within it.  JavaScript has a number of different kinds of scopes. They include:
