@@ -2,7 +2,17 @@
 
 - function creation
 - function calling
-- identifier creation (var, let, const, function, class, parameters, immutable name in named function expression, import)
+- identifier creation
+  - var
+  - function
+  - let
+  - const
+  - class
+  - function parameters
+  - function names in named function expressions
+  - import
+  - catch error name
+  - property assignment (undeclared to global in sloppy)
 - loops
 - iteration order (keys vs ownKeys vs Map, etc.)
 - primitives
