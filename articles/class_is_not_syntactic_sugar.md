@@ -1,4 +1,4 @@
-# Why JavaScript's class is not just syntactic sugar
+# Why JavaScript's class is Not Just Syntactic Sugar
 
 The `class` syntax in JavaScript is often described as "syntactic sugar" for normal constructor functions, meaning its just a different way of doing the same thing.  But this is not entirely true.  While JavaScript continues to use constructor functions to represent its version of classes, even when using the `class` syntax, constructors created using `class` are quite different from those created through normal function declarations.  These differences include:
 
