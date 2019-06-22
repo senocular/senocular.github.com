@@ -11,11 +11,13 @@
   <body>
 
     {% include header.html %}
-
-    <main>
-      {{ content }}
-    </main>
-
+    
+    <div class="container-lg px-3 my-5 markdown-body">
+      <main>
+        {{ content }}
+      </main>
+    </div>
+    
     {% include footer.html %}
 
   </body>
