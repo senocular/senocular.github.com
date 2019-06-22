@@ -1,10 +1,11 @@
-function addBreadcrumb (selector) {
+function addBreadcrumb (selector = null) {
   const trail = location.pathname
     .split('/')
-    .filter(Boolean)
-    .slice(0, -1);
+    .filter(Boolean); // remove any "/" bookends -> ""
   
   if (!trail.length) return;
+  
+  trail.pop(); // current page
   
   const breadcrumb = document.createElement('nav');
   
@@ -28,6 +29,7 @@ function addBreadcrumb (selector) {
   if (target) {
     target.appendChild(breadcrumb);
   } else {
+    // no selector adds after the callsite script (assuming synchronous call)
     const script = Array.from(document.querySelectorAll('script')).pop();
     if (!script) return;
     script.parentNode.insertBefore(breadcrumb, script.nextSibling);
