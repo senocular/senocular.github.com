@@ -6,7 +6,7 @@
 
 ## About
 
-Unless otherwise stated, all code within the senocular Github account is released under the MIT license.
+Unless otherwise stated, all code here is released under the MIT license.
 
 ```
 Copyright (c) 2013 Trevor McCauley
