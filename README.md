@@ -1,4 +1,4 @@
-# [senocular.github.io](/)
+# [senocular.github.io](//senocular.github.io)
 
 ## Sections
 
