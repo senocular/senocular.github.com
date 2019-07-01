@@ -36,10 +36,10 @@ Where `value` in the examples represents a BigInt or Number value.
 | Supported in JSON | No | Yes |
 | `typeof value` | 'bigint' | 'number' |
 | `Object.is(value, -value)` where `value` is 0 | true | false |
-| `value + 1` (or other arithmetic operatation) | Error | Number |
-| `value + 1n` (or other arithmetic operatation) | BigInt | Error |
-| `value \| 1` (or other bitwise operatation) | Error | Number |
-| `value \| 1n` (or other bitwise operatation) | BigInt | Error |
+| `1 + value` (or other arithmetic operatation) | Error | Number |
+| `1n + value` (or other arithmetic operatation) | BigInt | Error |
+| `1 ^ value` (or other bitwise operatation) | Error | Number |
+| `1n ^ value` (or other bitwise operatation) | BigInt | Error |
 | `+value` | Error | Number |
 | `Math.round(value)` (or other `Math` operation) | Number | Error |
 | `Array` index in methods (e.g. `array.slice(value)`) | Yes | Error |
@@ -205,9 +205,9 @@ Where `value` is an ordinary object.
 | `'' == new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `'' + value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `'' + new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `0 + value` (or other arithmetic operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `0 + new Date` (or other arithmetic operatation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `value \| 0` (or other bitwise operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `1 + value` (or other arithmetic operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `1 + new Date` (or other arithmetic operatation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
+| `1 ^ value` (or other bitwise operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `+value` (or other unary operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `Number(value)` | `Symbol.toPrimitive` | `valueOf` | `toString` |
