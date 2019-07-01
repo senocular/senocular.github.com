@@ -1,5 +1,7 @@
 # JavaScript Lists
 
+A random collection of different lists related to the JavaScript language.
+
 ## Primitives
 
 | Primitive | Literals |
