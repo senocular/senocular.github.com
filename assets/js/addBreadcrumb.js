@@ -7,7 +7,7 @@ function addBreadcrumb (selector = null) {
   
   trail.pop();
   
-  const breadcrumb = document.createElement('nav');
+  const breadcrumb = document.createDocumentFragment();
   
   function addLink (text, href) {
     const link = document.createElement('a');
