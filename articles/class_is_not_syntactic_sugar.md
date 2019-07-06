@@ -224,4 +224,4 @@ A list of internal slot values which are unique to `class` definitions.
 | ---: | --- | --- |
 | `[[FunctionKind]]` | "classConstructor" | Differentiates between different kinds of functions |
 | `[[ConstructorKind]]` | "derived" | Will be "derived" if extending another class (otherwise is "base" like normal functions) |
-| `[[HomeObject]]` | _superclass_ | For methods in a `class`, used to provide a superclass reference for `super()` calls |
+| `[[HomeObject]]` | _superclass_ | Used to determine what `super` refers to for methods referencing `super` (Note: non-class object literal methods can also use `super` referring to the object itself as the `[[HomeObject]]`) |
