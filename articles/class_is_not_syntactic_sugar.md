@@ -33,6 +33,7 @@ class Foo {
     return this.input
   }
 }
+
 class Bar extends Foo {
   constructor (input) {
     super(input)
@@ -65,7 +66,7 @@ Object.setPrototypeOf(Bar, Foo);
 Object.setPrototypeOf(Bar.prototype, Foo.prototype);
 ```
 
-Here, the details around the implementation of the inheritance become apparent.  When one class extends another, the prototype chain is updated to include that of the subclass's (the class's themselves are also linked for inheriting static definitions).  Also we can see how calls with `super` resolve into calls from the subclass against the current instance.
+Here, the details around the implementation of the inheritance becomes more apparent.  When one class extends another, the prototype chain is updated to include that of the subclass's (the class's themselves are also linked for inheriting static definitions).  Also we can see how calls with `super` resolve into calls from the subclass against the current instance.
 
 For the most part, these are equivalent definitions.  But there are still differences.
 
@@ -94,22 +95,22 @@ However, unlike the `class` error, this error is thrown after the call to the fu
 
 ## `class` Function Instances Are Created From Superclasses
 
-The biggest and probably most important difference with `class` constructors is how they create instances.  With normal function constructors, instances are created immediately with the invocation of the constructor function.  This instance object is an ordinary JavaScript object whose prototype has been set to equal the value currently in the `prototype` property of the constructor.  At this point it's then the responsibility of the constructor to make super-like calls to any superclasses to allow for any initialization defined there.
+The biggest and probably most important difference with `class` constructors is how they create instances.  With normal function constructors, instances are created immediately with the invocation of the constructor function.  This instance object is an ordinary JavaScript object whose prototype has been set to equal the value currently referenced by the `prototype` property of the constructor.  At this point it's then the responsibility of the constructor to make super-like calls to any superclasses to provide any initialization defined there.
 
-With `class` constructors, the instance is not created immediately for the constructor, but rather provided by the superclass.  This is why attempting to access `this` prior to `super` (assuming extending another class) is not allowed - it doesn't yet exist.  Its the call to `super` that defines what `this` is.
+With `class` constructors, the instance is not created immediately for the constructor, but rather provided by the superclass.  This is why attempting to access `this` prior to `super` (assuming extending another class) is not allowed - it doesn't yet exist.  It's the call to `super` that defines what `this` is.
 
 ```javascript
 class Foo {}
 class Bar extends Foo {
   constructor (input) {
     this.input = input // Error
-    super()
+    super() // what creates `this`
   }
 }
 new Bar()
 ```
 
-In the above example, the value of `this` would be coming from the `Foo` constructor (though `super` will also perform the necessary updates to the instance's prototype for inheritance), so attempting to set a property on `this` before the `Foo` constructor has run causes an error.  Any access to `this` needs to happen after `super`.
+In the above example, the value of `this` would be coming from the `Foo` constructor (though `super` will also perform the necessary updates to the instance's prototype for inheritance), so attempting to set a property on `this` before the `Foo` constructor has run via the call to `super` causes an error.  Any access to `this` needs to happen after `super`.
 
 This behavior can potentially problems depending on what the superclass is doing.  Consider the following:
 
@@ -130,7 +131,7 @@ class Bar extends Foo {
 new Bar()
 ```
 
-Normally this would be allowed since `this` is being accessed after `super`, but because the superclass froze the instance with `Object.freeze`, the subclass is not able to add any more properties to it.  And because the subclass has no access to that instance until after the superclass returns it, there's nothing it can do.
+Here, the superclass froze the instance with `Object.freeze` so the subclass is not able to add any more properties to it.  Because the subclass has no access to `this` until after the superclass returns it via `super`, there's nothing it can do.  Using the `function` syntax for constructors, however, `this` could be accessed before calling into the superclass.
 
 Taking this further, we can use superclass initialization behavior to do some very unconventional things, such as adding private properties to any arbitrary, ordinary object.
 
@@ -152,19 +153,22 @@ class AddPrivateFoo extends SetThis {
   }
 }
 
+const { getFoo } = AddPrivateFoo.prototype
 const myObj = {}
-AddPrivateFoo.prototype.getFoo.call(myObj) // Error
+getFoo.call(myObj) // Error
 new AddPrivateFoo(myObj, 'bar')
-AddPrivateFoo.prototype.getFoo.call(myObj) // 'bar'
+getFoo.call(myObj) // 'bar'
 ```
 
-This instance construction behavior also allows for the next difference...
+This example uses two classes to add a private property to an arbitrary JavaScript object.  The object, `myObj`, is passed into the `AddPrivateFoo` constructor which then passes it to the `SetThis` superclass through `super`.  `SetThis` simply returns the object it was given overriding it's own, automatically created version of `this`.  Then, because superclasses in the `class` syntax determine `this`, `this` in `AddPrivateFoo` becomes `myObj` which allowed the private property `#foo` to be initialized for it.  After the constructor resolves, the `getFoo` method correctly runs identifying the `#foo` property in `myObj`.
+
+It's this instance construction behavior also allows for the next difference...
 
 ## `class` Functions Can Correctly Extend Built-ins
 
 At a high level, there are two categories of objects in JavaScript: ordinary objects and exotic objects.  Ordinary objects are objects anyone can create in JavaScript using the `Object` constructor or the object literal syntax (`{...}`) etc..  Exotic objects are special objects that have an additional internal behavior that go beyond ordinary objects.
 
-Probably the most common exotic object is the array.  Arrays are very much like ordinary JavaScript objects except for one special property: `length`.  The `length` property is unique in that it is able to automatically update based on changes to the indexed members of an array instance.
+Array objects are of the most common exotic objects.  Arrays are very much like ordinary JavaScript objects except for one special property: `length`.  The `length` property is unique in that it is able to automatically update based on changes to the indexed members of an array instance.
 
 ```javascript
 const arr = []
@@ -173,7 +177,7 @@ arr[2] = 2
 arr.length // 3
 ```
 
-Prior to the `class` syntax, attempts to properly extend the `Array` class have failed because of this magical property.  Construction and inheritance could work, but not `length`.
+Prior to the `class` syntax, attempts to properly extend the `Array` class have largely failed because of this magical property.  Construction and inheritance could work, but not `length`.
 
 ```javascript
 function MyArray () {
@@ -201,6 +205,8 @@ myArr[3] = 3
 myArr.length // 4 as expected
 ```
 
+The same applies to other exotic types like `Date`, `Map`, etc..
+
 ## Other Differences
 
 Here are some additional, smaller differences you might also see with `class` functions:
@@ -209,3 +215,13 @@ Here are some additional, smaller differences you might also see with `class` fu
 - `class` functions are always in strict mode (e.g. accessing `arguments` from a class always throws an error)
 - `class` declarations are similar to `function` declarations except their function value is not hoisted
 - `class` `prototype` properties are not writable (`prototype` is writable for normal functions)
+
+### Internal Slots
+
+A list of internal slot values which are unique to `class` definitions.
+
+| Slot | Value | Description |
+| ---: | --- | --- |
+| `[[FunctionKind]]` | "classConstructor" | Differentiates between different kinds of functions |
+| `[[ConstructorKind]]` | "derived" | Will be "derived" if extending another class (otherwise is "base" like normal functions) |
+| `[[HomeObject]]` | _superclass_ | For methods in a `class`, used to provide a superclass reference for `super()` calls |
