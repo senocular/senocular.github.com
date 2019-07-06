@@ -48,6 +48,7 @@ Where `value` in the examples represents a BigInt or Number value.
 
 - `catch` error binding
 - `class`
+- named `class` name
 - `const`
 - `decorator` (stage 2)
 - `function`
