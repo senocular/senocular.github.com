@@ -12,7 +12,7 @@ A random collection of different lists related to the JavaScript language.
 | number | `1`, `1.2`, `0xF`, `0o7`, `0b1`, `1e2`, `1e-2` |
 | string | `'string'`, `"string"`, `` `string` `` |
 | symbol | _none_ |
-| undefined | _none_ |
+| undefined | _none_ (though accessible via global `undefined`) |
 
 ## Primitive Objects
 
@@ -46,30 +46,38 @@ Where `value` in the examples represents a BigInt or Number value.
 
 ## Identifiers
 
-- `catch` error binding
-- `class`
-- named `class` name
-- `const`
-- `decorator` (stage 2)
-- `function`
-- named `function` expression name
-- `import`
-- label (own namespace)
-- `let`
-- `var`
+Where `identifier` is the identifier being created and `/* scope */` represents the scope where that identifier is available
+
+| Kind | Example |
+| --- | --- |
+| Catch error binding | `try { } catch (identifier) { /* scope */ }` |
+| Class | `/* scope */ class identifier {}` |
+| Named class name | `(class identifier { /* scope */ })` |
+| Const | `/* scope */ const identifier = value;` |
+| Decorator (stage 2) | `/* scope */ decorator @identifier () {}` |
+| Decorator parameter | `(decorator (identifier /* scope */ ) { /* scope */ })` |
+| Function | `/* scope */ function identifier () {}` |
+| Function parameter | `(function (identifier /* scope */ ) { /* scope */ })` |
+| Named function expression name | `(function identifier ( /* scope */ ) { /* scope */ })` |
+| Import | `/* scope */ import identifier from '...'` |
+| Label | `identifier: { /* scope */ }` |
+| Let | `/* scope */ let identifier;` |
+| Var | `/* scope */ var identifier;` |
+
+_Note: Scopes within the parameter list refers to default parameter expressions._
 
 ## Loops
 
 ### Statements
 
-| Statement | Is Conditional | Loops Over |
-| --- | --- | --- |
-| do...while | Yes | - |
-| for | Yes | - |
-| for...in | No | Objects |
-| for...of | No | Iterables |
-| for await...of | No | Async Iterables |
-| while | Yes | - |
+| Statement | Loops Over |
+| --- | --- |
+| do...while | _User-defined condition_ |
+| for | _User-defined condition_ |
+| for...in | Objects |
+| for...of | Iterables |
+| for await...of | Async Iterables |
+| while | _User-defined condition_ |
 
 ### Collection Methods
 
@@ -150,7 +158,7 @@ Creating functions named `name` (or anonymous).
 
 _Note: Any expression context will work for expression variations, not just the grouping (`()`) used in the examples shown._
 
-_Note: The `AsyncFunction`, `GeneratorFunction` and `AsyncGeneratorFunction` constructors are not globally accessible._
+_Note: The `AsyncFunction`, `GeneratorFunction` and `AsyncGeneratorFunction` constructors are not globally accessible but can be obtained from existing instances/declarations._
 
 ### Function Syntax
 
