@@ -55,11 +55,11 @@ Where `identifier` is the identifier being created and `/* scope */` represents 
 | Named class name | `(class identifier { /* scope */ })` |
 | Const | `/* scope */ const identifier = value;` |
 | Decorator (stage 2) | `/* scope */ decorator @identifier () {}` |
-| Decorator parameter | `(decorator (identifier /* scope */ ) { /* scope */ })` |
+| Decorator parameter | `decorator @name (identifier /* scope */ ) { /* scope */ }` |
 | Function | `/* scope */ function identifier () {}` |
 | Function parameter | `(function (identifier /* scope */ ) { /* scope */ })` |
 | Named function expression name | `(function identifier ( /* scope */ ) { /* scope */ })` |
-| Import | `/* scope */ import identifier from '...'` |
+| Import | `/* scope */ import identifier from 'path'` |
 | Label | `identifier: { /* scope */ }` |
 | Let | `/* scope */ let identifier;` |
 | Var | `/* scope */ var identifier;` |
