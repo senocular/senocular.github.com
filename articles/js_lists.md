@@ -227,6 +227,6 @@ There can be abiguity between operations when starting a line with the following
 | `[` | Array literal | Array access |
 | `(` | Grouping | Function call |
 | `/` | RegExp literal | Division |
-| `` ` `` | Template literal | Tagged template  |literal
+| `` ` `` | Template literal | Tagged template literal |
 | `+` | Unary `+` | Addition |
 | `-` | Unary `-` | Subtraction |
