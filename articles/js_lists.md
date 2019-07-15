@@ -226,7 +226,7 @@ Where `value` is an ordinary object.
 | `Object[value]` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 
 
-## ASI Concerns
+## ASI Considerations
 
 There can be abiguity between operations when starting a line with the following characters where ASI (Automatic Semicolon Insertion) will not insert a semicolon to terminate the previous line's expression.
 
