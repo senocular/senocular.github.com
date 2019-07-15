@@ -19,7 +19,7 @@ Math // Math object
 globalThis.Math // Math object
 ```
 
-User-defined `var` and `function` declarations made in the top level of a script automatically become properties of the global object.  In sloppy mode (non-strict) undeclared variable assignments also get added directly to the global scope.  `var` and `function` declarations, however, create non-configurable properties within the global object whereas undeclared variables are configurable, just as they would be as though assigned directly to the global object directly.
+User-defined `var` and `function` declarations made in the top level of a script become global scope variables and automatically become properties of the global object.  In sloppy mode (non-strict) undeclared variable assignments also get added to the global object, whether in the global scope or not.  `var` and `function` declarations, however, create non-configurable properties within the global object whereas undeclared variables are configurable, just as they would be as though assigned directly to the global object directly.
 
 ```javascript
 var foo = 1
@@ -44,9 +44,11 @@ globalThis.qux // 4
 Object.getOwnPropertyDescriptor(globalThis, 'qux').configurable // true
 ```
 
+_Note: Currently Chrome/Safari incorrectly allows you to delete or overwrite global `var`-declared variables if defined first as a property of the global object.
+
 ## Script Scope
 
-The script scope represents a part of the global scope that does not contribute to the global object.  While top level `var` and `function` declarations get added to the global scope and the global object, declarations using `let`, `const`, and `class` get instead added to the script scope and are not added to the global object.  Being a part of the global scope, the script scope is available everywhere, much like the global scope as defined by the global object*.
+The script scope represents a part of the global scope that does not contribute to the global object.  While top level `var` and `function` declarations get added to the global scope and the global object, declarations using `let`, `const`, and `class` get instead added to the script scope and are not added to the global object.  Being a part of the global scope, the script scope is available everywhere, much like the global scope as defined by the global object.
 
 ```javascript
 let foo = 1
@@ -54,7 +56,7 @@ foo // 1
 globalThis.foo // undefined
 ```
 
-_* As of this writing Safari does not expose the script scope to modules_
+_Note: Currently Safari incorrectly does not expose the script scope to modules._
 
 ## Module Scope
 
