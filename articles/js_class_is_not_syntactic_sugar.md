@@ -97,17 +97,14 @@ However, unlike the `class` error, this error is thrown after the call to the fu
 
 The biggest and probably most important difference with `class` constructors is how they create instances.  With normal function constructors, instances are created immediately with the invocation of the constructor function.  This instance object is an ordinary JavaScript object whose prototype has been set to equal the value currently referenced by the `prototype` property of the constructor.  At this point it's then the responsibility of the constructor to make super-like calls to any superclasses to provide any initialization defined there.
 
-
 ```javascript
 function Foo () {}
 function Bar (input) {
-    // `this` created as part of new Bar() call
-    Foo.call(this) // super(), using existing `this`
-    this.input = input
-  }
+  // `this` created as part of new Bar() call
+  Foo.call(this) // super(), using existing `this`
+  this.input = input
 }
 Object.setPrototypeOf(Bar.prototype, Foo.prototype);
-
 
 new Bar()
 ```
@@ -122,6 +119,7 @@ class Bar extends Foo {
     this.input = input // `this` here is determined by Foo
   }
 }
+
 new Bar()
 ```
 
@@ -135,6 +133,7 @@ class Bar extends Foo {
     super() // now `this` is available
   }
 }
+
 new Bar()
 ```
 
@@ -160,6 +159,19 @@ new Bar()
 ```
 
 Here, the superclass froze the instance with `Object.freeze` so the subclass is not able to add any more properties to it.  Because the subclass has no access to `this` until after the superclass returns it via `super`, there's nothing it can do.  Using the `function` syntax for constructors, however, `this` could be accessed before calling into the superclass.
+
+```javascript
+function Foo () {
+  Object.freeze(this)
+}
+function Bar (input) {
+  this.input = input
+  Foo.call(this) // freezes, but property already added
+}
+Object.setPrototypeOf(Bar.prototype, Foo.prototype);
+
+new Bar()
+```
 
 Taking this further, we can use superclass initialization behavior to do some very unconventional things, such as adding private properties to any arbitrary, ordinary object.
 
