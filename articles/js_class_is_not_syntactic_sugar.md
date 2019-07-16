@@ -1,6 +1,6 @@
 # Why JavaScript's class is Not Just Syntactic Sugar
 
-The `class` syntax in JavaScript is often described as "syntactic sugar" for normal constructor functions, meaning its just a different way of doing the same thing.  But this is not entirely true.  While JavaScript continues to use constructor functions to represent its version of classes, even when using the `class` syntax, constructors created using `class` are quite different from those created through normal function declarations.  These differences include:
+The `class` syntax in JavaScript is often described as "syntactic sugar" for normal constructor functions, meaning its just a different way of doing the same thing.  But this is not entirely true.  While JavaScript continues to use constructor functions to represent its version of classes - even when using the `class` syntax - constructors created using `class` are quite different from those created through normal function declarations.  These differences include, but are not limited to:
 
 - `class` Functions Are Not Callable Without `new`
 - `class` Function Instances Are Created From Superclasses
@@ -8,7 +8,7 @@ The `class` syntax in JavaScript is often described as "syntactic sugar" for nor
 
 ## A Simple Desugaring
 
-First a rough breakdown of a `class` desugaring; given the `class` definition:
+First a rough breakdown of a `class` desugaring; given a simple `class` definition:
 
 ```javascript
 class Foo {}
@@ -20,9 +20,9 @@ It would roughly desugar to:
 let Foo = function () {}
 ```
 
-At its simplest, this is all `class` is really doing, creating a function.  As with normal function declarations, all the plumbing for using this as a constructor, for example it being given its own `prototype` property, is all there.
+At its simplest, this is mostly what `class` is doing, creating a function.  As with normal function declarations, all the plumbing that is necessary for using this definition as a constructor, for example, the presence of a `prototype` property, is all there.
 
-Moving on to a more complicated example:
+Next, a more complicated example:
 
 ```javascript
 class Foo {
@@ -66,9 +66,9 @@ Object.setPrototypeOf(Bar, Foo);
 Object.setPrototypeOf(Bar.prototype, Foo.prototype);
 ```
 
-Here, the details around the implementation of the inheritance becomes more apparent.  When one class extends another, the prototype chain is updated to include that of the subclass's (the class's themselves are also linked for inheriting static definitions).  Also we can see how calls with `super` resolve into calls from the subclass against the current instance.
+Here, the details around the implementation of the inheritance becomes more apparent in the desugaring.  When one class extends another, the prototype chain is updated to include that of the subclass's (the class's themselves are also linked for inheriting static definitions).  Also we can see how calls with `super` resolve into calls from the subclass against the current instance.
 
-For the most part, these are equivalent definitions.  But there are still differences.
+For the most part, these are equivalent definitions.  But there are still more differences.
 
 ## `class` Functions Are Not Callable Without `new`
 
@@ -91,20 +91,48 @@ let Foo = function () {
 }
 ```
 
-However, unlike the `class` error, this error is thrown after the call to the function is already made.  For `class` functions, the error is thrown before the function gets a chance to call.
+However, unlike the `class` error, this error is thrown after the call to the function is already made.  For `class` functions, the error is thrown before the function gets a chance to be called.
 
 ## `class` Function Instances Are Created From Superclasses
 
 The biggest and probably most important difference with `class` constructors is how they create instances.  With normal function constructors, instances are created immediately with the invocation of the constructor function.  This instance object is an ordinary JavaScript object whose prototype has been set to equal the value currently referenced by the `prototype` property of the constructor.  At this point it's then the responsibility of the constructor to make super-like calls to any superclasses to provide any initialization defined there.
 
-With `class` constructors, the instance is not created immediately for the constructor, but rather provided by the superclass.  This is why attempting to access `this` prior to `super` (assuming extending another class) is not allowed - it doesn't yet exist.  It's the call to `super` that defines what `this` is.
+
+```javascript
+function Foo () {}
+function Bar (input) {
+    // `this` created as part of new Bar() call
+    Foo.call(this) // super(), using existing `this`
+    this.input = input
+  }
+}
+Object.setPrototypeOf(Bar.prototype, Foo.prototype);
+
+
+new Bar()
+```
+
+With `class` constructors, the instance is not created immediately for the constructor, but rather provided by the superclass.
 
 ```javascript
 class Foo {}
 class Bar extends Foo {
   constructor (input) {
-    this.input = input // Error
-    super() // what creates `this`
+    super() // creates `this`
+    this.input = input // `this` here is determined by Foo
+  }
+}
+new Bar()
+```
+
+This behavior is why attempting to access `this` prior to `super` (assuming extending another class) is not allowed, because it doesn't yet exist.  It's that call to `super` that defines `this`.
+
+```javascript
+class Foo {}
+class Bar extends Foo {
+  constructor (input) {
+    this.input = input // Error, no `this`
+    super() // now `this` is available
   }
 }
 new Bar()
