@@ -140,7 +140,7 @@ new Bar()
 
 In the above example, the value of `this` would be coming from the `Foo` constructor (though `super` will also perform the necessary updates to the instance's prototype for inheritance), so attempting to set a property on `this` before the `Foo` constructor has run via the call to `super` causes an error.  Any access to `this` needs to happen after `super`.
 
-This behavior can potentially problems depending on what the superclass is doing.  Consider the following:
+This behavior can also potentially cause problems depending on what the superclass is doing.  Consider the following:
 
 ```javascript
 class Foo {
