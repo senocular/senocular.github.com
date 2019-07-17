@@ -27,7 +27,7 @@ getValue() // 1
 
 ## Iteration 1: Legacy Decorators
 
-## Iteration 2: Decorators++
+## Iteration 2: Enhanced Decorators
 
 ## Iteration 3: Static Decorators
 
