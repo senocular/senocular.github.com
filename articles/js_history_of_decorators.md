@@ -29,7 +29,7 @@ getValue() // 1
 
 ## Iteration 2: Decorators++
 
-## Iteration 3: Return of the Decorators
+## Iteration 3: Static Decorators
 
 # References
 
