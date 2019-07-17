@@ -1,4 +1,4 @@
-# A look at the history of decorators in JavaScript
+# A History of Decorators in JavaScript
 
 # References
 
