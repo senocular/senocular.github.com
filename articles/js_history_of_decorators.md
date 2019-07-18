@@ -1,10 +1,10 @@
 # A History of Decorators in JavaScript
 
-JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language.  Even so, they're history has been a turbulent one, with multiple revisions already having been made to their specification.
+JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language.  Even so, they're history has been a turbulent one, with multiple, substantial revisions having been made to their specification.
 
 ## What are Decorators?
 
-Decorators are custom modifiers, like `static` or `async`, that end-users can create and apply to various definitions within their code.  They can modify, or "decorate", anything from functions to variables or even, potentially, [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but they will be expanded to include other use cases (such as number literals) later on.
+Decorators are custom modifiers, like `static` or `async`, that end-users can create and apply to various definitions within their code.  They can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but are planned to be expanded to include other use cases (such as number literals) later on.
 
 A example of a decorator would be a `@bound` decorator for class methods which would automatically bind a method's context to an instance's `this`.
 
@@ -24,6 +24,8 @@ const num = new MyNumber(1)
 const getValue = num.getValue
 getValue() // 1
 ```
+
+Normally `getValue` would not work if detached from its instance. However, the `@bound` decorator was able to alter its implementation so that it would be a method bound to the instance.
 
 ## Iteration 1: Legacy Decorators
 
