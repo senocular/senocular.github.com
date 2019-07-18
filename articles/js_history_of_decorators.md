@@ -1,37 +1,33 @@
 # A History of Decorators in JavaScript
 
-JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language.  Even so, they're history has been a turbulent one, with multiple, substantial revisions having been made to their specification.
+JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language (the current [decorator proposal](https://github.com/tc39/proposal-decorators) is in stage 2).  Even so, they're history has been a turbulent one, with multiple, substantial revisions having been made to their specification.
 
 ## What are Decorators?
 
-Decorators are custom modifiers, like `static` or `async`, that end-users can create and apply to various definitions within their code.  They can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but are planned to be expanded to include other use cases (such as number literals) later on.
+Decorators are custom modifiers, similar to those you might see like `static` or `async`, that end-users can create and apply to various definitions within their own code.  Decorators can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but are planned to be expanded to include other use cases (such as number literals) later on.
 
-A example of a decorator would be a `@bound` decorator for class methods which would automatically bind a method's context to an instance's `this`.
+A example of a decorator would be an `@enumerable` decorator that could expose a class's method to enumeration.
 
 ```javascript
-class MyNumber {
-  constructor (value) {
-    this.value = value
-  }
+class MyClass {
   
-  @bound // decorator applied to getValue method
-  getValue () {
-    return this.value
-  }
+  @enumerable // decorator applied to exposed method
+  exposed () {}
+  
+  hidden () {}
 }
 
-const num = new MyNumber(1)
-const getValue = num.getValue
-getValue() // 1
+const myInstance = new MyClass()
+for (let member in myInstance) console.log(member) // exposed
 ```
 
-Normally `getValue` would not work if detached from its instance. However, the `@bound` decorator was able to alter its implementation so that it would be a method bound to the instance just as though `this.getValue = this.getValue.bind(this)` were called in the constructor.
+Normally methods do not get exposed to iteration through `for...in` loops. However, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be while the undecorated `hidden` method continued to be hidden.
 
 ## Iteration 1: Legacy Decorators
 
-The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).  Because it is the oldest, this iteration is known as "Legacy Decorators".
+The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use functions to wrap definitions, able to decorate classes and class methods and accessors.  For methods and accessors, a descriptor object is also provided to allow additional modification of the member.
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions to wrap definitions, able to decorate both classes and class methods and accessors.  For methods and accessors, a descriptor object is also provided to allow additional modification of the member being decorated.
 
 ## Iteration 2: Enhanced Decorators
 
