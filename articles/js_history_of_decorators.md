@@ -25,13 +25,21 @@ const getValue = num.getValue
 getValue() // 1
 ```
 
-Normally `getValue` would not work if detached from its instance. However, the `@bound` decorator was able to alter its implementation so that it would be a method bound to the instance.
+Normally `getValue` would not work if detached from its instance. However, the `@bound` decorator was able to alter its implementation so that it would be a method bound to the instance just as though `this.getValue = this.getValue.bind(this)` were called in the constructor.
 
 ## Iteration 1: Legacy Decorators
+
+The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).  Because it is the oldest, this iteration is known as "Legacy Decorators".
+
+Legacy decorators have the simplest implementation.  They use functions to wrap definitions, able to decorate classes and class methods and accessors.  For methods and accessors, a descriptor object is also provided to allow additional modification of the member.
 
 ## Iteration 2: Enhanced Decorators
 
 ## Iteration 3: Static Decorators
+
+## Summary
+
+
 
 # References
 
