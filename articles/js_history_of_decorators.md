@@ -6,7 +6,7 @@ JavaScript doesn't support decorators, not officially, not yet.  But they are pl
 
 Decorators are custom modifiers, like `static` or `async`, that end-users can create and apply to various definitions within their code.  They can modify, or "decorate", anything from functions to variables or even, potentially, [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but they will be expanded to include other use cases (such as number literals) later on.
 
-A example of a decorator would be a `@bind` decorator for class methods which would automatically bind a method's context to an instance's `this`.
+A example of a decorator would be a `@bound` decorator for class methods which would automatically bind a method's context to an instance's `this`.
 
 ```javascript
 class MyNumber {
@@ -14,7 +14,7 @@ class MyNumber {
     this.value = value
   }
   
-  @bind // decorator applied to getValue method
+  @bound // decorator applied to getValue method
   getValue () {
     return this.value
   }
