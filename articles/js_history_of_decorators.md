@@ -33,6 +33,24 @@ function enumerable(target, key, descriptor) {
 }
 ```
 
+When applied to a class definition (here a method) using the function as a prefix to a definition with an `@` character before its name...
+
+```javascript
+class MyClass {
+  
+  @enumerable
+  exposed () {}
+}
+```
+
+the function gets run as:
+
+```javascript
+enumerable(MyClass.prototype, 'exposed', Object.getOwnPropertyDescriptor(MyClass.prototype, 'exposed'))
+```
+
+The descriptor then gets applied back to the definition, or if a new descriptor was returned, that would be used in its place.
+
 ## Iteration 2: Enhanced Decorators
 
 The next iteration of the decorators specification expanded on legacy decorators adding additional functionality and adding to the capabilities of decorators.  With these improvements, decorators could be used with fields as well as methods, and even supported interacting with private members.  A single decorator was also capable of creating additional definitions within a class on top of the one being decorated.
