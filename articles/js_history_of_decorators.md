@@ -25,7 +25,7 @@ Normally methods do not get exposed to iteration through `for...in` loops. Howev
 
 The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and a descriptor for that member.  The enumerable decorator from earlier would be defined as:
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member.  The enumerable decorator from earlier could be defined as:
 
 ```javascript
 function enumerable(target, key, descriptor) {
@@ -35,7 +35,20 @@ function enumerable(target, key, descriptor) {
 
 ## Iteration 2: Enhanced Decorators
 
-The next iteration of the decorators specification expanded on legacy decorators adding additional functionality and expanding the capabilities of decorators.  Not only could a decorator modify a decorated class member, and do more to it than before, but it could also add additional members to the class.
+The next iteration of the decorators specification expanded on legacy decorators adding additional functionality and adding to the capabilities of decorators.  With these improvements, decorators could be used with fields as well as methods, and even supported interacting with private members.  A single decorator was also capable of creating additional definitions within a class on top of the one being decorated.
+
+To support the extra functionality, the object descriptor used by decoratoes was expanded to include the original values along with the following new properties:
+
+* kind:
+* key:
+* placement:
+* Elements: (Classes)
+* initialize: (Fields)
+* method: (Methods) 
+* start: (Hooks)
+* replace: (Hooks)
+* finish: (Hooks)
+* extras:
 
 ## Iteration 3: Static Decorators
 
