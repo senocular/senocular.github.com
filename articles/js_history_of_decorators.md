@@ -13,23 +13,29 @@ class MyClass {
   
   @enumerable // decorator applied to exposed method
   exposed () {}
-  
-  hidden () {}
 }
 
 const myInstance = new MyClass()
 for (let member in myInstance) console.log(member) // exposed
 ```
 
-Normally methods do not get exposed to iteration through `for...in` loops. However, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be while the undecorated `hidden` method continued to be hidden.
+Normally methods do not get exposed to iteration through `for...in` loops. However, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be.
 
 ## Iteration 1: Legacy Decorators
 
 The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use normal JavaScript functions to wrap definitions, able to decorate both classes and class methods and accessors.  For methods and accessors, a descriptor object is also provided to allow additional modification of the member being decorated.
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and a descriptor for that member.  The enumerable decorator from earlier would be defined as:
+
+```javascript
+function enumerable(target, key, descriptor) {
+    descriptor.enumerable = true;
+}
+```
 
 ## Iteration 2: Enhanced Decorators
+
+The next iteration of the decorators specification expanded on legacy decorators adding additional functionality and expanding the capabilities of decorators.  Not only could a decorator modify a decorated class member, and do more to it than before, but it could also add additional members to the class.
 
 ## Iteration 3: Static Decorators
 
