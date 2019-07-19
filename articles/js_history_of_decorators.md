@@ -60,7 +60,7 @@ To support the extra functionality, the object descriptor used by decorators was
 * **kind**: Identifies the kind of property decorated or the kind of decoration being applied. Values include: `"class"`, `"method"`, `"field"`, `"accessor"`, or `"hook"`.
 * **key**: The name of the member or class being decorated.
 * **placement**: Where the definition is being defined. Values include: `"prototype"`, `"static"`, or `"own"` where "static" is defined on the class constructor and "own" is defined on class instances.
-* **Elements**: (Classes) A list of the definitions defined for the class.
+* **elements**: (Classes) A list of the definitions defined for the class.
 * **initialize**: (Fields) A function run to define the initial value of a field.
 * **method**: (Methods) The value of the method.
 * **start**: (Hooks) Callback for hook side effects.
