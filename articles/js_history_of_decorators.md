@@ -55,7 +55,7 @@ The descriptor then gets applied back to the definition, or if a new descriptor 
 
 The next iteration of the decorators specification greatly expanded on legacy decorators adding additional functionality and adding to the capabilities of decorators.  With these improvements, decorators could be used with fields as well as methods, and even supported interacting with private members.  A single decorator was also capable of creating additional definitions within a class on top of the one being decorated.
 
-To support the extra functionality, the object descriptor used by decorators was expanded to include the original values along with the following new properties:
+To support the extra functionality, the normal object descriptor used by decorators was expanded to include all of the original descriptor values along with the following properties, either pre-populated or added by the user, to represent a new decorator descriptor object:
 
 * **kind**: Identifies the kind of property decorated or the kind of decoration being applied. Values include: `"class"`, `"method"`, `"field"`, `"accessor"`, or `"hook"`.
 * **key**: The name of the member or class being decorated.
@@ -66,9 +66,9 @@ To support the extra functionality, the object descriptor used by decorators was
 * **start**: (Hooks) Callback for hook side effects.
 * **replace**: (Hooks) Callback for replacing definitions in hooks.
 * **finish**: (Hooks) Callback for hook side effects.
-* **extras**: Additional definition objects that represent new definitions or hooks that can be handled in addition to the current decorated item.
+* **extras**: An array of additional decorator descriptor objects that represent new definitions or hooks that can be handled in addition to the current decorated item.
 
-Hooks are a notable feature that represent decorator descriptors that don't necessarily apply to a decorated member, rather allow callbacks to be run at different times during the definition process.
+Hooks are a notable new feature that allow callbacks to be run at different times during the definition process.  A normal decorator can be transformed into a hook by adding a hook callback to the decorator descriptor, or they can be added separately in the `extras` array. 
 
 With these changes, decorators were given the ability to completely change any and all definitions within a class, even in ways beyond that which is allowed by the `class` syntax.
 
