@@ -1,4 +1,4 @@
-# A History of Decorators in JavaScript
+# A Brief History of Decorators in JavaScript
 
 JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language (the current [decorator proposal](https://github.com/tc39/proposal-decorators) is in stage 2).  Even so, they're history has been a turbulent one, with multiple, substantial revisions having been made to their specification.
 
@@ -19,13 +19,13 @@ const myInstance = new MyClass()
 for (let member in myInstance) console.log(member) // exposed
 ```
 
-Normally methods do not get exposed to iteration through `for...in` loops. However, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be.
+Normally methods do not get exposed to iteration through `for...in` loops. However, here, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be.
 
 ## Iteration 1: Legacy Decorators
 
 The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation, or a variation of it, in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member.  The enumerable decorator from earlier could be defined as:
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member as arguments.  The enumerable decorator from earlier could be defined as:
 
 ```javascript
 function enumerable(target, key, descriptor) {
