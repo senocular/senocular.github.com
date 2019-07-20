@@ -27,7 +27,7 @@ Normally methods do not get exposed to iteration through `for...in` loops. Howev
 
 The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation, or a variation of it, in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and the members defined within them.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member as arguments.  The enumerable decorator from earlier, given that it decorates a class method, could be defined as:
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and the members defined within them.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member as arguments.  The `@enumerable` decorator from earlier, given that it decorates a class method, could be defined as:
 
 ```javascript
 function enumerable (target, key, descriptor) {
@@ -96,7 +96,7 @@ While the second iteration of decorators added a lot of power and functionality 
 
 More significantly, with static decorators, decorators are no longer simple JavaScript functions.  They are, instead, a brand new entity with their own declarations created with the use of a new `decorator` keyword.  Decorators are defined through the composition of other decorators, either other custom decorators and/or any of the built-in decorator primitives.
 
-Going back to the `enumerable` example from earlier, we would now have:
+For the `@enumerable` example, we would now have:
 
 ```javascript
 decorator @enumerable {
