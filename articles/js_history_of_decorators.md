@@ -2,7 +2,7 @@
 
 JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language, as suggested by the current stage 2 [decorator proposal](https://github.com/tc39/proposal-decorators).  Even so, developers have been using them in production for years.  Unfortunately, what they've been using is very likely not like what will eventually become part of the standard.
 
-Here, we'll look into the changes of the decorators spec over its last couple of revisions, from where it started (what's out there now) to where it looks like its going to end up.
+Here, we'll look into the changes of the decorators spec over its last couple of revisions, from where it started (what's out there now) to where it looks like it's going to end up.
 
 ## What are Decorators?
 
@@ -92,11 +92,18 @@ While the `@enumerable` example doesn't do much to show off the added functional
 
 ## Iteration 3: Static Decorators
 
-While the second iteration of decorators added a lot of power and functionality to decorators, it also made them complicated - not only more complicated to author, but also in a way that could affect runtime performance.  The third iteration of decorators (the current iteration, currently at stage 2) addressed these issues by taking a step back, largely reverting to the functionality of legacy decorators along with a few exceptions, such as support for private member decoration which was not explicitly included before.
+The added complexity in the second iteration of decorators not only made them more complicated to author, but also affected decorator performance.  The third, and current iteration of decorators addressed these issues by taking a step back, largely reverting to the functionality of the original, legacy decorators (with a few exceptions) and changing how they were defined to make them more statically analyzable.
 
-More significantly, with static decorators, decorators are no longer simple JavaScript functions.  They are, instead, a brand new entity with their own declarations created with the use of a new `decorator` keyword.  Decorators are defined through the composition of other decorators, either other custom decorators and/or any of the built-in decorator primitives.
+One of the largest impacts of this change is that decorators are no longer simple JavaScript functions.  They are, instead, a brand new entity with their own declarations that are created with the use of a new `decorator` keyword.  Decorators defined this way are also nothing more than a composition of other decorators, either other custom decorators and/or any of the built-in decorator primitives that is to be provided by the language.
 
-For the `@enumerable` example, we would now have:
+Built-in decorators include:
+
+* **`@wrap`**: Wraps a definition in a function call, allowing it to return a new value.
+* **`@initialize`**: Provides a callback that is called during instance construction.
+* **`@register`**: Provides a callback occuring after the definition is defined.
+* **`@expose`**: A version of `@register` that allows access to private members.
+
+The implementation of the `@enumerable` example with static decorators would be:
 
 ```javascript
 decorator @enumerable {
@@ -107,20 +114,58 @@ decorator @enumerable {
 }
 ```
 
-This custom decorator uses the built-in `@register` decorator primitive to make the decorated class member enumerable.  Unlike with previous iterations, a descriptor object is not automatically provided.  Instead, primitives provide hooks into the definition process and any changes to a definition's description would need to be handled manually.
+No longer is `enumerable` just a function.  It's now a new kind of declaration created with the new `decorator` keyword with the identity `@enumerable` (with the `@` character included).  It wraps the `@register` primitive decorator including the code necessary to alter the enumerability of the decorated member.  In doing so, you may also notice that the descriptor is no longer being provided and has to be retrieved and set manually.
 
-Built-in decorators include:
+The application of decorators have not changed.
 
-* **`@wrap`**: Wraps a definition in a function call.
-* **`@initialize`**: Provides a callback that is called during instance construction.
-* **`@register`**: Provides a callback for after the class is defined.
-* **`@expose`**: A version of `@register` that allows access to private members.
+```javascript
+class MyClass {
+  
+  @enumerable
+  exposed () {}
+}
+```
 
-With these primitives, you should be able to obtain the same functionality as legacy decorators.  This will help in making the transition from legacy decorators to this newest iteration, except for the fact that any custom decorators would have to be re-written to use the new decorator declaration syntax. 
+However, since user-defined decorators are now just wrappers for the built-in primitives, `@enumerable` could just as well have been written as:
+
+```javascript
+class MyClass {
+  
+  @register((target, name) => {
+    const descriptor = Object.getOwnPropertyDescriptor(target, name)
+    Object.defineProperty(target, name, { ...descriptor, enumerable: true })
+  })
+  exposed () {}
+}
+```
+
+This iteration is likely to be the final iteration for decorators.  Because legacy decorators are currently the most widely used and because static decorators support that same featureset, the transition should mostly be seamless, especially for decorator consumers.  Decorator implementers, however, would need update their decorator definitions over to use the `decorator` syntax along with implementations that use existing built-in decorator primitives.
 
 ## Summary
 
-TBD
+Comparing the decorator iterations:
+
+### Legacy Decorators
+
+* Defined as functions
+* Simple wrapper for classes
+* Object descriptors used for modifying class members
+
+### Enhanced Decorators
+
+* Defined as functions
+* Used enhanced object descriptor for all definitions
+* Complete control over all aspects of a definition
+* Allowed multiple descriptors for one instance of a decorator
+* Introduced hooks
+
+### Static Decorators
+
+* Uses built-in decorator primitives
+* Custom decorators defined with `decorator`
+* Custom decorators are made by composing other decorators
+* Has legacy decorator-like capabilities
+* Primitives include hooks
 
 
 # References
