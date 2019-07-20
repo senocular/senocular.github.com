@@ -1,39 +1,41 @@
 # A Brief History of Decorators in JavaScript
 
-JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language (the current [decorator proposal](https://github.com/tc39/proposal-decorators) is in stage 2).  Even so, they're history has been a turbulent one, with multiple, substantial revisions having been made to their specification.
+JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language, as suggested by the current stage 2 [decorator proposal](https://github.com/tc39/proposal-decorators).  Even so, developers have been using them in production for years.  Unfortunately, what they've been using is very likely not like what will eventually become part of the standard.
+
+Here, we'll look into the changes of the decorators spec over its last couple of revisions, from where it started (what's out there now) to where it looks like its going to end up.
 
 ## What are Decorators?
 
-Decorators are custom modifiers, similar to those you might see like `static` or `async`, that end-users can create and apply to various definitions within their own code.  Decorators can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions, but are planned to be expanded to include other use cases (such as number literals) later on.
+Decorators are custom modifiers, similar to those you might see for functions like `static` or `async`, that end-users can create and apply to various definitions within their code.  Decorators can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions (classes and their members), but are planned to be expanded to include other use cases, such as number literals, later on.
 
 A example of a decorator would be an `@enumerable` decorator that could expose a class's method to enumeration.
 
 ```javascript
 class MyClass {
   
-  @enumerable // decorator applied to exposed method
+  @enumerable // decorator applied to the exposed method
   exposed () {}
 }
 
 const myInstance = new MyClass()
-for (let member in myInstance) console.log(member) // exposed
+for (let member in myInstance) console.log(member) // "exposed"
 ```
 
-Normally methods do not get exposed to iteration through `for...in` loops. However, here, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would be.
+Normally methods do not get exposed to iteration through `for...in` loops. However, here, the `@enumerable` decorator was able to alter the implementation of the `exposed` method so that it would.
 
 ## Iteration 1: Legacy Decorators
 
 The first iteration of decorators was the simplest and, currently, is still the most widely used.  You'll see this implementation, or a variation of it, in [TypeScript](https://www.typescriptlang.org/) and used by libraries like [MobX](https://mobx.js.org/).
 
-Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and class methods and accessors.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member as arguments.  The enumerable decorator from earlier could be defined as:
+Legacy decorators have the simplest implementation.  They use normal JavaScript functions as decorators and are able to decorate both classes and the members defined within them.  Class decorators simply wrap the class in a function while method and accessor decorators get passed the class prototype, the name of the member, and an object descriptor (as used with [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)) for that member as arguments.  The enumerable decorator from earlier, given that it decorates a class method, could be defined as:
 
 ```javascript
-function enumerable(target, key, descriptor) {
-    descriptor.enumerable = true;
+function enumerable (target, key, descriptor) {
+    descriptor.enumerable = true
 }
 ```
 
-When applied to a class definition (here a method) using the function as a prefix to a definition with an `@` character before its name...
+When applied to a class method, placing the function before the definition with an `@` character prefix in its name...
 
 ```javascript
 class MyClass {
@@ -46,16 +48,19 @@ class MyClass {
 the function gets run as:
 
 ```javascript
-enumerable(MyClass.prototype, 'exposed', Object.getOwnPropertyDescriptor(MyClass.prototype, 'exposed'))
+const descriptor = Object.getOwnPropertyDescriptor(MyClass.prototype, 'exposed')
+enumerable(MyClass.prototype, 'exposed', descriptor)
 ```
 
-The descriptor then gets applied back to the definition, or if a new descriptor was returned, that would be used in its place.
+Any changes to the descriptor then gets applied back to the definition, or if a new descriptor was returned, that would be used in its place.
+
+The simplicity of these kinds of decorators made them easy implement, and even as simple as they were,they provided enough functionality to handle most of the common use cases.  Unfortunately, the feature set of classes was expanding (for example, with the inclusion of private members) and decorators needed to catch up.
 
 ## Iteration 2: Enhanced Decorators
 
-The next iteration of the decorators specification greatly expanded on legacy decorators adding additional functionality and adding to the capabilities of decorators.  With these improvements, decorators could be used with fields as well as methods, and even supported interacting with private members.  A single decorator was also capable of creating additional definitions within a class on top of the one being decorated.
+The next iteration of the decorators specification greatly expanded the capabilities of legacy decorators.  The overall approach was very similar, still using functions to represent decorators, but the improved design allowed for much more than was possible before.
 
-To support the extra functionality, the normal object descriptor used by decorators was expanded to include all of the original descriptor values along with the following properties, either pre-populated or added by the user, to represent a new decorator descriptor object:
+These new, enhanced decorators took the normal object descriptor used by the legacy decorators and super charged it, added additional properties that provided access to virtually every part of the definition.  Additions include:
 
 * **kind**: Identifies the kind of property decorated or the kind of decoration being applied. Values include: `"class"`, `"method"`, `"field"`, `"accessor"`, or `"hook"`.
 * **key**: The name of the member or class being decorated.
@@ -66,11 +71,24 @@ To support the extra functionality, the normal object descriptor used by decorat
 * **start**: (Hooks) Callback for hook side effects.
 * **replace**: (Hooks) Callback for replacing definitions in hooks.
 * **finish**: (Hooks) Callback for hook side effects.
-* **extras**: An array of additional decorator descriptor objects that represent new definitions or hooks that can be handled in addition to the current decorated item.
+* **extras**: An array of additional descriptor objects that represent new definitions or hooks that can be handled in addition to the current decorated item.
 
-Hooks are a notable new feature that allow callbacks to be run at different times during the definition process.  A normal decorator can be transformed into a hook by adding a hook callback to the decorator descriptor, or they can be added separately in the `extras` array. 
+Using the `placement` property, for example, you could take a method that would normally get placed on the prototype and instead define it on the instance by changing its value to `"own"`.
 
-With these changes, decorators were given the ability to completely change any and all definitions within a class, even in ways beyond that which is allowed by the `class` syntax.
+Also introduced was the concept of hooks. Hooks are callbacks that can be run at different times during the definition process.  A normal decorator can be transformed into a hook by adding a hook callback to the descriptor, or they can be added separately to a decoration by adding them to the `extras` array.
+
+Looking back to the `@enumerable` decorator example, we can update it for this new iteration:
+
+```javascript
+function enumerable (descriptor) {
+    descriptor.enumerable = true
+    return descriptor
+}
+```
+
+The definition has changed slightly since all of the information for the decorator is encapsulated in the new descriptor object which also now needs to be returned.
+
+While the `@enumerable` example doesn't do much to show off the added functionality of these new decorators, the additional complexity needed to support this added functionality did come at a cost - a cost that was to be addressed in the next iteration.
 
 ## Iteration 3: Static Decorators
 
@@ -108,5 +126,5 @@ TBD
 # References
 
 - Spec iteration 1: [README.md](https://github.com/wycats/javascript-decorators/blob/e1bf8d41bfa2591d949dd3bbf013514c8904b913/README.md)
-- Spec iteration 2: [README.md](https://github.com/tc39/proposal-decorators/blob/beae8dc25d2dddc3a19cdd235d14f8b16a6f1325/README.md), [METAPROGRAMMING.md](https://github.com/tc39/proposal-decorators/blob/beae8dc25d2dddc3a19cdd235d14f8b16a6f1325/METAPROGRAMMING.md)
+- Spec iteration 2: [README.md](https://github.com/tc39/proposal-decorators/blob/beae8dc25d2dddc3a19cdd235d14f8b16a6f1325/README.md)
 - Spec iteration 3: [README.md](https://github.com/tc39/proposal-decorators/blob/e480e0659534567a7edb28ffe968f583a91c7e0c/README.md)
