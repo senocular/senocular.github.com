@@ -155,20 +155,20 @@ class Foo {}
 class Bar extends Foo {
   constructor (input) {
     super() // creates `this`
-    this.input = input // `this` here is determined by Foo
+    this.input = input // `this` here is determined by superclass
   }
 }
 
 new Bar()
 ```
 
-It's this behavior that access `this` prior to `super` (assuming extending another class) is not allowed.
+It's this behavior that causes an error if access to `this` is attempted prior to `super` (assuming extending another class).
 
 ```javascript
 class Foo {}
 class Bar extends Foo {
   constructor (input) {
-    this.input = input // Error, no `this`
+    this.input = input // Error, `this` not yet defined
     super() // now `this` is available
   }
 }
@@ -177,6 +177,8 @@ new Bar()
 ```
 
 In the above example, the value of `this` would be coming from the `Foo` constructor (though `super` will also perform the necessary updates to the instance's prototype for inheritance), so attempting to set a property on `this` before the `Foo` constructor has run via the call to `super` causes an error.  Any access to `this` needs to happen after `super` because it's not until then that `this` exists.
+
+### Abusing Instance Creation in Superclass
 
 One thing about this behavior is that it can also potentially cause problems depending on what the superclass is doing.  Consider the following:
 
