@@ -58,8 +58,8 @@ Bar.prototype.getInput = function () {
   const input = Object.getPrototypeOf(Bar.prototype).getInput.call(this)
   return `Bar: ${input}`
 }
-Object.setPrototypeOf(Bar, Foo);
-Object.setPrototypeOf(Bar.prototype, Foo.prototype);
+Object.setPrototypeOf(Bar, Foo)
+Object.setPrototypeOf(Bar.prototype, Foo.prototype)
 ```
 
 Here, the details around the implementation of the inheritance becomes more apparent in the desugaring.  When one class extends another, the prototype chain is updated to include that of the subclass's. The class's themselves are also linked for inheriting static definitions.  Also we can see how calls with `super` resolve into calls from the superclass against the current instance.
