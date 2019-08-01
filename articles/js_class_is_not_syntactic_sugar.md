@@ -257,6 +257,6 @@ A list of internal slot values which are unique to `class` definitions.
 
 | Slot | Where | Value | Description |
 | ---: | ---  | --- | --- |
-| `[[FunctionKind]]` | class functions | "classConstructor" | Differentiates between different kinds of functions |
+| `[[FunctionKind]]` | class functions | "classConstructor" | Differentiates between different kinds of functions where only `class`-defined constructors get "classConstructor" |
 | `[[ConstructorKind]]` | class functions | "derived" | Will be "derived" if extending another class (otherwise is "base" like normal functions) |
-| `[[HomeObject]]` | class methods | _class_ | Used to determine how `super` calls are made within methods (Note: non-class object literal methods can also use `super` referring to the object itself as the `[[HomeObject]]`) |
+| `[[HomeObject]]` | class methods | _class prototype_ | Used to determine how `super` calls are made within methods |
