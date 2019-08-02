@@ -108,7 +108,7 @@ Prior to the `class` syntax, attempts to properly extend the `Array` class have 
 function MyArray () {
   Array.prototype.push.apply(this, arguments) // super
 }
-MyArray.prototype = Object.create(Array.prototype)
+MyArray.prototype = Object.create(Array.prototype) // legacy prototype hookup
 MyArray.prototype.constructor = MyArray
 
 var myArr = new MyArray(0, 1, 2)
@@ -143,6 +143,7 @@ function Bar (input) {
   Foo.call(this) // super(), using existing `this`
   this.input = input
 }
+Object.setPrototypeOf(Bar, Foo)
 Object.setPrototypeOf(Bar.prototype, Foo.prototype);
 
 new Bar()
@@ -259,6 +260,6 @@ A list of internal slot values which are unique to `class` definitions.
 
 | Slot | Where | Value | Description |
 | ---: | ---  | --- | --- |
-| `[[FunctionKind]]` | class constructor functions | "classConstructor" | Differentiates between different kinds of functions where only `class`-defined constructors get "classConstructor" |
+| `[[FunctionKind]]` | class constructor functions | "classConstructor" | Differentiates between different kinds of functions where only `class`-defined constructors get "classConstructor". |
 | `[[ConstructorKind]]` | class constructor functions | "derived" | Will be "derived" if extending another class (otherwise is "base" like normal functions) |
-| `[[HomeObject]]` | class methods | _class prototype_ | Used to determine how `super` calls are made within methods defined within `class` bodies |
+| `[[HomeObject]]` | class methods | _class prototype_ | Used to determine how `super` calls are made within methods defined within `class` bodies. Note: object literals also support use of `super` and setting of `[[HomeObject]]`, so technically this field could be replicated with non-`class` constructor methods if their `prototype` objects were defined with an object literal. |
