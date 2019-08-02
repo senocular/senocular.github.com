@@ -143,8 +143,6 @@ function Bar (input) {
   Foo.call(this) // super(), using existing `this`
   this.input = input
 }
-Object.setPrototypeOf(Bar, Foo)
-Object.setPrototypeOf(Bar.prototype, Foo.prototype);
 
 new Bar()
 ```
@@ -210,6 +208,8 @@ function Bar (input) {
   this.input = input
   Foo.call(this) // freezes, but property already added
 }
+
+new Bar()
 ```
 
 Taking this further, we can use superclass initialization behavior to do some very unconventional things, such as adding private properties to any arbitrary, ordinary object.
