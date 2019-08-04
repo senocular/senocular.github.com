@@ -77,7 +77,7 @@ Foo() // Error
 
 For better or worse, this is a protection keeping you from accidentally calling constructor code against an unexpected `this` value.  There may be cases where you might want this behavior, for example if re-using the constructor as a conversion function (not unlike what you see with `String()` and `Number()` etc.), but with the `class` syntax, this is not allowed.
 
-Assuming you want this behavior, it can be emulated with the `function` constructor syntax as well:
+You can emulate this behavior with the `function` constructor syntax (assuming you want it):
 
 ```javascript
 let Foo = function () {
@@ -87,7 +87,9 @@ let Foo = function () {
 }
 ```
 
-However, unlike the `class` error, this error is thrown after the call to the function is already made.  For `class` functions, the error is thrown before the function gets a chance to be called.
+However, unlike the `class` error, this error is thrown after the call to the function is already made.  For `class` functions, the error is thrown before the function gets a chance to be called.  It's a subtle difference, but a difference nevertheless.  
+
+Note that while you cannot call a `class`-defined constructor as a function, it is still technically a _callable_.  What causes the error is a specific behavior to class functions, not the fact that the function object is not callable.
 
 ## `class` Functions Can Correctly Extend Built-ins
 
