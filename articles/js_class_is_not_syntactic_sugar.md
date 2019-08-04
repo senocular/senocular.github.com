@@ -64,7 +64,7 @@ Object.setPrototypeOf(Bar.prototype, Foo.prototype)
 
 Here, the details around the implementation of the inheritance becomes more apparent in the desugaring.  When one class extends another, the prototype chain is updated to include that of the subclass's. The class's themselves are also linked for inheriting static definitions.  Also we can see how calls with `super` resolve into calls from the superclass against the current instance.
 
-For the most part, the original and the desugaring are equivalent definitions.  But there are differences.
+For the most part, the original and the desugaring are equivalent definitions, but there are differences you should be aware of.
 
 ## `class` Functions Are Not Callable Without `new`
 
