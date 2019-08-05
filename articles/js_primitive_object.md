@@ -91,5 +91,5 @@ let primitive = PrimitiveObject()
 primitive.property = true // Fails, like other primitives
 ```
 
-Here, the function `PrimitiveObject` is being used to create a new primitive object instance which is simply an plain JavaScript object made immutable with `Object.freeze`. 
+Here, the function `PrimitiveObject` is being used to create a new primitive object instance which is simply an plain JavaScript object made immutable with `Object.freeze`.  Because its frozen, properties can't be added, removed, or otherwise altered.
 
