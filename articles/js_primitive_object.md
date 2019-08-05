@@ -10,7 +10,7 @@ The specification (2019) [includes a description for primitives](http://www.ecma
 
 > A primitive value is a datum that is represented directly at the lowest level of the language implementation.
 
-At a high level, this is telling us that primitive values can't be broken down into other, smaller values.  Object types, for example, are essentially containers for other values.  Primitives, on the other hand, are themselves, representations of the lowest possible level of a value.
+This is basically telling us that primitive values can't be broken down into other, smaller values.  Object types, for example, are essentially containers for other values.  Primitives, on the other hand, are themselves, representations of the lowest possible level of a value.
 
 There are 7 primitive types in JavaScript:
 
@@ -26,7 +26,7 @@ Everything else, including arrays and functions, fall under the object type.
 
 ## Pass by Reference or Pass by Value?
 
-Sometimes you'll hear that the difference between primitives and objects is that primitives pass by value while objects pass by reference.  This is also not true.  Everything in JavaScript passes by value.  Whether or not you pass a primitive or an object into a function call, for example, the values given to that function are equal to their original.
+Sometimes you'll hear that the difference between primitives and objects is that primitives pass by value while objects pass by reference.  This is also not true.  Everything in JavaScript passes by value.  Whether or not you pass a primitive or an object into a function call, the values given to that function are equal to their originals.
 
 ```javascript
 let obj = {}
@@ -46,9 +46,11 @@ Primitive values may also be representations of references.  You may have notice
 let str = 'A very long string...'
 let list = []
 for (let i = 0; i < 1000000; i++) {
-    list.push(str) // reference to the same string data
+    list.push(str) // reference to the same string data under the hood
 }
 ```
+
+But ultimately, the language provides an abstraction for these values which keeps you from having to worry about anything related to memory.  All you need to know is that if you pass a value into a function call, the same value is seen in the function body.
 
 ## Primitives are Immutable
 
@@ -60,13 +62,13 @@ let str = 'string'
 
 function mutate (a, b) {
   a.property = true // OK, changes obj
-  b // ... nothing can change
+  b // ... nothing to change
 }
 
 mutate(obj, str)
 ```
 
-Note that primitives _can_ behave like objects.  This is what allows them to use properties and methods defined by their respective types.  This is what allows string primitives to use methods like `toUpperCase()`.  This behavior is enabled through _autoboxing_, a temporary wrapping of primitive values into their respective object type that grants them access to the type's API.
+Note that primitives _can_ behave like objects.  This is what allows them to use properties and methods defined by their respective types, methods like String's `toUpperCase()`.  This behavior is enabled through _autoboxing_, a temporary wrapping of primitive values into their respective object type that grants them access to the primitive type's API.
 
 ```javascript
 let str = 'string'
@@ -77,19 +79,77 @@ let temporaryBox = new String(str)
 temporaryBox.toUpperCase()
 ```
 
-The thing about immutability is that JavaScript provides tools for making objects immutable too.  So if primitives can be references like objects, and both can be immutable, what really separates the two?
+While primitives are inherently immutable, JavaScript also provides tools for making objects immutable too.
 
 ## The Primitive Object
 
-If primitives and objects are so similar, how far can we go to make an object like a primitive?  Say hello to the primitive object:
+If primitives and objects are so similar, how far can we go to make an object like a primitive?  That's what we're here to find out. Say hello to the primitive object:
 
 ```javascript
 function PrimitiveObject() {
   return Object.freeze({})
 }
 let primitive = PrimitiveObject()
-primitive.property = true // Fails, like other primitives
 ```
 
-Here, the function `PrimitiveObject` is being used to create a new primitive object instance which is simply an plain JavaScript object made immutable with `Object.freeze`.  Because its frozen, properties can't be added, removed, or otherwise altered.
+This is the first step in making an object that appears to be a primitive.  It starts with a function, `PrimitiveObject`, that creates the primitive. When called, it returns an immutable value that can't have properties added, removed, or otherwise altered thanks to `Object.freeze` - our new primitive.
+
+You may recognize this pattern for primitive creation as it is also used for creating symbols.
+
+```javascript
+let symbol = Symbol()
+```
+
+While not true with other primitives, like symbols, PrimitiveObject instances are also not equal.
+
+```javascript
+console.log(Symbol() === Symbol()) // false
+console.log(PrimitiveObject() === PrimitiveObject()) // false
+```
+
+### Associating with a Type
+
+Most primitives (except Null or Undefined) also have a respective type.  We should also have one for PrimitiveObject.  This means creating a type - like `String` for strings - to represent PrimitiveObject and its properties and methods.  Additionally, like other primitives, using `instanceOf` should not return true when checking for a primitive value when checked against its type.  Luckily, we can achieve this using `Symbol.hasInstance`.
+
+Because we're creating instances with a function mirroring symbols, we'll need to use a constructor function instead of `class` since `class`-defined constructors can't be called as functions.
+
+```javascript
+let PrimitiveObject
+{
+  let canConstruct = false
+
+  PrimitiveObject = function () {
+    if (new.target === PrimitiveObject) { // called with new
+      if (!canConstruct) {
+        throw new TypeError('PrimitiveObject is not a constructor')
+      }
+    } else { // called as function
+      canConstruct = true
+      const instance = new PrimitiveObject()
+      canConstruct = false
+      return Object.freeze(instance)
+    }
+  }
+
+  PrimitiveObject.prototype.isPrimitive = function () {
+    return true
+  }
+
+  Object.defineProperty(PrimitiveObject, Symbol.hasInstance, {
+    value () {
+      return false
+    }
+  })
+}
+let primitive = PrimitiveObject()
+console.log(primitive.isPrimitive()) // true
+console.log(primitive.isPrimitive === PrimitiveObject.prototype.isPrimitive) // true
+console.log(primitive instanceof PrimitiveObject) // false
+```
+
+With this, `PrimitiveObject` is a proper constructor for PrimitiveObject instances with an API inherited from its prototype. However, as with symbols, the constructor can't be called with `new` in user code and instead it needs to be used as a factory function (which internally uses `new`).
+
+What about `typeof`?  While `typeof` does help in identifying primitives, it does not do so consistently, so we're not going to worry about it.  For example, `typeof null` results in "object", even though `null` is a primitive.  Also functions, another kind of non-primitive object, also has its own entry for `typeof`: "function".  So `typeof` doesn't really exist as a way to completely separate primitives from objects.  Also, there's nothing we could do to change its output for our PrimitiveObject even if we wanted to.
+
+### Putting PrimitiveObject to the Test
 
