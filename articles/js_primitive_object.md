@@ -153,7 +153,9 @@ console.log(primitive instanceof PrimitiveObject) // false
 
 With this, `PrimitiveObject` is a proper constructor for PrimitiveObject instances with an API inherited from its prototype. However, as with symbols, the constructor can't be called with `new` in user code and instead it needs to be used as a factory function (which internally uses `new`).
 
-What about `typeof`?  While `typeof` does help in identifying primitives, it does not do so consistently, so we're not going to worry about it.  For example, `typeof null` results in "object", even though `null` is a primitive.  Also functions, another kind of non-primitive object, also has its own entry for `typeof`: "function".  So `typeof` doesn't really exist as a way to completely separate primitives from objects.  Also, there's nothing we could do to change its output for our PrimitiveObject even if we wanted to.
+| What About `typeof`? |
+| :--- |
+| While `typeof` does help in identifying primitives, it does not do so consistently, so we're not going to worry about it.  For example, `typeof null` results in "object", even though `null` is a primitive.  Also functions, another kind of non-primitive object, also has its own entry for `typeof`: "function".  So `typeof` doesn't really exist as a way to completely separate primitives from objects.  Also, there's nothing we could do to change its output for our PrimitiveObject even if we wanted to. |
 
 ### Putting PrimitiveObject to the Test
 
