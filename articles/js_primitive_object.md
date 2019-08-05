@@ -94,7 +94,7 @@ function PrimitiveObject() {
 let primitive = PrimitiveObject()
 ```
 
-This is the first step in making an object that appears to be a primitive.  It starts with a function, `PrimitiveObject`, that creates the primitive. When called, it returns an immutable value that can't have properties added, removed, or otherwise altered thanks to `Object.freeze` - our new primitive.
+This is the first step in making an object that appears to be a primitive.  It starts with a function, `PrimitiveObject`, that creates the primitive. When called, it returns an immutable value that can't have properties added, removed, or otherwise altered thanks to `Object.freeze`. This value is our new primitive.
 
 You may recognize this pattern for primitive creation as it is also used for creating symbols.
 
