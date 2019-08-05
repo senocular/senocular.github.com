@@ -109,6 +109,8 @@ console.log(Symbol() === Symbol()) // false
 console.log(PrimitiveObject() === PrimitiveObject()) // false
 ```
 
+Thankfully, symbols have set a precedence here for primitives showing that they do not have to be equal in value like other primitives have in the past.
+
 ### Associating with a Type
 
 Most primitives (except Null or Undefined) also have a respective type.  We should also have one for PrimitiveObject.  This means creating a type - like `String` for strings - to represent PrimitiveObject and its properties and methods.  Additionally, like other primitives, using `instanceOf` should not return true when checking for a primitive value when checked against its type.  Luckily, we can achieve this using `Symbol.hasInstance`.
