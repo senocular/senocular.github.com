@@ -44,9 +44,9 @@ Primitive values may also be representations of references.  You may have notice
 
 ```javascript
 let str = 'A very long string...'
-let list = []
+let duplicates = []
 for (let i = 0; i < 1000000; i++) {
-    list.push(str) // reference to the same string data under the hood
+    duplicates.push(str) // reference to the same string data under the hood
 }
 ```
 
