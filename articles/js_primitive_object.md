@@ -68,6 +68,8 @@ function mutate (a, b) {
 mutate(obj, str)
 ```
 
+Since there's nothing to change in the string, there's no way of knowing if b is a value copy or a reference.  All we know is that, comparitively, `b` is the same value as `str` in the outer scope.
+
 Note that primitives _can_ behave like objects.  This is what allows them to use properties and methods defined by their respective types, methods like String's `toUpperCase()`.  This behavior is enabled through _autoboxing_, a temporary wrapping of primitive values into their respective object type that grants them access to the primitive type's API.
 
 ```javascript
