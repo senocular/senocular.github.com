@@ -106,7 +106,7 @@ Thankfully, this is a precedent set by symbols that we can take advantage of sin
 
 Most primitives (except null or undefined) also have a respective type.  We should also have one for PrimitiveObject.  This means creating a type - like `String` for strings - to represent PrimitiveObject and its properties and methods.  
 
-Additionally, like other primitives, using `instanceOf` should not return true when checking for a primitive value when checked against its type.  Luckily, we can achieve this using `Symbol.hasInstance`.
+Additionally, like other primitives, using `instanceof` should not return true when checking for a primitive value when checked against its type.  Luckily, we can (mostly) achieve this using `Symbol.hasInstance`.
 
 Because we're creating instances with a function mirroring symbols, we'll need to use a constructor function instead of `class` given that `class`-defined constructors can't be called as functions.
 
