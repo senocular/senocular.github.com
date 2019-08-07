@@ -138,7 +138,7 @@ With this, `PrimitiveObject` now also represents the primitive's type and has an
 
 ### Putting PrimitiveObject to the Test
 
-```
+```javascript
 let primitive = PrimitiveObject()
 console.log(primitive.isPrimitive()) // true
 console.log(primitive.isPrimitive === PrimitiveObject.prototype.isPrimitive) // true
