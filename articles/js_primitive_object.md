@@ -158,3 +158,12 @@ mutate(primitive)
 console.log(primitive.property) // undefined
 ```
 
+But
+
+```javascript
+'string' === Object('string') // false
+let symbol = Symbol()
+symbol === Object(symbol) // false
+let primitive = PrimitiveObject()
+primitive === Object(primitive) // true
+```
