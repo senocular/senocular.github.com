@@ -238,7 +238,7 @@ console.log(objectPrimitive instanceof ObjectPrimitive) // false - OK
 new ObjectPrimitive() // Error, ObjectPrimitive is not a constructor - OK
 ```
 
-There is one flaw in the object primitive's armor that has not yet been addressed, and in fact cannot be.  That is, primitives do not equal their object equivalents.  While the object primitive has taken a step to prevent creating what may be considered its object equivalent by blocking `new ObjectPrimitive()`, there is another way to get object values from primitives, using the `Object` conversion function. 
+There is one flaw in the object primitive's armor that has not yet been addressed, and in fact cannot be.  That is, primitives do not equal their object equivalents.  While the object primitive has taken a step to prevent creating what may be considered its object equivalent by blocking `new ObjectPrimitive()`, there is another way to get object values from primitives: using the `Object` conversion function. 
 
 ```javascript
 'string' instanceof String // false
@@ -253,4 +253,4 @@ let objectPrimitive = ObjectPrimitive()
 console.log(Object(objectPrimitive) === objectPrimitive) // true - Fail
 ```
 
-So, despite all the effort to keep up the masquerade of being a primitive, a simple object conversion is all that is needed to show the true nature of the custom object primitive.  Nevertheless, this exercise should hopefully show just how similar primitives and objects can be.  Special thanks to the symbol primitive with all its oddities that helped in this endeavor.
+So, despite all the effort to keep up the masquerade of being a primitive, a simple object conversion is all that is needed to show the true nature of the custom object primitive.  Nevertheless, this exercise should hopefully show just how similar primitives and objects can be, especially with respect to the symbol primitive given its all its peculiarities.
