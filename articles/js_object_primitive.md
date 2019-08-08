@@ -184,6 +184,7 @@ Object.defineProperty(ObjectPrimitive, Symbol.hasInstance, {
 
 // test
 let objectPrimitive = ObjectPrimitive()
+console.log(objectPrimitive.toString === ObjectPrimitive.prototype.toString) // true - OK
 console.log(objectPrimitive.toString()) // ObjectPrimitive() - OK
 console.log(objectPrimitive instanceof ObjectPrimitive) // false - OK
 new ObjectPrimitive() // Error, ObjectPrimitive is not a constructor - OK
@@ -212,14 +213,44 @@ The `Object` type _could_ be modified with `Symbol.hasInstance` to account for t
 
 ## The Downfall of the Object Primitive
 
-So far the object primitive has gone a long way in appearing to be a primitive (mostly the symbol primitive) despite being an object.  The tests speak for themselves
-
-But
+So far the object primitive has come a long way in appearing to be a primitive (mostly the symbol primitive) despite being an object.  The tests speak for themselves.
 
 ```javascript
-'string' === Object('string') // false
-let symbol = Symbol()
-symbol === Object(symbol) // false
-let primitive = PrimitiveObject()
-primitive === Object(primitive) // true
+let objectPrimitive = ObjectPrimitive()
+
+// acts like an object
+console.log(objectPrimitive.toString()) // ObjectPrimitive() - OK
+
+// symbol primitive-like equality
+ObjectPrimitive() === ObjectPrimitive() // false - OK
+
+// immutable, "pass by value"-like behavior
+function mutate (a) {
+  a.property = true
+}
+
+mutate(objectPritive)
+console.log(objectPritive.property) // undefined - OK
+
+// inherits from type while not being instanceof type
+console.log(objectPrimitive.toString === ObjectPrimitive.prototype.toString) // true - OK
+console.log(objectPrimitive instanceof ObjectPrimitive) // false - OK
+new ObjectPrimitive() // Error, ObjectPrimitive is not a constructor - OK
 ```
+
+There is one flaw in the object primitive's armor that has not yet been addressed, and in fact cannot be.  That is, primitives do not equal their object equivalents.  While the object primitive has taken a step to prevent creating what may be considered its object equivalent by blocking `new ObjectPrimitive()`, there is another way to get object values from primitives, using the `Object` conversion function. 
+
+```javascript
+'string' instanceof String // false
+Object('string') instanceof String // true
+Object('string') === 'string' // false
+```
+
+Given that object primitive values are already objects, converting one with `Object()` does not result in a new object version of the value. Instead it returns the same value.
+
+```javascript
+let objectPrimitive = ObjectPrimitive()
+console.log(Object(objectPrimitive) === objectPrimitive) // true - Fail
+```
+
+So, despite all the effort to keep up the masquerade of being a primitive, a simple object conversion is all that is needed to show the true nature of the custom object primitive.  Nevertheless, this exercise should hopefully show just how similar primitives and objects can be.  Special thanks to the symbol primitive with all its oddities that helped in this endeavor.
