@@ -1,5 +1,3 @@
-_Work in Progress_
-
 # The Custom Object Primitive
 
 The custom object primitive is a new custom type created in JavaScript to give the appearance of a primitive despite the fact that it's actually an object.  Its creation was an exercise to discover how far an object could go in making itself indistinguishable from a primitive, largely spurred by misconceptions around how values work in JavaScript such as...
