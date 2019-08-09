@@ -32,7 +32,7 @@ let number = 10
 new Number(number).toString()
 ```
 
-Its the `Number` type which defines the `toString()` method, so in order for it to be used by the primitive, a new `Number` object instance is created with the primitive value with the method is called from that.
+Its the `Number` type which defines the `toString()` method used here, so in order for it to be made available to the non-object primitive, a new `Number` object instance is created with the primitive value as its base value and the method is called from that.
 
 When it comes to defining the custom object primitive, the goal is to act like a primitive.  Because primitives act like objects, the custom object primitive can safely _be_ an object.  As a starting point for its definition, we simply have:
 
@@ -50,7 +50,7 @@ This is a good beginning, but there's still much more to do.
 
 True.
 
-Whenever you have two primitives of the same value, despite being different instances of that value, when compared they are equal.
+This is not a misconception, just an observation of behavior. Whenever you have two primitives of the same value, despite being different instances of that value, when compared they are equal.
 
 ```javascript
 1 === 1 // true
@@ -70,7 +70,7 @@ You might say objects don't really have their own value; that they're just conta
 new Object() === new Object() // false
 ```
 
-When it comes to primitives, there is a primitive type that is similar to objects in this way: symbols.  Symbols don't have a literal syntax. To create them you call the `Symbol()` function.  Each time you call that function, a new symbol is created and that symbol is always unique and not equivalent to any other symbol. 
+When it comes to primitives, there is a primitive type that is similar to objects in this way: the symbol primitive.  Symbols don't have a literal syntax. To create one you call the `Symbol()` function.  Each time you call that function, a new symbol is created and each symbol is always unique and not equivalent to any other symbol. 
 
 ```javascript
 Symbol() === Symbol() // false
@@ -126,7 +126,7 @@ console.log(obj.property) // true
 console.log(str.property) // undefined
 ```
 
-This, however, is not a consequence of the way the values are being passed into the function, rather a consequence of the fact that primitives are _immutable_.  In other words, there's nothing _to_ change in a primitive that would allow it to be reflected in the original value.  Primitives don't allow it.
+This, however, is not a consequence of the way the values are being passed into the function, rather a consequence of the fact that primitives are _immutable_.  In other words, there's nothing _to_ change in a primitive that would allow it to be reflected in the original value.
 
 Objects can also be made immutable in JavaScript using `Object.freeze()`.  A frozen object, like primitives, can't have properties added, deleted, or changed.  The object primitive can be updated to be immutable as well.
 
@@ -146,7 +146,7 @@ mutate(objectPritive)
 console.log(objectPritive.property) // undefined - OK
 ```
 
-Just like any primitive passed into a function, now an object primitive instances also cannot be changed.
+Just like any primitive passed into a function, now an object primitive instance would also not be changed.
 
 ## "Primitives Are Not Instances of Their Type"
 
