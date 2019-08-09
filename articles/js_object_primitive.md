@@ -2,13 +2,13 @@ _Work in Progress_
 
 # The Custom Object Primitive
 
-The custom object primitive is value defined in JavaScript that was created to give the appearance of a primitive despite it actually being an object.  Its creation was an exercise to discover how far you could you could go with an object to make it indistinguishable from a primitive, largely spurred by misconceptions thrown around about how values work in JavaScript such as...
+The custom object primitive is a new custom type created in JavaScript to give the appearance of a primitive despite the fact that it's actually an object.  Its creation was an exercise to discover how far an object could go in making itself indistinguishable from a primitive, largely spurred by misconceptions around how values work in JavaScript such as...
 
 ## "Everything is an Object"
 
 False.
 
-Though you may sometimes hear "everything is an object" in JavaScript, this is not true. Values known as primitives are explicitly not objects.  There are 7 primitive types in JavaScript:
+Though you may sometimes hear "everything is an object" in JavaScript, this is not true. There are a number of values known as primitives are explicitly not objects.  They are:
 
 * BigInt
 * Boolean
@@ -20,21 +20,23 @@ Though you may sometimes hear "everything is an object" in JavaScript, this is n
 
 Everything else, including arrays and functions, are considered objects.
 
-While primitives are themselves not objects, many (not including null or undefined) can behave like objects.  This is thanks to _autoboxing_ which will temporarily wrap primitive values in their respective object types when primitives are being used as objects.
+While primitives are themselves not objects, many (not including null or undefined) can behave like objects.  This is thanks to a behavior known as _autoboxing_ which temporarily wraps primitive values in their respective object types when those primitives are being used as objects in code.
 
 ```javascript
 let number = 10
 number.toString() // OK, thanks to autoboxing
 ```
 
-Behind the scenes, that expression looks something more like:
+Behind the scenes, that expression looks something like:
 
 ```javascript
 let number = 10
 new Number(number).toString()
 ```
 
-Because primitives act like objects, the custom object primitive can _be_ an object and still behave like a primitive.  So we start it off as an object.
+Its the `Number` type which defines the `toString()` method, so in order for it to be used by the primitive, a new `Number` object instance is created with the primitive value with the method is called from that.
+
+When it comes to defining the custom object primitive, the goal is to act like a primitive.  Because primitives act like objects, the custom object primitive can safely _be_ an object.  As a starting point for its definition, we simply have:
 
 ```javascript
 // generation 1
@@ -44,17 +46,17 @@ let objectPrimitive = {}
 objectPrimitive.toString() // {} - OK
 ```
 
-This is a good start, but there's still much more to do.
+This is a good beginning, but there's still much more to do.
 
 ## "Primitives Have Value Equality"
 
 True.
 
-Whenever you have primitives of the same value, despite being different instances of that value, they are equal.
+Whenever you have two primitives of the same value, despite being different instances of that value, when compared they are equal.
 
 ```javascript
 1 === 1 // true
-true == true // true
+true === true // true
 'string' === 'string' // true
 ```
 
@@ -64,15 +66,19 @@ This is not the case for objects.
 {} === {} // false
 ```
 
-Though the two objects above appear to have the same value, they are not equivalent.  This was not the case with the primitives.  But objects don't really have their own values; they're just containers for other values.  As containers they exist as separate instances and the equality operators identify them as such despite how the literal syntax used to create them are the same.
+You might say objects don't really have their own value; that they're just containers for other values.  It's largely the literal syntax that's being used that makes the object values appear to be the same even though they're each separate instances of `Object`.  The above is really a shorthand for:
 
-When it comes to primitives, there is a primitive type that is similar to objects in this way.  These primitives are symbols.  Symbols don't even have a literal syntax; to create them you call the `Symbol()` function.  Each time you call that function, a new symbol is created which is always unique and not equivalent to another symbol. 
+```javascript
+new Object() === new Object() // false
+```
+
+When it comes to primitives, there is a primitive type that is similar to objects in this way: symbols.  Symbols don't have a literal syntax. To create them you call the `Symbol()` function.  Each time you call that function, a new symbol is created and that symbol is always unique and not equivalent to any other symbol. 
 
 ```javascript
 Symbol() === Symbol() // false
 ```
 
-This creation approach can be used with the object primitive to help separate it from the literal syntax used by other objects.
+This approach to creation can be used with the object primitive to help separate it from the literal syntax used by other objects.
 
 ```javascript
 // generation 2
@@ -84,13 +90,13 @@ function ObjectPrimitive () {
 ObjectPrimitive() === ObjectPrimitive() // false - OK
 ```
 
-Now object primitive values are created with a function and each have their own unique values just like the symbol primitive.
+Now object primitive values are created with a function and each have their own unique values just like the symbol primitive.  One step closer.
 
 ## "Objects Pass by Reference, Primitives Pass by Value"
 
 False.
 
-Given the level abstraction JavaScript provides for its values there's no difference between the two.  The easiest way to look at it is that all values are references and all passing is done by value.  So when a value is passed, it's passed by value, and the value being passed is a reference.  This would apply to both objects and primitives.
+Given the level abstraction JavaScript provides for its values there's no observable difference between how values are passed.  The easiest way to look at it is that all values are references and all passing is done by value.  So when a value is passed, it's passed by value, and the value being passed is a reference.  This would apply to both objects and primitives.
 
 
 ```javascript
@@ -105,7 +111,7 @@ function compare (a, b) {
 compare(obj, str)
 ```
 
-What makes this statement appear to be true is that you can alter object properties of a value passed to a function within that function and it would affect the original.  This cannot be done with primitives.
+What makes this statement appear to be true is that you can alter properties of an object value passed to a function within that function and it would affect the value of the original.  This cannot be done with primitives.
 
 ```javascript
 let obj = {}
@@ -122,7 +128,7 @@ console.log(obj.property) // true
 console.log(str.property) // undefined
 ```
 
-This, however, is not a consequence of the way the values are being passed into the function, rather a consequence of the fact that primitives are _immutable_.  In other words, there's nothing _to_ change in a primitive that would allow it to be reflected in the original value.
+This, however, is not a consequence of the way the values are being passed into the function, rather a consequence of the fact that primitives are _immutable_.  In other words, there's nothing _to_ change in a primitive that would allow it to be reflected in the original value.  Primitives don't allow it.
 
 Objects can also be made immutable in JavaScript using `Object.freeze()`.  A frozen object, like primitives, can't have properties added, deleted, or changed.  The object primitive can be updated to be immutable as well.
 
@@ -142,9 +148,7 @@ mutate(objectPritive)
 console.log(objectPritive.property) // undefined - OK
 ```
 
-Just like any primitive passed into a function, now object primitive instances also cannot be changed.
-
-
+Just like any primitive passed into a function, now an object primitive instances also cannot be changed.
 
 ## "Primitives Are Not Instances of Their Type"
 
@@ -158,9 +162,9 @@ Simply, using `instanceof` on primitives returns false despite the fact that pri
 Symbol() instanceof Symbol // false
 ```
 
-For the object primitive there's a few things to do here.  First, it needs to have a type.  There's an `ObjectPrimitive` function for creating new instances, but nothing that ties those instances to that function.  Symbol instances, for example, inherit from `Symbol.prototype`.  Object primitive instances should do the same with `ObjectPrimitive.prototype`.
+For the object primitive there's a few things to do here.  First, it needs to have a type.  There's an `ObjectPrimitive` function for creating new instances, but there's nothing that ties those instances to that function.  Symbol instances, for example, inherit from `Symbol.prototype`.  Object primitive instances should do the same with `ObjectPrimitive.prototype`.
 
-Once thats in place, `instanceof` needs to be fixed so that object primitives, despite appearing as instances of `ObjectPrimitive` when used, aren't reported as being so.  Luckily this can be achieved with `Symbol.hasInstance`.
+Once thats in place, `instanceof` needs to be fixed so that object primitives, despite appearing as instances of `ObjectPrimitive` when used, aren't reported as being so.  Luckily this can be achieved with the help of `Symbol.hasInstance`.
 
 ```javascript
 // generation 4
@@ -190,14 +194,14 @@ console.log(objectPrimitive instanceof ObjectPrimitive) // false - OK
 new ObjectPrimitive() // Error, ObjectPrimitive is not a constructor - OK
 ```
 
-Object primitives now have access to methods in `ObjectPrimitive.prototype`, as seen with the custom `toString()` thanks to `Object.create()` in the `ObjectPrimitive` function.  Additionally, again mirroring symbols, `ObjectPrimitive` blocks itself from being called with `new`.  This prevents an alternative object-based version of our value that would be able to pass the `instanceof` test.  For example, string primitives are not instances of `String` but String objects are.
+Object primitives now have access to methods in `ObjectPrimitive.prototype`, as seen with the custom `toString()` thanks to `Object.create()` in the `ObjectPrimitive` function.
+
+Additionally, again mirroring symbols, `ObjectPrimitive` blocks itself from being called with `new`.  This prevents an alternative object-based version of the object primitive that would be expected to pass the `instanceof` test.  For example, string primitives are not instances of `String` but String objects are.
 
 ```javascript
 'string' instanceof String // false
 new String('string') instanceof String // true
 ```
-
-By blocking creation with `new`, we prevent would-be object variations of the "primitive" from existing.
 
 Finally, because `instanceof` works by checking the prototype chain, we are able to block it from returning true for `ObjectPrimitive` using `Symbol.hasInstance`.  This approach, however, does _not_ prevent `instanceof` checks against `Object`.
 
@@ -205,7 +209,7 @@ Finally, because `instanceof` works by checking the prototype chain, we are able
 ObjectPrimitive() instanceof Object // true - Fail
 ```
 
-The `Object` type _could_ be modified with `Symbol.hasInstance` to account for this as well, but it is not scalable and bad practice to modify built-ins.  Instead we'll leave it be.
+The `Object` type _could_ be modified with `Symbol.hasInstance` to account for this as well, but it is not scalable and bad practice to modify built-ins.
 
 | What About `typeof`? |
 | :--- |
@@ -213,7 +217,7 @@ The `Object` type _could_ be modified with `Symbol.hasInstance` to account for t
 
 ## The Downfall of the Object Primitive
 
-So far the object primitive has come a long way in appearing to be a primitive (mostly the symbol primitive) despite being an object.  The tests speak for themselves.
+The custom object primitive has come a long way in appearing to be a primitive (mostly the symbol primitive) despite really being an object.  The tests speak for themselves.
 
 ```javascript
 let objectPrimitive = ObjectPrimitive()
@@ -238,7 +242,7 @@ console.log(objectPrimitive instanceof ObjectPrimitive) // false - OK
 new ObjectPrimitive() // Error, ObjectPrimitive is not a constructor - OK
 ```
 
-There is one flaw in the object primitive's armor that has not yet been addressed, and in fact cannot be.  That is, primitives do not equal their object equivalents.  While the object primitive has taken a step to prevent creating what may be considered its object equivalent by blocking `new ObjectPrimitive()`, there is another way to get object values from primitives: using the `Object` conversion function. 
+There is, however, one flaw in the object primitive that has not yet been addressed.  That is, primitives do not equal their object equivalents.  While the last generation of the object primitive has taken a step to prevent creating what may be considered its object equivalent by blocking `new ObjectPrimitive()`, there is still another way to get object values from primitives: using the `Object` conversion function. 
 
 ```javascript
 'string' instanceof String // false
@@ -253,4 +257,4 @@ let objectPrimitive = ObjectPrimitive()
 console.log(Object(objectPrimitive) === objectPrimitive) // true - Fail
 ```
 
-So, despite all the effort to keep up the masquerade of being a primitive, a simple object conversion is all that is needed to show the true nature of the custom object primitive.  Nevertheless, this exercise should hopefully show just how similar primitives and objects can be, especially with respect to the symbol primitive given its all its peculiarities.
+Despite all the masquerading, there's still no hiding that the object primitive is still an object.  Nevertheless, it does come close, especially when compared to the symbol primitive given its all its peculiarities.
