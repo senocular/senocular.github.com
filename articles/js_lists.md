@@ -230,7 +230,7 @@ Where `value` is an ordinary object.
 
 There can be abiguity between operations when starting a line with the following characters where ASI (Automatic Semicolon Insertion) will not insert a semicolon to terminate the previous line's expression.
 
-| Line Starts With | Semicolon before | No Semicolon Before |
+| Line Starts With | Semicolon Before | No Semicolon Before |
 | --- | --- | --- |
 | `[` | Array literal | Array access |
 | `(` | Grouping | Function call |
