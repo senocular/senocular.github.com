@@ -88,6 +88,7 @@ _Note: Scopes within the parameter list refers to default parameter expressions.
 | `filter` | _any_ | No | Yes | No | No |
 | `find` | _any_ | Yes | Yes | No | No |
 | `findIndex` | Number | Yes | Yes | No | No |
+| `flatMap` | Array | No | Yes | No | No |
 | `forEach` | _none_ | No | Yes | Yes | Yes |
 | `map` | Array | No | Yes | No | No |
 | `reduce` | _any_ | No | Yes | No | No |
