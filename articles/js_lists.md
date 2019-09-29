@@ -119,18 +119,18 @@ A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-int
 
 | Operation | Ordering |
 | --- | --- |
-| `for..in` | not guaranteed |
-| `JSON.stringify` | not guaranteed |
-| `JSON.parse` | not guaranteed |
-| `Object.entries` | not guaranteed |
-| `Object.keys` | not guaranteed |
-| `Object.values` | not guaranteed |
-| `Object.assign` | well-defined |
-| `Object.defineProperties` | well-defined |
-| `Object.getOwnPropertyDescriptors` | well-defined |
-| `Object.getOwnPropertyNames` | well-defined |
-| `Object.getOwnPropertySymbols` | well-defined |
-| `Reflect.ownKeys` | well-defined |
+| `for..in` | Not guaranteed |
+| `JSON.stringify` | Not guaranteed |
+| `JSON.parse` | Not guaranteed |
+| `Object.entries` | Not guaranteed |
+| `Object.keys` | Not guaranteed |
+| `Object.values` | Not guaranteed |
+| `Object.assign` | Well-defined |
+| `Object.defineProperties` | Well-defined |
+| `Object.getOwnPropertyDescriptors` | Well-defined |
+| `Object.getOwnPropertyNames` | Well-defined |
+| `Object.getOwnPropertySymbols` | Well-defined |
+| `Reflect.ownKeys` | Well-defined |
 
 Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
 
