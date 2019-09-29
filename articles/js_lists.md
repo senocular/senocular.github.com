@@ -104,24 +104,35 @@ Metadata collections can be created for objects and iterated over.
 | _non-null_ | `Object.entries(value)` | Array |
 | _non-null_ | `Object.keys(value)` | Array |
 | _non-null_ | `Object.values(value)` | Array |
+| _non-null_ | `Object.getOwnPropertyDescriptors(value)` | Object |
 | _non-null_ | `Object.getOwnPropertyNames(value)` | Array |
 | _non-null_ | `Object.getOwnPropertySymbols(value)` | Array |
-| _non-null_ | `Object.getOwnPropertyDescriptors(value)` | Object |
 | Object | `Reflect.ownKeys(object)` | Array |
 
 ### Iteration Order
 
-A specification-defined order known as OrdinaryOwnPropertyKeys is set for some operations. Other operations (like `for...in`) do not have to follow this order.  OrdinaryOwnPropertyKeys ordering uses:
+A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-international.org/ecma-262/6.0/index.html#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys) is set for some operations. Other operations (like `for...in`) do not have to follow this order and are implementation-dependent.  `[[OwnPropertyKeys]]` ordering uses:
 
 1. Integer keys between 0 and 2^53-1 (inclusive) in ascending order
 2. Other non-symbol keys in creation order
 3. Symbol keys in creation order
 
-| Ordering | Operation |
+| Operation | Ordering |
 | --- | --- |
-| OrdinaryOwnPropertyKeys | `Object.getOwnPropertyNames` |
-| OrdinaryOwnPropertyKeys | `Object.getOwnPropertySymbols` |
-| OrdinaryOwnPropertyKeys | `Reflect.ownKeys` |
+| `for..in` | not guaranteed |
+| `JSON.stringify` | not guaranteed |
+| `JSON.parse` | not guaranteed |
+| `Object.entries` | not guaranteed |
+| `Object.keys` | not guaranteed |
+| `Object.values` | not guaranteed |
+| `Object.assign` | well-defined |
+| `Object.defineProperties` | well-defined |
+| `Object.getOwnPropertyDescriptors` | well-defined |
+| `Object.getOwnPropertyNames` | well-defined |
+| `Object.getOwnPropertySymbols` | well-defined |
+| `Reflect.ownKeys` | well-defined |
+
+Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
 
 ## Creating Functions
 
