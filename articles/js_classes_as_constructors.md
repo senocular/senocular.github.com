@@ -129,6 +129,7 @@ The second line sets up instance inheritance by having the subclass's `prototype
 The new constructor:
 
 ```javascript
+// constructor()
 function MyClass (mySuperProperty, myProperty) {
   const _super = Object.getPrototypeOf(MyClass)
   const _this = Reflect.construct(_super, [mySuperProperty], new.target)
@@ -168,6 +169,7 @@ While the use of `Reflect.construct()` may seem to over-complicate things, it is
 `super` in method calls differ from the `super()` used in construction. In methods, `super` is used to look up methods in the superclass's `prototype`.  In `class`-defined methods, this lookup happens dynamically using an internal slot defined for the method called `[[HomeObject]]`. It points to the object within which the function was originally defined, or more specifically the class's `prototype` object.  We don't have access to that internal slot, so we add it manually as a property called `_homeObject` in the method function.
 
 ```javascript
+// super.method()
 MyClass.prototype.mySuperMethod = function myMethod () {
   const _super = Object.getPrototypeOf(myMethod._homeObject)
   return _super.mySuperMethod.call(this)
@@ -176,6 +178,10 @@ MyClass.prototype.myMethod._homeObject = MyClass.prototype
 ```
 
 With the `_homeObject` pointing to the current class's `prototype`, the superclass's prototype can be obtained with `Object.getPrototypeOf()`.  From that we can make the superclass method call making sure to explicitly set `this` through `call()`.
+
+### More on `Reflect.construct()`
+
+TODO
 
 ## Private Fields
 
