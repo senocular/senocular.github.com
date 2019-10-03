@@ -186,7 +186,7 @@ Unfortunately, constructor functions do not directly support private fields.  Pr
 
 ### Inheriting Private Fields
 
-While a function constructor can't have private fields, it can inherit from a `class` that does.  Any method that would need to access a private field would also need to be defined in that class, but the function constructor would just inherit it.
+While a function constructor can't have private fields, it can inherit from a `class` that does.  Any method that would need to access a private field would also need to be defined in that class, but the function constructor would have access to those inherently through inheritance.
 
 **class version**
 
@@ -224,7 +224,7 @@ Object.setPrototypeOf(MyClass.prototype, MyPrivateProvider.prototype)
 
 ### Redirecting Initialization
 
-We can take advantage of the fact that `class` definitions rely on `super()` for defining `this` and create a `class` that allows us to specify what instance `this` should be by having a `super()` call that returns the object we pass it.  Once the `class` has its `this`, it will get initialized it that class's private fields.  And we can do this without including the class in the inheritance hierarchy at all.  Some extra work is needed to copy class's methods (which are able to access the private fields) into the constructor function `prototype`.
+We can take advantage of the fact that `class` definitions rely on `super()` for defining `this` and create a `class` that allows us to specify what instance `this` should be by having a `super()` call that returns the object we pass it.  Once the `class` has its `this` (the specified object), it will get initialized with that class's private fields.  And we can do this without including the class in the inheritance hierarchy.  Some extra work is needed, though, to copy the class's methods (which are able to access the private fields) into the constructor function's `prototype`.
 
 **class version**
 
@@ -269,3 +269,41 @@ Reflect.ownKeys(MyPrivateProvider.prototype)
       MyClass.prototype[method] = MyPrivateProvider.prototype[method]
 })
 ```
+
+In this particular case, we're able to continue to MyClass's constructed `this` value because we're not inheriting from another class. The MyPrivateProvider class only exists to initialize an object with private variables, not to serve as a superclass.
+
+The first step is passing MyClass's `this` into the MyPrivateProvider constructor.  We don't care what it returns (which ultimately will be `this`); we're only using the constructor as a way to modify an existing value.
+
+```javascript
+function MyClass () {
+  new MyPrivateProvider(this)
+}
+```
+
+MyPrivateProvider has the private fields and necessary methods for accessing those fields as part of its own definition.  Private fields will get initialized on the constructor's `this` value after `super()` is called - `super()` being what defines what `this` is.  Because `super()` does this, we use the special SetThis superclass to set the `this` of MyPrivateProvider to whatever it passes it, which in this case would be the `this` from MyClass.
+
+```javascript
+function SetThis (target) {
+  return target
+}
+```
+
+This means when the MyPrivateProvider initializes its `this` with private variables, its actually initializing the MyClass instance it was given as `target`.
+
+```javascript
+  constructor (target) {
+    super(target) // super is SetThis, target becomes this
+  }
+```
+
+The initialization of `this` here in MyPrivateProvider does not include setting up the inheritance connections for the instance.  That would have happened in the base class, SetThis, which we overrode by returning `target` (the `this` in SetThis would have had inheritance set to inherit from MyPrivateProvider).  So in order for the MyClass instance to gain access to the MyPrivateProvider methods that can access the private fields defined there, they need to be copied over into MyClass.
+
+```javascript
+Reflect.ownKeys(MyPrivateProvider.prototype)
+  .forEach(method => {
+    if (method !== 'constructor') 
+      MyClass.prototype[method] = MyPrivateProvider.prototype[method]
+})
+```
+
+There is one small catch to this approach.  If you remember from earlier, `super` in methods refers to a `[[HomeObject]]` slot that points to its prototype of origin.  This means that any uses of `super` in MyPrivateProvider would refer to methods in SetThis, not MyClass's superclass, if it had one.
