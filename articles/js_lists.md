@@ -223,10 +223,10 @@ Where `value` is an ordinary object.
 | Operation | First | Second | Third |
 | ---: | --- | --- | --- |
 | `'' == value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `'' == new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `'' + value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `'' + new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `1 + value` (or other arithmetic operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `'' == new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
+| `'' + new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `1 + new Date` (or other arithmetic operatation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `1 ^ value` (or other bitwise operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `+value` (or other unary operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
