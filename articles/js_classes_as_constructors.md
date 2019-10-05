@@ -1,6 +1,3 @@
-| Status: **WIP** |
-| --- |
-
 # Creating Classes using Constructor Functions
 
 Defining classes in JavaScript with `class` is concise and powerful.  But there may be times where you would need to bypass the `class` syntax and use normal function constructors instead.  The following outlines how `class`-based constructors are wired up and how you would replicate their behavior with non-`class` constructor functions.
