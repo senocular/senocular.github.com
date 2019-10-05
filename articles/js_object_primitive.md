@@ -1,12 +1,14 @@
 # The Custom Object Primitive
 
-The custom object primitive is a new custom type created in JavaScript to give the appearance of a primitive despite the fact that it's actually an object.  Its creation was an exercise to discover how far an object could go in making itself indistinguishable from a primitive, largely spurred by misconceptions around how values work in JavaScript such as...
+Sometimes it can be hard to nail down the differences between objects and primitives in JavaScript. In many cases, they can even behave the same way despite the fact that they are fundamentally different.
+
+Here we'll go through the process of creating new custom object type we're calling the _custom object primitive_.  Its creation is an exercise to discover just how far an object could go in making itself indistinguishable from a primitive, largely spurred by misconceptions around how values work in JavaScript such as...
 
 ## "Everything is an Object"
 
-False.
+This is false.
 
-Though you may sometimes hear "everything is an object" in JavaScript, this is not true. There are a number of values known as primitives are explicitly not objects.  They are:
+Though you may sometimes hear "everything is an object" in JavaScript, this is not true. Primitive values in JavaScript are explicitly not objects.  They include:
 
 * BigInt
 * Boolean
@@ -34,7 +36,7 @@ new Number(number).toString()
 
 Its the `Number` type which defines the `toString()` method used here, so in order for it to be made available to the non-object primitive, a new `Number` object instance is created with the primitive value as its base value and the method is called from that.
 
-When it comes to defining the custom object primitive, the goal is to act like a primitive.  Because primitives act like objects, the custom object primitive can safely _be_ an object.  As a starting point for its definition, we simply have:
+When it comes to defining the custom object primitive, the goal is to, while being an object, act like a primitive.  Because primitives act like objects, at a high level the custom object primitive can already safely be an object.  As a starting point for its definition, we simply have:
 
 ```javascript
 // generation 1
@@ -64,7 +66,7 @@ This is not the case for objects.
 {} === {} // false
 ```
 
-You might say objects don't really have their own value; that they're just containers for other values.  It's largely the literal syntax that's being used that makes the object values appear to be the same even though they're each separate instances of `Object`.  The above is really a shorthand for:
+It's largely the literal syntax that's being used here that makes the object values appear to be the same even though they're each separate instances of `Object`.  The above is really a shorthand for:
 
 ```javascript
 new Object() === new Object() // false
@@ -109,7 +111,7 @@ function compare (a, b) {
 compare(obj, str)
 ```
 
-What makes this statement appear to be true is that you can alter properties of an object value passed to a function within that function and it would affect the value of the original.  This cannot be done with primitives.
+What makes "pass by reference" appear to be true is that you can alter properties of an object value passed to a function within that function and it would affect the value of the original.  This cannot be done with primitives.
 
 ```javascript
 let obj = {}
