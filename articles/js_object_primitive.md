@@ -257,4 +257,8 @@ let objectPrimitive = ObjectPrimitive()
 console.log(Object(objectPrimitive) === objectPrimitive) // true - Fail
 ```
 
-Despite all the masquerading, there's still no hiding that the object primitive is still an object.  Nevertheless, it does come close, especially when compared to the symbol primitive given its all its peculiarities.
+So, despite all the masquerading, there's still no hiding that the object primitive is still an object.  Nevertheless, it does come close, especially when compared to the symbol primitive given its all its peculiarities.
+
+## Takeaway
+
+The custom object primitive showed just how close an object can become to a primitive while still being an object. Granted, the odd nature of, and precedence set by symbols was a big help in this endeavor.  But the truth remains, primitives are fundamentally different from objects.  While focus is often put on the fact that primitives are immutable, it ultimately comes down to the fact that primitives, for lack of a better way to put it, "are not objects."  Most of the other characteristics of primitives can be mimicked by objects - including immutability.  But when it comes to fully being able to determine if a value is a primitive, all you need to do is determine if the value is equal to its Object() version of itself.
