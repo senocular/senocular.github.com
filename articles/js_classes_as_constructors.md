@@ -107,11 +107,11 @@ MyClass.prototype.mySuperMethod = function mySuperMethod () {
 MyClass.prototype.mySuperMethod._homeObject = MyClass.prototype
 ```
 
-It may not be entirely clear what's going on, so let's look at some of the different parts in a little more detail.
+There's a lot going on here, so let's look at some of the different parts in a little more detail.
 
 ### Setting Up Inheritance
 
-Because we're explicitly extending another class, we'll need to override the default inheritance to Object with inheritance to the class being extended. The inheritance is set up with the following two lines:
+We're going to skip ahead a little and start with the inheritance setup after the constructor since the constructor depends on what is happening here. The inheritance is defined with the following two lines:
 
 ```javascript
 // extends
@@ -121,11 +121,11 @@ Object.setPrototypeOf(MyClass.prototype, MySuperClass.prototype)
 
 The first line sets up inheritance between constructors. Constructor inheritance allows the `static` members to be inherited as well as determines what to use for `super` in the constructor.
 
-The second line sets up instance inheritance by having the subclass's `prototype` inherit from the superclass's.  This allows instances of MyClass to inherit from MySuperClass.
+The second line sets up instance inheritance by having the subclass's `prototype` inherit from the superclass's.  This allows object instances created by MyClass to inherit from the methods defined by MySuperClass.
 
 ### The Constructor
 
-There's a lot more happening in this new constructor:
+The constructor is where things get messy.
 
 ```javascript
 // constructor()
@@ -138,7 +138,7 @@ function MyClass (mySuperProperty, myProperty) {
 }
 ```
 
-It's more complicated in part because `class` construction is handled differently than it is with standard function constructors.  When creating an instance with function constructors, the instance is created immediately and assigned to `this` before any user code runs. With `class` constructors, instance construction is dependent on `super()`.  `this` isn't even available until `super()` is called and, in fact, what `this` is, is determined by what is created by `super()`.
+It's complexity is in part because `class` construction is handled differently than it is with standard function constructors.  When creating an instance with function constructors, the instance is created immediately and assigned to `this` before any user code runs. With `class` constructors, instance construction is dependent on `super()`.  `this` isn't even available until `super()` is called and, in fact, what `this` is, is determined by what is created by `super()`.
 
 To get the equivalent of `super()`, the superclass is first obtained through the constructor inheritance set up earlier using `Object.getPrototypeOf()`. Then `Reflect.construct()` is used to replicate the actual `super()` call using that superclass constructor.
 
@@ -148,7 +148,7 @@ const _super = Object.getPrototypeOf(MyClass)
 const _this = Reflect.construct(_super, [mySuperProperty], new.target)
 ```
 
-Because `super()` is responsible for instance creation in `class` constructors, we capture the return value of `Reflect.construct()` and assign it to a `_this` variable.  The value in `_this` now represents our new class instance.  This does not stop the creation of the new instance automatically created and assigned to `this` when the constructor was first invoked.  That still exists, but because it was not run through superclass initialization, we are going to ignore it.  Instead, `_this` is our instance, and any instance members we have will need to be assigned to it rather than `this`.
+Because `super()` is responsible for instance creation in `class` constructors, we capture the return value of `Reflect.construct()` and assign it to a `_this` variable.  The value in `_this` now represents our new class instance.  Doing this does not stop the creation of the new instance automatically created and assigned to `this` when the constructor was first invoked.  That still exists, but because it was not run through superclass initialization, we are going to ignore it.  Instead, this `_this` from the superclass is our instance, and any instance members we have will need to be assigned to it rather than `this`.
 
 ```javascript
 _this.myField = 1
@@ -174,11 +174,7 @@ MyClass.prototype.mySuperMethod = function mySuperMethod () {
 MyClass.prototype.mySuperMethod._homeObject = MyClass.prototype
 ```
 
-With the `_homeObject` pointing to the current class's `prototype`, the superclass's prototype can be obtained with `Object.getPrototypeOf()`.  From that we can make the superclass method call making sure to explicitly set `this` through `call()`.
-
-### More on `Reflect.construct()`
-
-TODO
+With the `_homeObject` pointing to the current class's `prototype`, the superclass's prototype can be obtained with `Object.getPrototypeOf()`.  From that we can make the superclass method call making sure to explicitly set `this` through the use of `call()`.
 
 ## Private Fields
 
@@ -222,9 +218,17 @@ Object.setPrototypeOf(MyClass, MyPrivateProvider)
 Object.setPrototypeOf(MyClass.prototype, MyPrivateProvider.prototype)
 ```
 
+Though MyClass isn't able to define a private field, because it extended a class that did, instances it creates will have access to that field through the inherited `myMethod` method.
+
+```javascript
+new MyClass().myMethod() // 1
+```
+
 ### Redirecting Initialization
 
-We can take advantage of the fact that `class` definitions rely on `super()` for defining `this` and create a `class` that allows us to specify what instance `this` should be by having a `super()` call that returns the object we pass it.  Once the `class` has its `this` (the specified object), it will get initialized with that class's private fields.  And we can do this without including the class in the inheritance hierarchy.  Some extra work is needed, though, to copy the class's methods (which are able to access the private fields) into the constructor function's `prototype`.
+Using a more obscure approach, we can take advantage of the fact that `class` definitions rely on `super()` for defining `this` and create a `class` that allows us to specify what instance `this` should be by having a `super()` call that returns the object we provide to it.  Once the `class` has its `this` (the specified object), it will get initialized with that class's private fields.  And we can do this without including the class in the inheritance hierarchy meaning the constructor would be free to extend anything else.
+
+Because methods from the class with the private definitions is not inherited, some extra work will be needed to copy it's methods (which are able to access the private fields) into the constructor function's `prototype`.
 
 **class version**
 
@@ -270,9 +274,9 @@ Reflect.ownKeys(MyPrivateProvider.prototype)
 })
 ```
 
-In this particular case, we're able to continue to MyClass's constructed `this` value because we're not inheriting from another class. The MyPrivateProvider class only exists to initialize an object with private variables, not to serve as a superclass.
+In this particular case, we're able to continue to MyClass's constructed `this` value because we're not inheriting from another class; MyClass is a simple base class. The MyPrivateProvider class only exists to initialize an object with private variables, not to serve as a superclass.
 
-The first step is passing MyClass's `this` into the MyPrivateProvider constructor.  We don't care what it returns (which ultimately will be `this`); we're only using the constructor as a way to modify an existing value.
+The first step is passing MyClass's `this` into the MyPrivateProvider constructor.  We don't care what it returns (which will ultimately be the same `this`).  We're only using the constructor as a way to modify an existing value.
 
 ```javascript
 function MyClass () {
