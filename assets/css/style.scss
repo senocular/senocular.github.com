@@ -38,6 +38,11 @@
   font-size: 1em;
 }
 
+.toc-panel ul {
+  list-style-type: disc;
+  padding-left: 2em;
+}
+
 .toc.expanded .toc-panel {
   display: inline-block;
 }
