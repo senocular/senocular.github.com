@@ -16,6 +16,10 @@
   outline: none;
 }
 
+.toc .anchorjs-link {
+  display: none;
+}
+
 .toc-panel {
   display: none;
   background-color: white;
