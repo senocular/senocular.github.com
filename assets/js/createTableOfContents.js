@@ -28,8 +28,9 @@ function createTableOfContents () {
     let list;
     while (!(list = listStack[tagIndex])) {
       list = document.createElement('ul');
-      const parent = listStack.length
-        ? listStack[listStack.length - 1].lastElementChild
+      const lastList = listStack[listStack.length - 1];
+      const parent = lastList
+        ? lastList.lastElementChild || lastList
         : panel;
       parent.appendChild(list);
       listStack.push(list);
