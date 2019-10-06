@@ -1,8 +1,8 @@
-# JavaScript Articles
+# Articles
+
+## JavaScript Articles
 
 A collection of articles covering JavaScript-related topics.
-
-### Completed Articles
 
 - [Creating Classes using Constructor Functions](js_classes_as_constructors.md)
 - [The Custom Object Primitive](js_object_primitive.md)
