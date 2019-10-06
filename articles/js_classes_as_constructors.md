@@ -158,6 +158,30 @@ Additionally, because we want the constructor to produce an instance that isn't 
 return _this
 ```
 
+#### Use of `Reflect.construct`
+
+Commonly, when using function constructors, the superclass constructor is called against the value of `this` to initialize it with the super constructor code.
+
+```javascript
+function SuperClass () {}
+function SubClass () {
+  SuperClass.call(this) // super
+}
+```
+
+Instead, of doing this, we're using `Reflect.construct()`, for a few reasons.  First, `Reflect.construct()` allows us to use the `class`-based order of instance creation where creation occurs at the base class first with the instance getting passed down through subclasses after. 
+
+Secondly, `class`-defined constructors cannot be called without `new`.  Trying to do so would result in an error.  Using `Reflect.construct()` bypasses this restriction.
+
+```javascript
+class SuperClass {}
+function SubClass () {
+  SuperClass.call(this) // Error
+}
+```
+
+Most importantly, using `Reflect.construct()` will perform proper initialization for superclass.  This means being able to properly extend exotic types like Array or making sure things like private fields are set up for the instance in `class` superclasses (more on this later).
+
 ### `super` in Methods
 
 `super` in method calls differ from the `super()` used in construction. In methods, `super` is used to look up methods in the superclass's `prototype`.  In `class`-defined methods, this lookup happens dynamically using an internal slot defined for the method called `[[HomeObject]]`. It points to the object within which the function was originally defined, or more specifically the class's `prototype` object.  We don't have access to that internal slot, so we add it manually as a property called `_homeObject` in the method function.
