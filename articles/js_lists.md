@@ -14,6 +14,14 @@ A random collection of different lists related to the JavaScript language.
 | symbol | _none_ |
 | undefined | _none_ (though accessible via global `undefined`) |
 
+## Object Literals
+
+| Object | Literals |
+| --- | --- |
+| Object | `{ key0: value0, key1: value1, keyN: valueN }` |
+| Array | `[ value0, value1, valueN ]` |
+| RegExp | `/expression/flags` |
+
 ## Primitive Objects
 
 | Object Type | Constructor | Conversion |
