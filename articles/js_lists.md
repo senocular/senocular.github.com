@@ -80,12 +80,12 @@ _Note: Scopes within the parameter list refers to default parameter expressions.
 
 | Statement | Loops Over |
 | --- | --- |
-| do...while | _User-defined condition_ |
-| for | _User-defined condition_ |
-| for...in | Objects |
-| for...of | Iterables |
-| for await...of | Async Iterables |
-| while | _User-defined condition_ |
+| `do...while` | _User-defined condition_ |
+| `for` | _User-defined condition_ |
+| `for...in` | Objects |
+| `for...of` | Iterables |
+| `for await...of` | Async Iterables |
+| `while` | _User-defined condition_ |
 
 ### Collection Methods
 
@@ -128,7 +128,7 @@ A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-int
 
 | Operation | Ordering |
 | --- | --- |
-| `for..in` | Not guaranteed |
+| `for...in` | Not guaranteed |
 | `JSON.stringify` | Not guaranteed |
 | `JSON.parse` | Not guaranteed |
 | `Object.entries` | Not guaranteed |
@@ -142,6 +142,24 @@ A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-int
 | `Reflect.ownKeys` | Well-defined |
 
 Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
+
+### Object Iteration Values
+
+When iterating over an object, what values are used for that iteration.
+
+| Operation | String Keys | Symbol Keys | Own | Inherited | Non-enumerable |
+| --- | --- | --- | --- | --- | --- |
+| `for...in` | Yes | No | Yes | Yes | No |
+| `JSON.stringify` |  Yes | No | Yes | No | No |
+| `Object.entries` | Yes | No | Yes | No | No |
+| `Object.keys` | Yes | No | Yes | No | No |
+| `Object.values` | Yes | No | Yes | No | No |
+| `Object.assign` |  Yes | Yes | Yes | No | No |
+| `Object.defineProperties` |  Yes | Yes | Yes | No | No |
+| `Object.getOwnPropertyDescriptors` | Yes | Yes | Yes | No | Yes |
+| `Object.getOwnPropertyNames` | Yes | No | Yes | No | Yes |
+| `Object.getOwnPropertySymbols` | No | Yes | Yes | No | Yes |
+| `Reflect.ownKeys` | Yes | Yes | Yes | No | Yes |
 
 ## Creating Functions
 
