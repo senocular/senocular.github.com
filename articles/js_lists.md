@@ -49,8 +49,8 @@ Where `value` in the examples represents a BigInt or Number value.
 | `1 ^ value` (or other bitwise operatation) | Error | Number |
 | `1n ^ value` (or other bitwise operatation) | BigInt | Error |
 | `+value` | Error | Number |
-| `Math.round(value)` (or other `Math` operation) | Number | Error |
-| `Array` index in methods (e.g. `array.slice(value)`) | Yes | Error |
+| `Math.round(value)` (or other `Math` operation) | Error | Number |
+| `Array` index in methods (e.g. `array.slice(value)`) | Error | Yes |
 
 ## Identifiers
 
