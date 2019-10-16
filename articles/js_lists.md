@@ -74,6 +74,20 @@ Where `identifier` is the identifier being created and `/* scope */` represents 
 
 _Note: Scopes within the parameter list refers to default parameter expressions._
 
+## Assign vs. Define
+
+Assign sets a property through getter/setters (if they exist) while define will not.
+
+| Operation | Example | Method |
+| --- | --- | --- |
+| Assignment Operator | `object.prop = value` | Assign |
+| Object.assign | `Object.assign(object, { prop: value })` | Assign |
+| Class Fields | ` class { prop = value }` | Define |
+| Object Literal | `{ prop: value }` | Define |
+| Object.create | `Object.create(object, { prop: { value } })` | Define |
+| Object.defineProperty | `Object.defineProperty(object, prop, { value })` | Define |
+| Object.fromEntries | `Object.fromEntries([['prop', value]])` | Define |
+
 ## Loops
 
 ### Statements
