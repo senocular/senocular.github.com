@@ -85,6 +85,7 @@ Assign sets a property through getter/setters (if they exist) while define will 
 | Class Fields | ` class { prop = value }` | Define |
 | Class Methods | ` class { prop() {} }` | Define |
 | Object Literal | `{ prop: value }` | Define |
+| Object Spread | `{ ...{ prop: value } }` | Define |
 | Object.create | `Object.create(object, { prop: { value } })` | Define |
 | Object.defineProperty | `Object.defineProperty(object, 'prop', { value })` | Define |
 | Object.fromEntries | `Object.fromEntries([['prop', value]])` | Define |
