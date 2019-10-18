@@ -84,6 +84,8 @@ Assign sets a property through getter/setters (if they exist) while define will 
 | Array Methods | `object.push(value)`<br>`object.unshift(value)`<br> _etc._ | Assign |
 | Object.assign | `Object.assign(object, { prop: value })` | Assign |
 | Reflect.set | `Reflect.set(object, 'prop', value)` | Assign |
+| Array Literal | `[ value ]` | Define |
+| Array Spread | `[ ...[ value ] ]` | Define |
 | Class Declaration Fields | ` class { prop = value }` | Define |
 | Class Declaration Methods | ` class { prop() {} }` | Define |
 | Object Literal | `{ prop: value }` | Define |
