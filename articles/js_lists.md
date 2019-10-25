@@ -205,6 +205,9 @@ Creating functions named `name` (or anonymous).
 | Class Expression | `(class { constructor () {} })` | Anonymous | Yes |
 | Named Class Expression | `(class name { constructor () {} })` | Explicit | Yes |
 | Class Method | `class { name () {} }` | Explicit | No |
+| Async Class Method | `class { async name () {} }` | Explicit | No |
+| Class Method Generator | `class { * name () {} }` | Explicit | No |
+| Async Class Method Generator | `class { async * name() {} }` | Explicit | No |
 | Object Method (Shorthand) | `({ name () {} })` | Explicit | No |
 | Async Object Method (Shorthand) | `({ async name () {} })` | Explicit | No |
 | Object Method Generator (Shorthand) | `({ * name () {} })` | Explicit | No |
