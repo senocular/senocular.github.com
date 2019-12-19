@@ -56,23 +56,23 @@ Where `value` in the examples represents a BigInt or Number value.
 
 ## Identifiers
 
-Where `identifier` is the identifier being created and `/* scope */` represents the scope where that identifier is available
+Where `name` is the identifier being created and `/* scope */` represents the scope where that identifier is available
 
 | Kind | Example |
 | --- | --- |
-| Catch error binding | `try { } catch (identifier) { /* scope */ }` |
-| Class | `/* scope */ class identifier {}` |
-| Named class name | `(class identifier { /* scope */ })` |
-| Const | `/* scope */ const identifier = value;` |
-| Decorator (stage 2) | `/* scope */ decorator @identifier () {}` |
-| Decorator parameter | `decorator @name (identifier /* scope */ ) { /* scope */ }` |
-| Function | `/* scope */ function identifier () {}` |
-| Function parameter | `(function (identifier /* scope */ ) { /* scope */ })` |
-| Named function expression name | `(function identifier ( /* scope */ ) { /* scope */ })` |
-| Import | `/* scope */ import identifier from 'path'` |
-| Label | `identifier: { /* scope */ }` |
-| Let | `/* scope */ let identifier;` |
-| Var | `/* scope */ var identifier;` |
+| Catch error binding | `try { } catch (name) { /* scope */ }` |
+| Class | `/* scope */ class name {}` |
+| Named class name | `(class name { /* scope */ })` |
+| Const | `/* scope */ const name = value;` |
+| Decorator (stage 2) | `/* scope */ decorator @name () {}` |
+| Decorator parameter | `decorator @name (name /* scope */ ) { /* scope */ }` |
+| Function | `/* scope */ function name () {}` |
+| Function parameter | `(function (name /* scope */ ) { /* scope */ })` |
+| Named function expression name | `(function name ( /* scope */ ) { /* scope */ })` |
+| Import | `/* scope */ import name from 'path'` |
+| Label | `name: { /* scope */ }` |
+| Let | `/* scope */ let name;` |
+| Var | `/* scope */ var name;` |
 
 _Note: Scopes within the parameter list refers to default parameter expressions._
 
@@ -95,6 +95,19 @@ Assign sets a property through getter/setters (if they exist) while define will 
 | Object.create | `Object.create(object, { prop: { value } })` | Define |
 | Object.defineProperty | `Object.defineProperty(object, 'prop', { value })` | Define |
 | Object.fromEntries | `Object.fromEntries([['prop', value]])` | Define |
+
+## Default Property Descriptors
+
+| Operation | Example | Default Descriptor |
+| --- | --- | --- |
+| Assignment | `object.prop = value` | `{ configurable: true, enumerable: true, writable: true }` |
+| Global var Declaration | `var prop = value` | `{ configurable: false, enumerable: true, writable: true }` |
+| Class Field | `class { prop = value }` | `{ configurable: true, enumerable: true, writable: true }` |
+| Class Method | `class { prop () {} }` | `{ configurable: true, enumerable: false, writable: true }` |
+| Define Property | `Object.defineProperty(object, 'prop', { value })` | `{ configurable: false, enumerable: false, writable: false }` |
+| Imports (prop in Module) | `import * as Module from './module.js'` | `{ configurable: false, enumerable: true, writable: true }` |
+
+Every [assign operation](#assign-vs-define) as well as many of the other define operations (those that don't explicitly say "define") will use the same Assignment descriptor configuration.
 
 ## Loops
 
