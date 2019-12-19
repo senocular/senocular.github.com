@@ -14,6 +14,8 @@ A random collection of different lists related to the JavaScript language.
 | symbol | _none_ |
 | undefined | _none_ (though accessible via global `undefined`) |
 
+Be on the look out for the upcoming [BigDecimal](https://docs.google.com/presentation/d/1jPsw7EGsS6BW59_BDRu9o0o3UwSXQeUhi38QG55ZoPI/edit?pli=1#slide=id.p).
+
 ## Object Literals
 
 | Object | Literals |
@@ -138,31 +140,6 @@ Metadata collections can be created for objects and iterated over.
 | _non-null_ | `Object.getOwnPropertySymbols(value)` | Array |
 | Object | `Reflect.ownKeys(object)` | Array |
 
-### Iteration Order
-
-A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-international.org/ecma-262/6.0/index.html#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys) is set for some operations. Other operations (like `for...in`) do not have to follow this order and are implementation-dependent.  `[[OwnPropertyKeys]]` ordering uses:
-
-1. Integer keys between 0 and 2^53-1 (inclusive) in ascending order
-2. Other non-symbol keys in creation order
-3. Symbol keys in creation order
-
-| Operation | Ordering |
-| --- | --- |
-| `for...in` | Not guaranteed |
-| `JSON.stringify` | Not guaranteed |
-| `JSON.parse` | Not guaranteed |
-| `Object.entries` | Not guaranteed |
-| `Object.keys` | Not guaranteed |
-| `Object.values` | Not guaranteed |
-| `Object.assign` | Well-defined |
-| `Object.defineProperties` | Well-defined |
-| `Object.getOwnPropertyDescriptors` | Well-defined |
-| `Object.getOwnPropertyNames` | Well-defined |
-| `Object.getOwnPropertySymbols` | Well-defined |
-| `Reflect.ownKeys` | Well-defined |
-
-Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
-
 ### Object Iteration Values
 
 When iterating over an object, what values are used for that iteration.
@@ -273,12 +250,12 @@ Where `value` is an ordinary object.
 | ---: | --- | --- | --- |
 | `'' == value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `'' + value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `1 + value` (or other arithmetic operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `'' == new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `'' + new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `1 + new Date` (or other arithmetic operatation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `1 ^ value` (or other bitwise operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `+value` (or other unary operatation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `1 + new Date` (or other arithmetic operation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
+| `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
+| `+value` (or other unary operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `Number(value)` | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `BigInt(value)` | `Symbol.toPrimitive` | `valueOf` | `toString` |
@@ -289,7 +266,7 @@ Where `value` is an ordinary object.
 
 ## ASI Considerations
 
-There can be abiguity between operations when starting a line with the following characters where ASI (Automatic Semicolon Insertion) will not insert a semicolon to terminate the previous line's expression.
+There can be ambiguity between operations when starting a line with the following characters where ASI (Automatic Semicolon Insertion) will not insert a semicolon to terminate the previous line's expression.
 
 | Line Starts With | Semicolon Before | No Semicolon Before |
 | --- | --- | --- |
@@ -299,3 +276,36 @@ There can be abiguity between operations when starting a line with the following
 | `` ` `` | Template literal | Tagged template literal |
 | `+` | Unary `+` | Addition |
 | `-` | Unary `-` | Subtraction |
+
+# Deprecated
+
+These were older lists entries that no longer apply.
+
+## Loops
+
+### Iteration Order
+
+A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-international.org/ecma-262/6.0/index.html#sec-ordinary-object-internal-methods-and-internal-slots-ownpropertykeys) is set for some operations. Other operations (like `for...in`) do not have to follow this order and are implementation-dependent.  `[[OwnPropertyKeys]]` ordering uses:
+
+1. Integer keys between 0 and 2^53-1 (inclusive) in ascending order
+2. Other non-symbol keys in creation order
+3. Symbol keys in creation order
+
+| Operation | Ordering |
+| --- | --- |
+| `for...in` | Not guaranteed |
+| `JSON.stringify` | Not guaranteed |
+| `JSON.parse` | Not guaranteed |
+| `Object.entries` | Not guaranteed |
+| `Object.keys` | Not guaranteed |
+| `Object.values` | Not guaranteed |
+| `Object.assign` | Well-defined |
+| `Object.defineProperties` | Well-defined |
+| `Object.getOwnPropertyDescriptors` | Well-defined |
+| `Object.getOwnPropertyNames` | Well-defined |
+| `Object.getOwnPropertySymbols` | Well-defined |
+| `Reflect.ownKeys` | Well-defined |
+
+Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
+
+:put_litter_in_its_place: **Deprecation:** As of ES2020's [for-in mechanics](https://github.com/tc39/proposal-for-in-order), iteration order is now well defined for the places where before it was not guaranteed.
