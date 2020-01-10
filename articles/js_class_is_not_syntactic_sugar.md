@@ -248,7 +248,7 @@ This example uses two classes to add a private property to an arbitrary JavaScri
 Here are some additional, smaller differences you might also see with `class` functions:
 
 - `class` `toString` returns the `class` syntax
-- `class` functions are always in strict mode (e.g. accessing `arguments` from a class always throws an error)
+- `class` functions are always in strict mode
 - `class` `prototype` properties added by the class are not writable
 - Unlike `function` declarations, `class` declarations are not hoisted
 - A `class` name binding is available everywhere within a class for named classes, for both expressions and declarations
