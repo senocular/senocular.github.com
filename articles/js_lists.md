@@ -170,6 +170,7 @@ When iterating over an object, what values are used for that iteration.
 | `Object.getOwnPropertyNames` | Yes | No | Yes | No | Yes |
 | `Object.getOwnPropertySymbols` | No | Yes | Yes | No | Yes |
 | `Reflect.ownKeys` | Yes | Yes | Yes | No | Yes |
+| Object Spread | Yes | Yes | Yes | No | No |
 
 ## Creating Functions
 
