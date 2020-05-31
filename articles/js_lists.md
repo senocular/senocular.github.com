@@ -265,9 +265,6 @@ Where `value` is an ordinary object.
 | `'' == value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `'' + value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `'' == new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `'' + new Date` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `1 + new Date` (or other arithmetic operation) | `Symbol.toPrimitive` | `toString` | `valueOf` |
 | `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `+value` (or other unary operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
 | `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
