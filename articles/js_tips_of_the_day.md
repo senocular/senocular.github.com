@@ -109,3 +109,5 @@ The following list is a sequential list in the order the the tips were posted. T
 1. [Copying Accessor Properties](https://forum.kirupa.com/t/javascript-tip-of-the-day-copying-accessor-properties/642997)
 1. [String Conversions in Depth](https://forum.kirupa.com/t/javascript-tip-of-the-day-string-conversions-in-depth/643047)
 1. [Custom Serialization With toJSON](https://forum.kirupa.com/t/javascript-tip-of-the-day-custom-serialization-with-tojson/643071)
+1. [A Function's Home Object](https://forum.kirupa.com/t/js-tip-of-the-day-a-functions-home-object/643187)
+
