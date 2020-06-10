@@ -111,3 +111,4 @@ The following list is a sequential list in the order the the tips were posted. T
 1. [Custom Serialization With toJSON](https://forum.kirupa.com/t/js-tip-of-the-day-custom-serialization-with-tojson/643071)
 1. [A Function's Home Object](https://forum.kirupa.com/t/js-tip-of-the-day-a-functions-home-object/643187)
 1. [Trailing Commas](https://forum.kirupa.com/t/js-tip-of-the-day-trailing-commas/643200)
+1. [JSON Reviver Function](https://forum.kirupa.com/t/js-tip-of-the-day-json-reviver-function/643241)
