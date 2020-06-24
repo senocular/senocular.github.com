@@ -114,3 +114,6 @@ The following list is a sequential list in the order the the tips were posted. T
 1. [JSON Reviver Function](https://forum.kirupa.com/t/js-tip-of-the-day-json-reviver-function/643241)
 1. [Mixing class and function Constructors](https://forum.kirupa.com/t/js-tip-of-the-day-mixing-class-and-function-constructors/643264)
 1. [The debugger Statement](https://forum.kirupa.com/t/js-tip-of-the-day-the-debugger-statement/643281)
+1. [Function Name Bindings](https://forum.kirupa.com/t/js-tip-of-the-day-function-name-bindings/643299)
+1. [Closure Scopes Limit Closure Variables](https://forum.kirupa.com/t/js-tip-of-the-day-closure-scopes-limit-closure-variables/643340)
+1. [Prototypes as Instance of Type](https://forum.kirupa.com/t/js-tip-of-the-day-prototypes-as-instance-of-type/643352)
