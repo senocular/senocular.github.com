@@ -17,6 +17,7 @@ function name () {}
 * (Since: ES2015) can be generator
 * (Since: ES2017) can be async
 * (Since: ES2018) can be async generator
+* can be anonymous (in export default statement only)
 
 ### Function from constructor
 Since: ES1
