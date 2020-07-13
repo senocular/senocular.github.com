@@ -62,7 +62,7 @@ Since: ES5
 
 * callable (through property access [get] or assignment [set])
 * (Since: ES2015) can use super
-* no prototype
+* (Since: ES2015) no prototype
 
 ### Method
 Since: ES2015
