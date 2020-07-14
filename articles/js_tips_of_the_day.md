@@ -117,3 +117,7 @@ The following list is a sequential list in the order the the tips were posted. T
 1. [Function Name Bindings](https://forum.kirupa.com/t/js-tip-of-the-day-function-name-bindings/643299)
 1. [Closure Scopes Limit Closure Variables](https://forum.kirupa.com/t/js-tip-of-the-day-closure-scopes-limit-closure-variables/643340)
 1. [Prototypes as Instance of Type](https://forum.kirupa.com/t/js-tip-of-the-day-prototypes-as-instance-of-type/643352)
+1. [Object.keys vs Array.keys](https://forum.kirupa.com/t/js-tip-of-the-day-object-keys-vs-array-keys/643508)
+1. [Undefined vs. Null vs. Nullish](https://forum.kirupa.com/t/js-tip-of-the-day-null-vs-undefined-vs-nullish/643521)
+1. [Default Parameter Scope](https://forum.kirupa.com/t/js-tip-of-the-day-default-parameter-scope/643536)
+1. [The Long Arrow Operator](https://forum.kirupa.com/t/js-tip-of-the-day-the-long-arrow-operator/643554)
