@@ -199,10 +199,14 @@ Creating functions named `name` (or anonymous).
 | Async Class Method | `class { async name () {} }` | Explicit | No |
 | Class Method Generator | `class { * name () {} }` | Explicit | No |
 | Async Class Method Generator | `class { async * name() {} }` | Explicit | No |
+| Class Getter | `class { get name() {} }` | Explicit | No |
+| Class Setter | `class { set name(value) {} }` | Explicit | No |
 | Object Method (Shorthand) | `({ name () {} })` | Explicit | No |
 | Async Object Method (Shorthand) | `({ async name () {} })` | Explicit | No |
 | Object Method Generator (Shorthand) | `({ * name () {} })` | Explicit | No |
 | Async Object Method Generator (Shorthand) | `({ async * name() {} })` | Explicit | No |
+| Object Getter | `({ get name() {} })` | Explicit | No |
+| Object Setter | `({ set name(value) {} })` | Explicit | No |
 | Function Constructor | `new Function()`, `Function()` | Anonymous | Yes |
 | AsyncFunction Constructor | `new AsyncFunction()`, `AsyncFunction()` | Anonymous | No |
 | GeneratorFunction Constructor | `new GeneratorFunction()`, `GeneratorFunction()` | Anonymous | No |
@@ -214,7 +218,7 @@ _Note: The `AsyncFunction`, `GeneratorFunction` and `AsyncGeneratorFunction` con
 
 ### Function Syntax
 
-Square brackets (`[]`) represent optional keywords or names whereas angle brackets (`<>`) represents a required item.
+Square brackets (`[]`) represent optional keywords or names whereas angle brackets (`<>`) represents a required item.  Not all combinations are compatible.
 
 | Kind | Syntax |
 | --- | --- |
@@ -233,7 +237,7 @@ Calling a function identified as `name`.
 | Call | `name()` |
 | Call | `name.call()` |
 | Call | `name.apply()` |
-| Template Literal Tag | ``` name`` ``` |
+| Template Literal Tag (Call) | ``` name`` ``` |
 | Construct | `new name` |
 | Construct | `new name()` |
 | Call | `Refect.apply(name)` |
@@ -258,21 +262,23 @@ This lists more obscure ways of function calling which may require special funct
 
 ## To Primitive Precedence
 
+Different methods get prioritization when converting objects to primitives.  If present, a `Symbol.toPrimitive` will always be used. If not, conversion will rely on `toString()` and `valueOf()`, using the other as a fallback if the first attempted fails to produce a primitive.  Which is called first depends on the "hint" of the operation.  This can have one of 3 values: "string", "number", or "default".  "string" prefers `toString()` while "number" and "default" prefer `valueOf()`.  If `Symbol.toPrimitive` is available, the hint will be passed in as an argument.
+
 Where `value` is an ordinary object.
 
-| Operation | First | Second | Third |
-| ---: | --- | --- | --- |
-| `'' == value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `'' + value` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `+value` (or other unary operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `Number(value)` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `BigInt(value)` | `Symbol.toPrimitive` | `valueOf` | `toString` |
-| `String(value)` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `Symbol(value)` | `Symbol.toPrimitive` | `toString` | `valueOf` |
-| `Object[value]` | `Symbol.toPrimitive` | `toString` | `valueOf` |
+| Operation | Primary | Hint | Secondary | Backup |
+| ---: | --- | --- | --- | --- |
+| `'' == value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `'' + value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `+value` (or other unary operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `Number(value)` | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `BigInt(value)` | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `String(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
+| `Symbol(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
+| `Object[value]` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 
 
 ## ASI Considerations
@@ -319,4 +325,4 @@ A specification-defined order known as [[[OwnPropertyKeys]]](http://www.ecma-int
 
 Where well-defined refers to `[[OwnPropertyKeys]]` ordering.
 
-:put_litter_in_its_place: **Deprecation:** As of ES2020's [for-in mechanics](https://github.com/tc39/proposal-for-in-order), iteration order is now well defined for the places where before it was not guaranteed.
+:put_litter_in_its_place: &nbsp; **Deprecation:** As of ES2020's [for-in mechanics](https://github.com/tc39/proposal-for-in-order), iteration order is now well defined for the places where before it was not guaranteed.
