@@ -100,12 +100,12 @@ Assign sets a property through getter/setters (if they exist) while define will 
 
 | Operation | Example | Default Descriptor |
 | --- | --- | --- |
-| Assignment | `object.prop = value` | `{ configurable: true, enumerable: true, writable: true }` |
-| Global var Declaration | `var prop = value` | `{ configurable: false, enumerable: true, writable: true }` |
-| Class Field | `class { prop = value }` | `{ configurable: true, enumerable: true, writable: true }` |
-| Class Method | `class { prop () {} }` | `{ configurable: true, enumerable: false, writable: true }` |
-| Define Property | `Object.defineProperty(object, 'prop', { value })` | `{ configurable: false, enumerable: false, writable: false }` |
-| Imports (prop in Module) | `import * as Module from './module.js'` | `{ configurable: false, enumerable: true, writable: true }` |
+| Assignment | `object.prop = value` | `configurable: true`<br>`enumerable: true`<br>`writable: true` |
+| Global var Declaration | `var prop = value` | `configurable: false`<br>`enumerable: true`<br>`writable: true` |
+| Class Field | `class { prop = value }` | `configurable: true`<br>`enumerable: true`<br>`writable: true` |
+| Class Method | `class { prop () {} }` | `configurable: true`<br>`enumerable: false`<br>`writable: true` |
+| Define Property | `Object.defineProperty(object, 'prop', { value })` | `configurable: false`<br>`enumerable: false`<br>`writable: false` |
+| Imports (prop in Module) | `import * as Module from './module.js'` | `configurable: false`<br>`enumerable: true`<br>`writable: true` |
 
 Every [assign operation](#assign-vs-define) as well as many of the other define operations (those that don't explicitly say "define") will use the same Assignment descriptor configuration.
 
