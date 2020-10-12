@@ -14,7 +14,7 @@ A random collection of different lists related to the JavaScript language.
 | symbol | _none_ |
 | undefined | _none_ (though accessible via global `undefined`) |
 
-Be on the look out for the upcoming [BigDecimal](https://docs.google.com/presentation/d/1jPsw7EGsS6BW59_BDRu9o0o3UwSXQeUhi38QG55ZoPI/edit?pli=1#slide=id.p).
+Be on the look out for the upcoming [BigDecimal](https://github.com/tc39/proposal-decimal).
 
 ## Object Literals
 
