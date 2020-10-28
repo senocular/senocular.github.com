@@ -2,7 +2,70 @@
 
 # Kinds of Functions and Their Differences
 
-## Summary
+There are many different ways to create a function in JavaScript.  TODO: more summary
+
+## Variations
+
+There are two primary kinds of function variations on top of normal functions. These include:
+
+* generator functions
+* async functions
+
+Most, but not all, function types support both of these.  These can also be both applied to the same function allowing you to create an async generator.
+
+### Generator Functions
+
+Generator functions are defined using an asterisk (`*`) as a prefix to the function name (syntax may vary).  They are special in that they always create and return generator objects when called.  They can also be suspended, pausing execution allowing other code to run before continuing from where they left off.  Generator functions will pause at `yield` statements and will resume when the `next()` method of the generator object that function call returned is called. The value returned from `next()` is a generator result object.
+
+```javascript
+function * generatorFunction () {
+    yield 1
+    return 2
+}
+
+const generatorObject = generatorFunction()
+console.log(generatorObject.next()) // { value: 1, done: false }
+console.log(generatorObject.next()) // { value: 2, done: true }
+```
+
+### Async Functions
+
+Async functions are defined using an `async` prefix. They are special in that they always create and return a promise object when called.  Like generator functions, they too can be suspended and continue executing at a later time only async function resumption is determined by the fulfillment of promises that are being awaited using the `await` keyword rather than through `yield` and explicit calls from a generator object's API.
+
+```javascript
+async function asyncFunction () {
+    await Promise.resolve()
+    return 1
+}
+
+const promise = asyncFunction()
+promise.then(value => console.log(value)) // 1
+```
+
+### Async Generator Functions
+
+Async generator functions are both async and generators.  They are used to create streams of data and are often used with `for await...of`.  Async generators are async first, meaning their return values are promises. The values these promises resolve to are going to be generator result objects.
+
+```javascript
+async function * asyncGeneratorFunction () {
+    yield Promise.resolve(1)
+    return 2
+}
+
+const asyncGeneratorObject = asyncGeneratorFunction()
+asyncGeneratorObject
+    .next()
+    .then(value => console.log(value)) // { value: 1, done: false }
+asyncGeneratorObject
+    .next()
+    .then(value => console.log(value)) // { value: 2, done: true }
+
+for await (let result of asyncGeneratorFunction()) {
+    console.log(result) // 1 (note: returns are not captured by for await...of)
+}
+```
+
+## Function Styles
 
 ### Function declaration
 Since: ES1
