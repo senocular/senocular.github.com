@@ -4,14 +4,14 @@
 
 There are many different ways to create a function in JavaScript.  TODO: more summary
 
-## Variations
+## Function Variations
 
 There are two primary kinds of function variations on top of normal functions. These include:
 
 * generator functions
 * async functions
 
-Most, but not all, function types support both of these.  These can also be both applied to the same function allowing you to create an async generator.
+Most, but not all, function types support both of these, either individually or both at the same time.
 
 ### Generator Functions
 
@@ -28,6 +28,8 @@ console.log(generatorObject.next()) // { value: 1, done: false }
 console.log(generatorObject.next()) // { value: 2, done: true }
 ```
 
+When a function is a generator, it cannot be used as a constructor in conjunction with `new`.
+
 ### Async Functions
 
 Async functions are defined using an `async` prefix. They are special in that they always create and return a promise object when called.  Like generator functions, they too can be suspended and continue executing at a later time only async function resumption is determined by the fulfillment of promises that are being awaited using the `await` keyword rather than through `yield` and explicit calls from a generator object's API.
@@ -42,9 +44,11 @@ const promise = asyncFunction()
 promise.then(value => console.log(value)) // 1
 ```
 
+When a function is async, it cannot be used as a constructor in conjunction with `new`.
+
 ### Async Generator Functions
 
-Async generator functions are both async and generators.  They are used to create streams of data and are often used with `for await...of`.  Async generators are async first, meaning their return values are promises. The values these promises resolve to are going to be generator result objects.
+Async generator functions are both async and generators.  They are used to create streams of data and are often used with `for await...of`.  Async generators are generators first, meaning their return values are generator objects. When `next()` is called for these generator objects, the return value is a promise that resolves into a genetator result object rather than being a generator result object itself.
 
 ```javascript
 async function * asyncGeneratorFunction () {
@@ -55,23 +59,33 @@ async function * asyncGeneratorFunction () {
 const asyncGeneratorObject = asyncGeneratorFunction()
 asyncGeneratorObject
     .next()
-    .then(value => console.log(value)) // { value: 1, done: false }
+    .then(result => console.log(result)) // { value: 1, done: false }
 asyncGeneratorObject
     .next()
-    .then(value => console.log(value)) // { value: 2, done: true }
+    .then(result => console.log(result)) // { value: 2, done: true }
 
-for await (let result of asyncGeneratorFunction()) {
-    console.log(result) // 1 (note: returns are not captured by for await...of)
+for await (let value of asyncGeneratorFunction()) {
+    console.log(value) // 1 (note: returns are not captured by for await...of)
 }
 ```
 
+When a function is an async generator, it cannot be used as a constructor in conjunction with `new`.
+
 ## Function Styles
+
+There are many different ways to write functions.  Most also differ from the others in how they function or what they're capable of.  The biggest example of this is with arrow functions which treat `this` completely differently from other functions.  Other differences tend to be more subtle.
 
 ### Function declaration
 Since: ES1
 
+Function declarations are your standard function style using the `function` keyword in a standalone definition within the current scope.
+
 ```javascript
 function name () {}
+function * name () {}
+async function name () {}
+async function * name () {}
+export default function () {}
 ```
 
 * hoisted
@@ -87,6 +101,10 @@ Since: ES1
 
 ```javascript
 new Function();
+new Function('body');
+new Function('param', 'body');
+new Function('param', 'paramN', 'body');
+new Function('param,paramN', 'body');
 ```
 
 * callable
@@ -102,6 +120,10 @@ Since: ES3
 
 ```javascript
 (function name () {})
+(function * name () {})
+(async function name () {})
+(async function * name () {})
+(function () {})
 ```
 
 * callable
