@@ -48,7 +48,7 @@ When a function is async, it cannot be used as a constructor in conjunction with
 
 ### Async Generator Functions
 
-Async generator functions are both async and generators.  They are used to create streams of data and are often used with `for await...of`.  Async generators are generators first, meaning their return values are generator objects. When `next()` is called for these generator objects, the return value is a promise that resolves into a genetator result object rather than being a generator result object itself.
+Async generator functions are both async and generators.  They are used to create streams of data and are often used with `for await...of`.  Async generators are generators first, meaning their return values are generator objects. When `next()` is called for these generator objects, the return value is a promise that resolves into a generator result object rather than being a generator result object itself.
 
 ```javascript
 async function * asyncGeneratorFunction () {
@@ -88,13 +88,17 @@ async function * name () {}
 export default function () {}
 ```
 
-* hoisted
-* callable
-* constructable (non async/generator)
-* (Since: ES2015) can be generator
-* (Since: ES2017) can be async
-* (Since: ES2018) can be async generator
-* can be anonymous (in export default statement only)
+
+
+| Feature | Supported |
+| --- | --- |
+| callable | yes |
+| constructable | yes (non async/generator) |
+| hoisted | yes |
+| async | yes |
+| generator | yes |
+| anonymous | no (except in default export) |
+
 
 ### Function from constructor
 Since: ES1
