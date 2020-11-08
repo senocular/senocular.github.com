@@ -89,7 +89,6 @@ export default function () {}
 ```
 
 
-
 | Feature | Supported |
 | --- | --- |
 | callable | yes |
@@ -111,6 +110,15 @@ new Function('param', 'paramN', 'body');
 new Function('param,paramN', 'body');
 ```
 
+| Feature | Supported |
+| --- | --- |
+| callable | yes |
+| constructable | yes (non async/generator) |
+| hoisted | no |
+| async | yes |
+| generator | yes |
+| anonymous | yes |
+
 * callable
 * constructable (non async/generator)
 * (Since: ES2015) can be generator (GeneratorFunction)
@@ -118,6 +126,7 @@ new Function('param,paramN', 'body');
 * (Since: ES2018) can be async generator (AsyncGeneratorFunction)
 * anonymous
 * name set to "anonymous"
+
 
 ### Function expression
 Since: ES3
@@ -129,6 +138,15 @@ Since: ES3
 (async function * name () {})
 (function () {})
 ```
+
+| Feature | Supported |
+| --- | --- |
+| callable | yes |
+| constructable | yes (non async/generator) |
+| hoisted | no |
+| async | yes |
+| generator | yes |
+| anonymous | yes |
 
 * callable
 * constructable (non async/generator)
@@ -147,7 +165,20 @@ Since: ES5
     get name () {},
     set name (value) {}
 };
+class {
+    get name () {}
+    set name (value) {}
+}
 ```
+
+| Feature | Supported |
+| --- | --- |
+| callable | yes* |
+| constructable | no |
+| hoisted | no |
+| async | no |
+| generator | no |
+| anonymous | no |
 
 * callable (through property access [get] or assignment [set])
 * (Since: ES2015) can use super
@@ -160,7 +191,19 @@ Since: ES2015
 {
     name () {}
 };
+class {
+    name () {}
+};
 ```
+
+| Feature | Supported |
+| --- | --- |
+| callable | yes |
+| constructable | no |
+| hoisted | no |
+| async | yes |
+| generator | yes |
+| anonymous | no |
 
 * callable
 * can be generator
@@ -176,6 +219,15 @@ Since: ES2015
 () => {};
 ```
 
+| Feature | Supported |
+| --- | --- |
+| callable | yes |
+| constructable | no |
+| hoisted | no |
+| async | yes |
+| generator | no |
+| anonymous | yes |
+
 * callable
 * (Since: ES2017) can be async
 * uses parent scope's this/super/arguments/new.target
@@ -184,7 +236,7 @@ Since: ES2015
 * no prototype
 * supports implicit returns
 
-### Class
+### Class Declaration
 Since: ES2015
 
 ```javascript
@@ -192,6 +244,40 @@ class name {
     constructor () {}
 }
 ```
+
+| Feature | Supported |
+| --- | --- |
+| callable | no |
+| constructable | yes |
+| hoisted | no |
+| async | no |
+| generator | no |
+| anonymous | no |
+
+* constructable
+* naming optional
+* explicit name is locally scoped
+* name can be assigned implicitly (or '' if anonymous)
+* can use super (both super() and super.method())
+* in global scope does not create a globalThis property
+
+### Class Expression
+Since: ES2015
+
+```javascript
+class {
+    constructor () {}
+}
+```
+
+| Feature | Supported |
+| --- | --- |
+| callable | no |
+| constructable | yes |
+| hoisted | no |
+| async | no |
+| generator | no |
+| anonymous | yes |
 
 * constructable
 * naming optional
@@ -229,3 +315,8 @@ class name {
 2) constructor: anonymous name = "anonymous"
 3) expression, arrow, class: anonymous name = ""
 4) methods: only have a prototype when generators
+
+## Upcoming Features
+
+* async class constructors
+* generator arrow functions
