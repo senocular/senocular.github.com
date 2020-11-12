@@ -88,7 +88,6 @@ async function * name () {}
 export default function () {}
 ```
 
-
 | Feature | Supported |
 | --- | --- |
 | callable | yes |
@@ -97,7 +96,6 @@ export default function () {}
 | async | yes |
 | generator | yes |
 | anonymous | no (except in default export) |
-
 
 ### Function from constructor
 Since: ES1
@@ -126,7 +124,6 @@ new Function('param,paramN', 'body');
 * (Since: ES2018) can be async generator (AsyncGeneratorFunction)
 * anonymous
 * name set to "anonymous"
-
 
 ### Function expression
 Since: ES3
@@ -160,6 +157,8 @@ Since: ES3
 ### Getter/setter
 Since: ES5
 
+Getter and/or setter methods are used to create accessor properties in object literals and classes.  Unlike other functions these methods are invoked when a property is accessed or assigned rather than being called directly.  To gain access to the functions themselves you can use `Object.getOwnPropertyDescriptor()`.
+
 ```javascript
 {
     get name () {},
@@ -186,6 +185,8 @@ class {
 
 ### Method
 Since: ES2015
+
+The method syntax is used in classes and acts as a shorthand for assigning function members in object literals.  These are mostly equivalent to assigning a property to a named function expression except method functions cannot be used as constructors.
 
 ```javascript
 {
@@ -215,8 +216,12 @@ class {
 ### Arrow Function
 Since: ES2015
 
+Arrow functions use a minimal syntax for function expressions but also differ from all other functions in that they treat `this`, `super`, `arguments` and `new.target` differently.  Unlike other functions, arrow functions inherit these from the parent scope rather than having their own.  Because of this arrow functions work well as callback functions (notably for minimal syntax and inheriting `this` from parent scope) but can be problematic when used as object methods, especially for object literals where `this` would represent the context of the parent scope rather than the object in which it was defined.
+
 ```javascript
 () => {};
+async () => {};
+param => expression;
 ```
 
 | Feature | Supported |
