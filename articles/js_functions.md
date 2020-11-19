@@ -95,7 +95,7 @@ export default function () {}
 | hoisted | yes |
 | async | yes |
 | generator | yes |
-| anonymous | no (except in default export) |
+| anonymous | no (exception: default export) |
 
 ### Function from constructor
 Since: ES1
@@ -115,7 +115,7 @@ new Function('param,paramN', 'body');
 | hoisted | no |
 | async | yes |
 | generator | yes |
-| anonymous | yes |
+| anonymous | always |
 
 * callable
 * constructable (non async/generator)
@@ -321,7 +321,7 @@ class {
 3) expression, arrow, class: anonymous name = ""
 4) methods: only have a prototype when generators
 
-## Upcoming Features
+## Possible Upcoming Features
 
 * async class constructors
 * generator arrow functions
