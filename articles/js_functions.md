@@ -194,7 +194,7 @@ The method syntax is used in classes and acts as a shorthand for assigning funct
 };
 class {
     name () {}
-};
+}
 ```
 
 | Feature | Supported |
