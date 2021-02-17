@@ -276,6 +276,7 @@ Where `value` is an ordinary object.
 | `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `Number(value)` | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `BigInt(value)` | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
+| `` `${value}` `` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 | `String(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 | `Symbol(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 | `Object[value]` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
