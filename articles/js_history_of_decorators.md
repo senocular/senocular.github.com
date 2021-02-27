@@ -139,7 +139,7 @@ class MyClass {
 }
 ```
 
-This iteration is likely to be the final iteration for decorators.  Because legacy decorators are currently the most widely used and because static decorators support that same featureset, the transition should mostly be seamless, especially for decorator consumers.  Decorator implementers, however, would need update their decorator definitions over to use the `decorator` syntax along with implementations that use existing built-in decorator primitives.
+This iteration was eventually abandoned for a version closer to the original legacy decorator design, most likely to help improve the developer experience.  Changes are still being made as the proposal is not as of yet finalized.
 
 ## Summary
 
