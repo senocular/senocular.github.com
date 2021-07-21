@@ -270,7 +270,7 @@ Where `value` is an ordinary object.
 | ---: | --- | --- | --- | --- |
 | `'' == value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
 | `'' + value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
-| `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `+value` (or other unary operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `Math.round(value)` (or other `Math` operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
