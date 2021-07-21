@@ -270,6 +270,7 @@ Where `value` is an ordinary object.
 | ---: | --- | --- | --- | --- |
 | `'' == value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
 | `'' + value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `1 > value` (or other relational operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `1 + value` (or other arithmetic operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `+value` (or other unary operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
@@ -280,6 +281,7 @@ Where `value` is an ordinary object.
 | `String(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 | `Symbol(value)` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 | `Object[value]` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
+| `value in object` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 
 
 ## ASI Considerations
