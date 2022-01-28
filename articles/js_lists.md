@@ -133,6 +133,7 @@ Every [assign operation](#assign-vs-define) as well as many of the other define 
 | `forEach` | _none_ | No | Yes | Yes | Yes |
 | `map` | Array | No | Yes | No | No |
 | `reduce` | _any_ | No | Yes | No | No |
+| `reduceRight` | _any_ | No | Yes | No | No |
 
 ### Metadata Collections
 
@@ -140,9 +141,9 @@ Metadata collections can be created for objects and iterated over.
 
 | For | Operation | Returns |
 | --- | --- | --- |
-| Array | `array.entries()` | Iterable |
-| Array | `array.keys()` | Iterable |
-| Array | `array.values()` | Iterable |
+| Array/Map/Set | `value.entries()` | Iterable |
+| Array/Map/Set | `value.keys()` | Iterable |
+| Array/Map/Set | `value.values()` | Iterable |
 | _non-null_ | `Object.entries(value)` | Array |
 | _non-null_ | `Object.keys(value)` | Array |
 | _non-null_ | `Object.values(value)` | Array |
