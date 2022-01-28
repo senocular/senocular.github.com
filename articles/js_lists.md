@@ -64,8 +64,6 @@ Where `name` is the identifier being created and `/* scope */` represents the sc
 | Class | `/* scope */ class name {}` |
 | Named class name | `(class name { /* scope */ })` |
 | Const | `/* scope */ const name = value;` |
-| Decorator (stage 2) | `/* scope */ decorator @name () {}` |
-| Decorator parameter | `decorator @name (name /* scope */ ) { /* scope */ }` |
 | Function | `/* scope */ function name () {}` |
 | Function parameter | `(function (name /* scope */ ) { /* scope */ })` |
 | Named function expression name | `(function name ( /* scope */ ) { /* scope */ })` |
