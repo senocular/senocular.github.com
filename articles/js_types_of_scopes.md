@@ -44,7 +44,7 @@ globalThis.qux // 4
 Object.getOwnPropertyDescriptor(globalThis, 'qux').configurable // true
 ```
 
-_Note: Currently Chrome/Safari incorrectly allows you to delete or overwrite global `var`-declared variables if defined first as a property of the global object.
+_Note: Currently Chrome/Safari incorrectly allows you to delete or overwrite global `var`-declared variables if defined first as a property of the global object._
 
 ## Script Scope
 
