@@ -4,6 +4,7 @@
 
 A collection of articles covering JavaScript-related topics.
 
+- [JavaScript's Private Parts](js_private_parts.md)
 - [A Flowchart for JavaScript's `this`](js_this_flowchart.md)
 - [JavaScript Tips of the Day](js_tips_of_the_day.md)
 - [Creating Classes using Constructor Functions](js_classes_as_constructors.md)
