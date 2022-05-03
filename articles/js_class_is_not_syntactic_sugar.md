@@ -251,7 +251,7 @@ Here are some additional, smaller differences you might also see with `class` fu
 - `class` functions are always in strict mode
 - `class` `prototype` properties added by the class are not writable
 - Unlike `function` declarations, `class` declarations are not hoisted
-- A `class` name binding is available everywhere within a class for named classes, for both expressions and declarations
+- A `class` name binding is available everywhere within a class for named classes, for both expressions and declarations (the only exception being for computed property names which are evaluated before the class name binding is made)
 
 ### Internal Slots Used with `class`
 
