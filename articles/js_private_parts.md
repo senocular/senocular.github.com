@@ -61,7 +61,7 @@ const example = new ExampleClass();
 console.log(example.#privateField); // SyntaxError
 ```
 
-There is only one private scope per class, and both instance private members and static private members share it. This prevents you from being able to use the same name for instance members and static members even though the members themselves would be stored on different objects.
+There is only one private scope per class, and both instance private members and static private members share it. This prevents you from being able to use the same name for instance members and static members even though the members themselves would be stored on different objects (one in instances, one in the class itself).
 
 ```javascript
 class ExampleClass {
@@ -87,7 +87,7 @@ const inner = new ExampleClass.InnerClass();
 console.log(inner.getPrivateField()); // 'value'
 ```
 
-Nested classes have their own private scope. These scopes have an independent set of private names. A private name in an inner scope matching that of a name in an outer scope is allowed but would cause that outer scope name to be shadowed and inaccessible from the inner scope.
+Nested classes also have their own private scope. These scopes have an independent set of private names. A private name in an inner scope matching that of a name in an outer scope is allowed but would cause that outer scope name to be shadowed and inaccessible from the inner scope.
 
 ```javascript
 class ExampleClass {
@@ -114,7 +114,7 @@ const inner = new ExampleClass.InnerClass();
 console.log(inner.getPrivateField());
 ```
 
-In the example above, while the name of the identifier is the same in both classes, the field is different because each private names represents a different private key. Unlike normal public members, private members are not stored by name. Instead they use a custom key similar symbols where the name of the identifier is the symbol description and each private member gets its own symbol such that `Symbol('#privateField') !== Symbol('#privateField')`. What you end up with given the previous example is something similar to:
+In the example above, while the name of the identifier is the same in both classes, the field is different because each private name represents a different private key. Unlike normal public members, private members are not stored directly by name. Instead they use a custom key similar symbols where the name of the identifier is the symbol description and each private member gets its own symbol such that `Symbol('#privateField') !== Symbol('#privateField')`. What you end up with given the previous example is something similar to:
 
 ```javascript
 // approximation of private members using symbols
@@ -142,58 +142,9 @@ const inner = new ExampleClass.InnerClass();
 console.log(inner.getPrivateField()); // undefined
 ```
 
-Here, you have access to the variables storing the symbols (the member identifier) but not the symbols (the keys) themselves.
+Here, you have access to the variables storing the symbols (the member identifier) but not the symbols (the keys) themselves. This symbol version, while similar in approach to what private members are doing internally, is also not as strict as the private member equivalent. When not found in an object, public member references such as those going through symbols will return `undefined`. Conversely, when a private member is not found a TypeError is thrown. Errors related to scoping seen in previous examples are SyntaxErrors and are found during code parsing, before any of the code even runs.
 
-This symbol version, while similar in approach, is also not as strict as the private member equivalent. When not found in an object, public member references such as those going through symbols will return `undefined`. Conversely, when using private members an error is thrown. Scoping errors are SyntaxErrors and are found during code parsing, before any of the code even runs. TypeErrors are thrown at runtime when a private identifier is in scope but a lookup in an object for the respective member fails.
-
-## Storage
-
-Each object in JavaScript has its own internal storage for private members. Unlike public members, these do not have any of the attributes associated with public members like configurable, enumerable, writable, etc. Private members have what equates to the immutable attributes of:
-
-* **field**: non-configurable, non-enumerable, writable
-* **method**: non-configurable, non-enumerable, non-writable
-* **accessor**: non-configurable, non-enumerable (writable N/A)
-
-As a result private members cannot be deleted or looped over. Also, private fields do not participate in object freezing.
-
-```javascript
-class ExampleClass {
-  #privateField = 'value';
-  publicField = 'value';
-  
-  constructor() {
-    Object.freeze(this);
-    this.#privateField = 'new value'; // allowed
-    this.publicField = 'new value'; // TypeError
-  }
-}
-```
-
-Private members defined by all classes within a class hierarchy get stored in the same internal storage for any given object instance. Because private members are not keyed by name, this allows any single object to have multiple private members of the same name if defined by different classes. While private members of the same name cannot exist in the same scope, they can exist in the same object.
-
-```javascript
-class ExampleClass {
-  #privateField = 'base value';
-    
-  getBasePrivateField() {
-    return this.#privateField;
-  }
-}
-
-class SubExampleClass extends ExampleClass {
-  #privateField = 'sub value';
-    
-  getSubPrivateField() {
-    return this.#privateField;
-  }
-}
-
-const sub = new SubExampleClass(); // private members = [#privateField, #privateField]
-console.log(sub.getBasePrivateField()); // 'base value'
-console.log(sub.getSubPrivateField()); // 'sub value'
-```
-
-Without being able to access a private member's real key, there's no way to dynamically reference them. Any dynamic lookups of members by name are treated as public member lookups.
+Without being able to access a private member's real key, there's no way to dynamically reference it. Any dynamic lookups of members by name are automatically treated as public member lookups.
 
 ```javascript
 class ExampleClass {
@@ -210,9 +161,90 @@ class ExampleClass {
 const example = new ExampleClass();
 ```
 
+## Storage
+
+Each object in JavaScript has its own internal storage for all of its private members. Private members defined by any class within a class hierarchy get stored in this internal storage for any given object instance. Because private members are not keyed by name, this allows any single object to have multiple private members of the same name if defined by different classes. While private members of the same name cannot exist in the same scope, they can exist in the same object when defined by different classes.
+
+```javascript
+class ExampleClass {
+  #privateField = 'base value';
+    
+  getBasePrivateField() {
+    return this.#privateField;
+  }
+}
+
+class SubExampleClass extends ExampleClass {
+  #privateField = 'sub value'; // same private name, does not clash
+    
+  getSubPrivateField() {
+    return this.#privateField;
+  }
+}
+
+const sub = new SubExampleClass(); // private members = [#privateField, #privateField]
+console.log(sub.getBasePrivateField()); // 'base value'
+console.log(sub.getSubPrivateField()); // 'sub value'
+```
+
+We can see this behavior is consistent when using symbols to represent private members.
+
+```javascript
+// approximation of private members using symbols
+const ExampleClass = (() => {
+  const privateField = Symbol('#privateField');
+  
+  return class ExampleClass {
+    [privateField] = 'base value';
+    
+    getBasePrivateField() {
+      return this[privateField];
+    }
+  }
+})();
+
+const SubExampleClass = (() => {
+  const privateField = Symbol('#privateField');
+  
+  return class SubExampleClass extends ExampleClass {
+    [privateField] = 'sub value';
+    
+    getSubPrivateField() {
+      return this[privateField];
+    }
+  }
+})();
+
+const sub = new SubExampleClass();
+console.log(Reflect.ownKeys(sub)); // [Symbol(#privateField), Symbol(#privateField)]
+console.log(sub.getBasePrivateField()); // 'base value'
+console.log(sub.getSubPrivateField()); // 'sub value'
+````
+
+Unlike public members, private members are not stored with any of the attributes associated with public members such as configurable, enumerable, and writable. Private members have what equates to the immutable attributes of:
+
+* **field**: non-configurable, non-enumerable, writable
+* **method**: non-configurable, non-enumerable, non-writable
+* **accessor**: non-configurable, non-enumerable (writable N/A)
+
+As a result private members cannot be deleted or enumerated. They also do not participate in object freezing.
+
+```javascript
+class ExampleClass {
+  #privateField = 'value';
+  publicField = 'value';
+  
+  constructor() {
+    Object.freeze(this);
+    this.#privateField = 'new value'; // allowed
+    this.publicField = 'new value'; // TypeError
+  }
+}
+```
+
 ## Assignment
 
-Private instance members are assigned to object instances within the constructor along with public fields. This applies to all private members including methods and accessors which is a departure from how public methods and accessors work. Public methods and accessors are defined within a class's prototype which are inherited and immediately available during object creation. Private methods and accessors are assigned to an object like fields in the constructor immediately following `super()`.
+Private instance members get assigned to object instances within the constructor along with public fields. This applies to all private members including methods and accessors which is a departure from how public methods and accessors work. Public methods and accessors are defined within a class's prototype which are inherited and immediately available during object creation. Private methods and accessors are assigned to an object like fields in the constructor immediately following `super()`.
 
 ```javascript
 class ExampleClass extends Object {
@@ -232,10 +264,10 @@ Despite being individually assigned and not inherited, a single function is used
 ```javascript
 class ExampleClass extends Object {
   #privateMethod() {
-    return true;
+    return 'reused';
   }
   
-  fieldMethod = () => false;
+  fieldMethod = () => 'recreated';
 
   static compare() {
     const a = new ExampleClass();
@@ -250,7 +282,7 @@ ExampleClass.compare();
 
 Each class maintains an internal list of their private method and accessor functions so that they can be assigned to instances when initialized.  While public methods and accessors can be accessed prior to any instance being created through a class's `prototype`, it is not possible to access private members without first creating an instance.
 
-Because inheritance doesn't apply to private members, static private members are not able to be inherited by subclasses.
+Given that inheritance doesn't apply to private members, static private members are not able to be inherited by subclasses.
 
 ```javascript
 class ExampleClass {
@@ -269,21 +301,23 @@ console.log(ExampleClass.callPrivateMethod()); // true
 console.log(SubExampleClass.callPrivateMethod()); // TypeError
 ```
 
-In the above example, `callPrivateMethod()` can be called from `SubExampleClass` because it is inherited. However the same doesn't apply to `#privateMethod()` so when the public method tries to the private one, an error is thrown. Static private members aren't available to subclasses because unlike instances of a class, there is no constructor step for private static members to get added. Classes themselves only receive their own static private members.
+In the above example, `callPrivateMethod()` can be called from `SubExampleClass` because it is inherited. However the same doesn't apply to `#privateMethod()` so when the public method tries to the private one, an error is thrown.
+
+Static private members aren't available to subclasses because unlike instances of a class, there is no constructor step for private static members to get added. Class objects are only assigned their own static private members.
 
 ### The Set (and Map) problem
 
 The fact that private members get added in the constructor rather than being inherited generally shouldn't cause a problem. But that is not always the case. Consider the built-in Set type. When you create a new Set instance you have the option of passing initial values into the constructor. These values get run through the public `add()` method during the initialization that happens within the `Set` constructor (a similar behavior is seen with `Map` and its `set()` method). If you were to subclass `Set` and override `add()`, it would be called with initial values during construction.
 
 ```javascript
-class SubSet extends Set {
+class LogSet extends Set {
   add(value) {
     console.log('Adding:', value);
     super.add(value);
   }
 }
 
-const sub = new SubSet([1,2,3]);
+const logSet = new LogSet([1,2,3]);
 // Adding: 1
 // Adding: 2
 // Adding: 3
@@ -292,7 +326,7 @@ const sub = new SubSet([1,2,3]);
 However, changing this code to refer to a private method within the overridden `add()` would not work.
 
 ```javascript
-class SubSet extends Set {
+class LogSet extends Set {
   #log(value) {
     console.log('Adding:', value);
   }
@@ -303,7 +337,7 @@ class SubSet extends Set {
   }
 }
 
-const sub = new SubSet([1,2,3]);
+const logSet = new LogSet([1,2,3]);
 ```
 
 This code throws an error because the `add()` call being made for the initial values is occurring in the `Set` constructor befire the `SubSet` constructor is able to assign the private `#log()` method.
@@ -311,7 +345,7 @@ This code throws an error because the `add()` call being made for the initial va
 To work around this issue, the subclass constructor should not pass the initial values to `super` and instead add them manually after.
 
 ```javascript
-class SubSet extends Set {
+class LogSet extends Set {
   constructor(iterable) {
     super(); // empty super
     // super(iterable) // not this
@@ -335,7 +369,7 @@ class SubSet extends Set {
   }
 }
 
-const sub = new SubSet([1,2,3]);
+const logSet = new LogSet([1,2,3]);
 // Adding: 1
 // Adding: 2
 // Adding: 3
@@ -345,18 +379,18 @@ Ultimately, this could be attributed more to the fact that the `Set` constructor
 
 ## Conclusion
 
-At a high level, private members are much like public members with a bunch of additional restirctions.  And for the most part, this is a solid mental model.  However, what was covered here helps shed some light on some of the more unusal characteristics of privates like, why can't static and instance members have the same name?  And why can't private members be called during construction in some cases?  These are not restrictions we see today with public members, but now it should be clear why they apply to private ones.
+At a high level, private members are much like public members with a bunch of additional restirctions.  And for the most part, this is a solid mental model.  However, what was covered here helps shed some light on some of the more unusal characteristics of privates like, why can't static and instance members have the same name?  And why can't private members be called during construction in some cases?  These are not restrictions we see today with public memberss.
 
 In summary, private members:
 
+- Are declared with names scoped to the class block
+  - Can have name collisions between static and instance members in the same class
+  - Can be referenced in child classes defined within the owner class's class block
+- Cannot be dynamically referenced by name
 - Do not have typical enumerable/writable/configurable attributes
   - Cannot be deleted
   - Cannot be enumerated
   - Do not participate in object freezing
-- Cannot be dynamically referenced by name
-- Are scoped to the class block
-  - Can have name collisions between static and instance members
-  - Can be referenced in child classes defined within the owner class's class block
 - Are added in the constructor
 - When static, are not shared among subclasses
 
