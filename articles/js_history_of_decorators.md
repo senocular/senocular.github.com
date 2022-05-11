@@ -1,12 +1,12 @@
 # A Brief History of Decorators in JavaScript
 
-JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language, as suggested by the current stage 2 [decorator proposal](https://github.com/tc39/proposal-decorators).  Even so, developers have been using them in production for years.  Unfortunately, what they've been using is very likely not like what will eventually become part of the standard.
+JavaScript doesn't support decorators, not officially, not yet.  But they are planned for to the language, currently at stage 3 (of 4) in the new feature proposal process.  For more information see the [decorator proposal](https://github.com/tc39/proposal-decorators).  At stage 3, the current proposal is very likely what you can expect to see implemented in runtimes in the near future.
 
-Here, we'll look into the changes of the decorators spec over its last couple of revisions, from where it started (what's out there now) to where it looks like it's going to end up.
+Here, we'll look into the changes of the decorators spec over its last couple of revisions, from where it started (what's out there now) to where it ended up.
 
 ## What are Decorators?
 
-Decorators are custom modifiers, similar to those you might see for functions like `static` or `async`, that end-users can create and apply to various definitions within their code.  Decorators can modify, or "decorate", anything from functions to variables or even [number literals](https://github.com/tc39/proposal-extended-numeric-literals).  Initial support for decorators will be limited to `class` definitions (classes and their members), but are planned to be expanded to include other use cases, such as number literals, later on.
+Decorators are custom modifiers, similar to those you might see for functions like `static` or `async`, that end-users can create and apply to various definitions within their code.  Decorators can modify, or "decorate", anything from classes to variables.  Initial support for decorators will be limited to `class` definitions (classes and their members), but are planned to be expanded to include other use cases later on.
 
 A example of a decorator would be an `@enumerable` decorator that could expose a class's method to enumeration.
 
@@ -54,7 +54,7 @@ enumerable(MyClass.prototype, 'exposed', descriptor)
 
 Any changes to the descriptor then gets applied back to the definition, or if a new descriptor was returned, that would be used in its place.
 
-The simplicity of these kinds of decorators made them easy implement, and even as simple as they were,they provided enough functionality to handle most of the common use cases.  Unfortunately, the feature set of classes was expanding (for example, with the inclusion of private members) and decorators needed to catch up.
+The simplicity of these kinds of decorators made them easy implement, and even as simple as they were, they provided enough functionality to handle most of the common use cases.  Unfortunately, the feature set of classes was expanding (for example, with the inclusion of private members) and decorators needed to catch up.
 
 ## Iteration 2: Enhanced Decorators
 
@@ -141,6 +141,24 @@ class MyClass {
 
 This iteration was eventually abandoned for a version closer to the original legacy decorator design, most likely to help improve the developer experience.  Changes are still being made as the proposal is not as of yet finalized.
 
+## Iteration 4: Proposed Decorators
+
+The current stage 3 version of decorators is expected to be the final version that will ultimately get added to the specification when the proposal process is complete.  This version of decorators backs away from the static approach and returns to an approach more similar to the legacy implementation.  Decorators are once again implemented as simple JavaScript functions and get passed a target that represents what they're decorating along with some additional information about that target.
+
+With this iteration, however, the target is not the containing object along with the name of the decorated element.  Instead the target is the element itself.  So if a method is being decorated, the target is the method function, not the class `prototype` and the method name.  Similarly, a descriptor is not provided.  In place of a descriptor is a context object providing information and some utilities relating to the decorated element.
+
+The lack of a descriptor makes an enumerable decorator a little more difficult with this design. To help, a returning feature from iteration 2 is an initialization hook which can be set up from the provided context object.  Adding an initializer lets you run code after a class instance is created which would be something similar to the finish hook from iteration 2.
+
+```javascript
+function enumerable (target, context) {
+    context.addInitializer(function () {
+        Object.defineProperty(this.constructor.prototype, context.name, { enumerable: true })
+    })
+}
+```
+
+There is one notable downside to this implementation. That is this code will run for every instance during construction even though it is only necessary to define the enumerable property once on the `prototype`.  While this still works, it is not ideal.  In order to be able to have this only run once, you'd need an additional class decorator that would provide the hook using properties flagged by individual element decorators such as the one above.  This kind of coordination makes (efficient) descriptor-based changes for methods more difficult to both implement and apply.
+
 ## Summary
 
 Comparing the decorator iterations:
@@ -167,9 +185,15 @@ Comparing the decorator iterations:
 * Has legacy decorator-like capabilities
 * Primitives include hooks
 
+### Proposed Decorators
+
+* Defined as functions
+* Simple wrapper for decorated element
+* No access to descriptors
 
 # References
 
 - Spec iteration 1: [README.md](https://github.com/wycats/javascript-decorators/blob/e1bf8d41bfa2591d949dd3bbf013514c8904b913/README.md)
 - Spec iteration 2: [README.md](https://github.com/tc39/proposal-decorators/blob/beae8dc25d2dddc3a19cdd235d14f8b16a6f1325/README.md)
 - Spec iteration 3: [README.md](https://github.com/tc39/proposal-decorators/blob/e480e0659534567a7edb28ffe968f583a91c7e0c/README.md)
+- Spec iteration 4 (current): [README.md](https://github.com/tc39/proposal-decorators)
