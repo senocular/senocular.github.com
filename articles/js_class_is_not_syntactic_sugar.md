@@ -249,7 +249,7 @@ Here are some additional, smaller differences you might also see with `class` fu
 
 - `class` `toString` returns the `class` syntax
 - `class` functions are always in strict mode
-- The `prototype` property in a `class` is defined as not writable
+- The `prototype` property in a `class` is defined as read-only and can't be reassigned
 - Unlike `function` declarations, `class` declarations are not hoisted
 - A `class` name binding is available everywhere within a class for named classes, for both expressions and declarations (the only exception being for computed property names which are evaluated before the class name binding is made)
 
