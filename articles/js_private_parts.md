@@ -117,7 +117,7 @@ console.log(inner.getPrivateField());
 In the example above, while the name of the identifier is the same in both classes, the field is different because each private name represents a different private key. Unlike normal public members, private members are not stored directly by name. Instead they use a custom key similar symbols where the name of the identifier is the symbol description and each private member gets its own symbol such that `Symbol('#privateField') !== Symbol('#privateField')`. What you end up with given the previous example is something similar to:
 
 ```javascript
-// approximation of private members using symbols
+// emulating private members using symbols
 const ExampleClass = (() => { // represents ExampleClass private scope
   const privateField = Symbol('#privateField');
   
@@ -190,7 +190,7 @@ console.log(sub.getSubPrivateField()); // 'sub value'
 We can see this behavior is consistent when using symbols to represent private members.
 
 ```javascript
-// approximation of private members using symbols
+// emulating private members using symbols
 const ExampleClass = (() => {
   const privateField = Symbol('#privateField');
   
@@ -241,6 +241,31 @@ class ExampleClass {
   }
 }
 ```
+
+### Emulating with WeakMaps
+
+While the use of symbols to emulate private members more closely matches the internal implementation used by JavaScript, at runtime the symbol keys would be public and observable outside the scope of the class.  Transpilers like [Babel](https://babeljs.io/) and [TypeScript](https://www.typescriptlang.org/) will instead use WeakMap collections to store private members for object instances when transpiling down to versions of JavaScript that don't support them natively. Given:
+
+```javascript
+class ExampleClass {
+  #privateField = 'value';
+}
+```
+
+TypeScript would transpile this to:
+
+```javascript
+"use strict";
+var _ExampleClass_privateField;
+class ExampleClass {
+    constructor() {
+        _ExampleClass_privateField.set(this, 'value');
+    }
+}
+_ExampleClass_privateField = new WeakMap();
+```
+
+Because the private member values are stored within the WeakMap and not the class instance itself, there's no way for an outside observer to access them. And while these WeakMaps would technically be in scope for others to access, TypeScript will use name mangling during the transpilation step to ensure that doesn't happen in the resulting JavaScript output.
 
 ## Assignment
 
@@ -379,7 +404,7 @@ Ultimately, this could be attributed more to the fact that the `Set` constructor
 
 ## Conclusion
 
-At a high level, private members are much like public members with a bunch of additional restirctions.  And for the most part, this is a solid mental model.  However, what was covered here helps shed some light on some of the more unusal characteristics of privates like, why can't static and instance members have the same name?  And why can't private members be called during construction in some cases?  These are not restrictions we see today with public memberss.
+At a high level, private members are much like public members with a bunch of additional restrictions. And for the most part, this is a solid mental model. However, there are times when the behavior of private members can seem confusing. Knowing how they operate can be key to getting a better understanding of these unusual behaviors and why they exist.
 
 In summary, private members:
 
