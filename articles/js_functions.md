@@ -252,12 +252,14 @@ class name {
 
 | Feature | Supported |
 | --- | --- |
-| callable | no |
+| callable | no<sup>*</sup> |
 | constructable | yes |
 | hoisted | no |
 | async | no |
 | generator | no |
 | anonymous | no |
+
+\* Technically class functions are internally considered callable, however they will always throw an error when called as a function.
 
 * constructable
 * naming optional
