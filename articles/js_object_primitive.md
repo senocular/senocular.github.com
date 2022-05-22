@@ -96,7 +96,7 @@ Now object primitive values are created with a function and each have their own 
 
 False.
 
-Given the level abstraction JavaScript provides for its values there's no observable difference between how values are passed.  The easiest way to look at it is that all values are references and all passing is done by value.  So when a value is passed, it's passed by value, and the value being passed is a reference.  This would apply to both objects and primitives.
+Given the level abstraction JavaScript provides for its values there's no observable difference between how values are passed.  The easiest way to look at it is that all values are references and all passing is done by value (or more accurately [pass by sharing](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_sharing)).  When a value is passed, it's passed by value, and the value being passed is a reference.  This would apply to both objects and primitives.
 
 
 ```javascript
