@@ -86,8 +86,9 @@ Assign sets a property through getter/setters (if they exist) while define will 
 | Reflect.set | `Reflect.set(object, 'prop', value)` | Assign |
 | Array Literal | `[ value ]` | Define |
 | Array Spread | `[ ...[ value ] ]` | Define |
-| Class Declaration Fields | ` class { prop = value }` | Define |
-| Class Declaration Methods | ` class { prop() {} }` | Define |
+| Class Declaration Fields | `class { prop = value }` | Define |
+| Class Declaration Methods | `class { prop() {} }` | Define |
+| JSON.parse | `JSON.parse('{"prop":value}')` | Define |
 | Object Literal | `{ prop: value }` | Define |
 | Object Spread | `{ ...{ prop: value } }` | Define |
 | Object.create | `Object.create(object, { prop: { value } })` | Define |
