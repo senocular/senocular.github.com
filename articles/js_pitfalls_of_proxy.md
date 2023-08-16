@@ -157,7 +157,7 @@ childProxy.callMethod();
 
 While a "get: method" was logged for `this.method()` it was not for `super.method()`. This is because `super` access isn't made through the instance, rather, it is made through the prototype of the method's home object.  In this case, the home object of Child's `method` is `Child.prototype` so the access is getting made through `Parent.prototype`. A proxy trap would only get triggered for this super method call if the prototype of `Child.prototype` were a proxy.
 
-## Cannot trap construct on non-constructors
+## Trapping construct on non-constructors
 
 For any function the `apply` trap in a proxy can be used to trap calls to that function. This will even work with `class` constructors which would normally throw an error when called, effectively allowing you to have a callable class constructor.
 
