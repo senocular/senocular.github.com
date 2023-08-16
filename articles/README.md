@@ -4,6 +4,7 @@
 
 A collection of articles covering JavaScript-related topics.
 
+- [Pitfalls of Proxy](js_pitfalls_of_proxy.md)
 - [JavaScript's Private Parts](js_private_parts.md)
 - [A Flowchart for JavaScript's `this`](js_this_flowchart.md)
 - [JavaScript Tips of the Day](js_tips_of_the_day.md)
