@@ -1,4 +1,6 @@
-# WIP
+| Status |
+| --- |
+| Work in progress |
 
 # Kinds of Functions and Their Differences
 
