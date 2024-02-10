@@ -1,22 +1,19 @@
 # Changes in Strict Mode
 
-A quick reference to the changes made in JavaScript's strict mode.
-
-| WIP |
-|---|
+A quick reference to the changes made in JavaScript's strict mode. For more information on how and when strict mode is enabled, refer to [MDN's page on strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). That page includes most, but not all of what's listed below.
 
 Reserved words
 
 ```js
-var implements
-var interface
-var let
-var package
-var private
-var protected
-var public
-var static
-var yield
+let implements
+let interface
+let let
+let package
+let private
+let protected
+let public
+let static
+let yield
 // sloppy: Variables created
 // strict: Error
 ```
@@ -93,8 +90,21 @@ Delete unqualified identifier
 
 ```js
 delete identifier
-// sloppy: Deletes and evaluates to true if identifer is a deletable global,
+// sloppy: Deletes and evaluates to true if identifier is a deletable global,
 //    otherwise does not delete and evaluates to false
+// strict: Error
+```
+
+Delete from proxy with trap returning falsy
+
+```js
+const hasDeleteTrap = new Proxy({}, {
+  deleteProperty() {
+    return false
+  }
+})
+delete hasDeleteTrap.any
+// sloppy: No error
 // strict: Error
 ```
 
@@ -114,13 +124,22 @@ for (var x = 0 in {}) {}
 // strict: Error
 ```
 
-0-prefixed octal numeric literals
+0-prefixed numeric literals
 
 ```js
 01
-// sloppy: Evaluates to octal value
+08
+// sloppy: Evaluates to octal value if digit after 0 < 8, decimal if > 7 
 // strict: Error
 ```
+
+Octal escapes in string literals
+
+```js
+"\7"
+// sloppy: Creates string '\x07'
+// strict: Error
+``` 
 
 No in-scope declarations with `eval`
 
@@ -191,14 +210,12 @@ function fn() {
 // strict: Error
 ```
 
-Parameter references in `arguments`
+Parameters mapped to `arguments`
 
 ```js
 function assignArg(param) {
   arguments[0] = 0;
-}
-function assignParam(param) {
-  param = 0;
+  param = 1;
 }
 // sloppy: Assignment to arguments changes parameter value, assigning parameter changes arguments
 // strict: Assignments do not change other values
@@ -215,9 +232,9 @@ function fn(arguments) {}
 // strict: Error
 ```
 
-`this` in functions
+`this` in function calls
 
-```
+```js
 function fn() {
   return this
 }
@@ -225,15 +242,61 @@ function fn() {
 // strict: Function sees `this` as undefined
 ```
 
-`this` boxing primitives in methods
+Nullish primitive `this` in function calls
 
 ```js
-function method() {
+function fn() {
   return this
 }
-method.call("string")
-method.call(true)
-method.call(0)
-// sloppy: Method sees `this` as Object
-// strict: Method sees `this` as primitive
+fn.call(null)
+fn.call(undefined)
+// sloppy: Function sees `this` as global object
+// strict: Function sees `this` as original primitive
+```
+
+Non-nullish primitive `this` in function calls
+
+```js
+function fn() {
+  return this
+}
+fn.call("string")
+fn.call(true)
+fn.call(0)
+// sloppy: Function sees `this` as `Object(this)`
+// strict: Function sees `this` as original primitive
+```
+
+## Changes in modules
+
+Modules are always in strict mode, but there are some additional changes that are specific to modules that do not apply to strict mode in other contexts.
+
+Reserved words
+
+```js
+let await
+// scripts: Variable created
+// modules: Error
+```
+
+Duplicate function declarations
+
+```js
+function fn() {}
+function fn() {}
+// scripts: Last declaration assigned to identifier
+// modules: Error
+```
+
+## Changes with parameters
+
+Features used within parameter lists can also impact how JavaScript behaves with some strict mode-like behaviors observable in sloppy mode depending on how a parameter list is defined.  These changes are seen when parameter lists contains any advanced features such as default parameters, rest parameters, or destructured parameters.
+
+Duplicate parameter names
+
+```js
+function fn(a, a) {}
+function fn(a, a = 1) {}
+// simple parameter list: No error, last parameter of that name used in function body
+// non-simple parameter list: Error
 ```
