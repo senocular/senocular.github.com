@@ -1,2 +1,4 @@
 markdown: GFM
+kramdown:
+  input: GFM
 title: senocular.github.io
