@@ -1,4 +1,5 @@
+title: senocular.github.io
 markdown: kramdown
 kramdown:
   input: GFM
-title: senocular.github.io
+  syntax_highlighter: rouge
