@@ -4,7 +4,7 @@ The following is a quick reference containing a list of changes made in JavaScri
 
 Reserved words
 
-```js
+```javascript
 let implements
 let interface
 let let
