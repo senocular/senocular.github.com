@@ -1,4 +1,2 @@
-# remote_theme: jekyllup/jekyll-theme-massively
-markdown:    kramdown
-highlighter: pygments
+markdown: GFM
 title: senocular.github.io
