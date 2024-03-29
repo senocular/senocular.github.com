@@ -179,6 +179,7 @@ Creating functions named `name` (or anonymous).
 | Kind | Example | Name | Constructable |
 | --- | --- | --- | --- |
 | Function Declaration | `function name () {}` | Explicit | Yes |
+| Default Function Declaration | `export default function () {}` | Anonymous | Yes |
 | Async Function Declaration | `async function name () {}` | Explicit | No |
 | Generator Function Declaration | `function * name () {}` | Explicit | No |
 | Async Generator Function Declaration | `async function * name () {}` | Explicit | No |
