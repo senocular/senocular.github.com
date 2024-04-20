@@ -304,6 +304,8 @@ fn.call(0)
 // strict: Function sees `this` as original primitive
 ```
 
+# Appendix
+
 ## Changes in modules
 
 Modules are always in strict mode, but there are some additional changes that are specific to modules that do not apply to strict mode in other contexts.
