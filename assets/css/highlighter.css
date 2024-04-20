@@ -4,5 +4,5 @@ intensity since highlighter incorrectly marks
 private member hash sigils as errors
 */
 pre.highlight .err {
-  background-color: none;
+  background: none;
 }
