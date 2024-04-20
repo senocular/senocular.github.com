@@ -3,6 +3,6 @@ Override for error background color to reduce
 intensity since highlighter incorrectly marks
 private member hash sigils as errors
 */
-pre.hightlight .err {
+pre.highlight .err {
   background-color: none;
 }
