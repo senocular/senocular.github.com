@@ -44,8 +44,6 @@ globalThis.qux // 4
 Object.getOwnPropertyDescriptor(globalThis, 'qux').configurable // true
 ```
 
-_Note: Currently Chrome/Safari incorrectly allows you to delete or overwrite global `var`-declared variables if defined first as a property of the global object._
-
 ## Script Scope
 
 The script scope represents a part of the global scope that does not contribute to the global object.  While top level `var` and `function` declarations get added to the global scope and the global object, declarations using `let`, `const`, and `class` get instead added to the script scope and are not added to the global object.  Being a part of the global scope, the script scope is available everywhere, much like the global scope as defined by the global object.
@@ -56,7 +54,7 @@ foo // 1
 globalThis.foo // undefined
 ```
 
-_Note: Currently Safari incorrectly does not expose the script scope to modules._
+Note: While debuggers will make this separation of the "global" scope and the "script" scope, they're technically both part of the same global scope. The global scope is, itself, a compound scope made of both an object environment record (global object) and a declarative environment record (script scope). Anything in either of these scopes will be global to the application.
 
 ## Module Scope
 
