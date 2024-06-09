@@ -22,7 +22,7 @@ let yield
 Assign undeclared
 
 ```js
-doesNotExist = 0
+doesNotExist = 0;
 
 // sloppy: Creates global property
 // strict: Error
@@ -31,9 +31,9 @@ doesNotExist = 0
 Assign built-in globals
 
 ```js
-undefined = 0
-Infinity = 0
-NaN = 0
+undefined = 0;
+Infinity = 0;
+NaN = 0;
 
 // sloppy: Silently fails assignment
 // strict: Error
@@ -43,9 +43,9 @@ Assign getter
 
 ```js
 const hasGetter = {
-  get getter() {}
-}
-hasGetter.getter = 0
+    get getter() {},
+};
+hasGetter.getter = 0;
 
 // sloppy: Silently fails assignment
 // strict: Error
@@ -54,9 +54,9 @@ hasGetter.getter = 0
 Assign non-writable
 
 ```js
-const hasReadOnly = {}
-Object.defineProperty(hasReadOnly, "readOnly", { value: 1, writable: false })
-hasReadOnly.readOnly = 0
+const hasReadOnly = {};
+Object.defineProperty(hasReadOnly, "readOnly", { value: 1, writable: false });
+hasReadOnly.readOnly = 0;
 
 // sloppy: Silently fails assignment
 // strict: Error
@@ -65,8 +65,8 @@ hasReadOnly.readOnly = 0
 Assign to non-extensible
 
 ```js
-const nonExtensible = Object.preventExtensions({})
-nonExtensible.any = 0
+const nonExtensible = Object.preventExtensions({});
+nonExtensible.any = 0;
 
 // sloppy: Silently fails assignment
 // strict: Error
@@ -75,9 +75,9 @@ nonExtensible.any = 0
 Assign primitive properties
 
 ```js
-"string".prop = 0
-true.prop = 0
-0.0.prop = 0
+"string".prop = 0;
+true.prop = 0;
+(0.0).prop = 0;
 
 // sloppy: Silently fails assignment
 // strict: Error
@@ -86,9 +86,9 @@ true.prop = 0
 Delete non-configurable
 
 ```js
-const hasNonConfig = {}
-Object.defineProperty(hasNonConfig, "nonConfig", { value: 1, configurable: false })
-delete hasNonConfig.nonConfig
+const hasNonConfig = {};
+Object.defineProperty(hasNonConfig, "nonConfig", { value: 1, configurable: false });
+delete hasNonConfig.nonConfig;
 
 // sloppy: Does not delete, evaluates to false
 // strict: Error
@@ -97,7 +97,7 @@ delete hasNonConfig.nonConfig
 Delete unqualified identifier
 
 ```js
-delete identifier
+delete identifier;
 
 // sloppy: Deletes and evaluates to true if identifier is a deletable global,
 //    otherwise does not delete and evaluates to false
@@ -107,12 +107,15 @@ delete identifier
 Delete from proxy with trap returning falsy
 
 ```js
-const hasDeleteTrap = new Proxy({}, {
-  deleteProperty() {
-    return false
-  }
-})
-delete hasDeleteTrap.any
+const hasDeleteTrap = new Proxy(
+    {},
+    {
+        deleteProperty() {
+            return false;
+        },
+    }
+);
+delete hasDeleteTrap.any;
 
 // sloppy: No error
 // strict: Error
@@ -121,7 +124,8 @@ delete hasDeleteTrap.any
 `with` blocks
 
 ```js
-with({}) {}
+with ({}) {
+}
 
 // sloppy: No error
 // strict: Error
@@ -139,26 +143,26 @@ for (var x = 0 in {}) {}
 0-prefixed numeric literals
 
 ```js
-01
-08
+01;
+08;
 
-// sloppy: Evaluates to octal value if digit after 0 < 8, decimal if > 7 
+// sloppy: Evaluates to octal value if digit after 0 < 8, decimal if > 7
 // strict: Error
 ```
 
 Octal escapes in string literals
 
 ```js
-"\7"
+"\7";
 
 // sloppy: Creates string '\x07'
 // strict: Error
-``` 
+```
 
 No in-scope declarations with `eval`
 
 ```js
-eval("var fromEval = 0")
+eval("var fromEval = 0");
 
 // sloppy: Declaration in eval added to current scope
 // strict: Declaration does not get added to current scope
@@ -167,8 +171,8 @@ eval("var fromEval = 0")
 `eval` rebinding
 
 ```js
-eval = 0
-let eval
+eval = 0;
+let eval;
 function eval() {}
 function fn(eval) {}
 
@@ -180,8 +184,8 @@ Assign function expression name
 
 ```js
 const fn = function name() {
-  name = 0
-}
+    name = 0;
+};
 
 // sloppy: No error
 // strict: Error
@@ -200,10 +204,10 @@ Block-scope function declarations
 
 ```js
 function outer() {
-  {
-    function inner() {}
-  }
-  inner()
+    {
+        function inner() {}
+    }
+    inner();
 }
 
 // sloppy: Inner function scoped to outer function and can be called outside of block
@@ -223,8 +227,8 @@ Function `caller`, `arguments` properties
 
 ```js
 function fn() {
-  fn.caller
-  fn.arguments
+    fn.caller;
+    fn.arguments;
 }
 
 // sloppy: No error
@@ -235,7 +239,7 @@ Arguments `callee` property
 
 ```js
 function fn() {
-  arguments.callee
+    arguments.callee;
 }
 
 // sloppy: No error
@@ -246,8 +250,8 @@ Parameters mapped to `arguments`
 
 ```js
 function assignArg(param) {
-  arguments[0] = 1;
-  param = 2;
+    arguments[0] = 1;
+    param = 2;
 }
 
 // sloppy: Assignment to arguments changes parameter value, assigning parameter changes arguments
@@ -257,8 +261,8 @@ function assignArg(param) {
 `arguments` rebinding
 
 ```js
-arguments = 0
-let arguments
+arguments = 0;
+let arguments;
 function arguments() {}
 function fn(arguments) {}
 
@@ -270,7 +274,7 @@ function fn(arguments) {}
 
 ```js
 function fn() {
-  return this
+    return this;
 }
 
 // sloppy: Function sees `this` as global object
@@ -281,10 +285,10 @@ Nullish primitive `this` in function calls
 
 ```js
 function fn() {
-  return this
+    return this;
 }
-fn.call(null)
-fn.call(undefined)
+fn.call(null);
+fn.call(undefined);
 
 // sloppy: Function sees `this` as global object
 // strict: Function sees `this` as original primitive
@@ -294,11 +298,11 @@ Non-nullish primitive `this` in function calls
 
 ```js
 function fn() {
-  return this
+    return this;
 }
-fn.call("string")
-fn.call(true)
-fn.call(0)
+fn.call("string");
+fn.call(true);
+fn.call(0);
 
 // sloppy: Function sees `this` as `Object(this)`
 // strict: Function sees `this` as original primitive
@@ -308,12 +312,12 @@ fn.call(0)
 
 ## Changes in modules
 
-Modules are always in strict mode, but there are some additional changes that are specific to modules that do not apply to strict mode in other contexts.
+ECMAScript modules are always in strict mode, but there are some additional changes that are specific to modules that do not apply to strict mode in other contexts.
 
 Reserved words
 
 ```js
-let await
+let await;
 
 // scripts: Variable created
 // modules: Error
@@ -331,7 +335,7 @@ function fn() {}
 
 ## Changes with parameters
 
-Features used within parameter lists can also impact how JavaScript behaves with some strict mode-like behaviors observable in sloppy mode depending on how a parameter list is defined.  These changes are seen when parameter lists contains any advanced features such as default parameters, rest parameters, or destructured parameters.
+Features used within parameter lists can also impact how JavaScript behaves with some strict mode-like behaviors observable in sloppy mode depending on how a parameter list is defined. These changes are seen when parameter lists contains any advanced features such as default parameters, rest parameters, or destructured parameters.
 
 Duplicate parameter names
 
@@ -357,17 +361,16 @@ function nonSimple(a = 0) {
 // non-simple parameter list: Error
 ```
 
-
 Parameters mapped to `arguments`
 
 ```js
 function simple(param) {
-  arguments[0] = 1;
-  param = 2;
+    arguments[0] = 1;
+    param = 2;
 }
 function nonSimple(param = 0) {
-  arguments[0] = 1;
-  param = 2;
+    arguments[0] = 1;
+    param = 2;
 }
 
 // simple parameter list: Assignment to arguments changes parameter value, assigning parameter changes arguments
