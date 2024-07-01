@@ -4,7 +4,7 @@
 
 # Implementing `for` Loops
 
-`for` loops can get surprisingly complex when it comes to their implementation, especially when it comes to scopes and the use of lexical declarations (e.g. `let`). Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch in JavaScript. The JavaScript implementations of these `for` loops will focus on what scopes are created and how variables are handled within those scopes.
+Have you ever wondered how JavaScript `for` loops work internally and why using `let` instead of `var` suddenly fixes some things? Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch _in_ JavaScript. The JavaScript implementations will focus on what scopes are created and how variables are handled within those scopes.
 
 ## Components of a `for` Loop
 
@@ -94,7 +94,7 @@ class Scope {
 
 ## Implementation with `var`
 
-`for` loop initializations using `var` require the least amount of work for the implementation. When `var` declarations are used in the initialization of a `for` loop, those declarations are added to the surrounding scope and no additional scopes are created for `for` loop declarations.
+Our first implementation will be a `for` loop with an initialization having a `var` declaration. When `var` declarations are used in the initialization of a `for` loop, the variables in those declarations get added to the surrounding scope and no additional scopes are created for those variables.
 
 Our implementation using `var` will be for the following loop:
 
@@ -114,7 +114,7 @@ Its a simple loop with 3 iterations, each of which logs the value of `i`. The ou
 
 ### Implementation
 
-This is the JavaScript implementation of the JavaScript `for` loop using `var`.
+The JavaScript implementation of the JavaScript `for` loop using `var`.
 
 ```javascript
 // A variable to track the currently active scope as we go through
@@ -173,7 +173,7 @@ while (true) {
 
 Complete code with Scope class: [for-with-var.js](js_implementing_for_loops/for-with-var.js)
 
-Running this code produces the following output, the same output as the original JavaScript loop this is code is implementing:
+Running this code produces the following output, the same output as the original JavaScript loop this code is implementing:
 
 ```
 0
@@ -181,11 +181,13 @@ Running this code produces the following output, the same output as the original
 2
 ```
 
-Looking at the code you can see that only one additional scope was created and only because the loop body was in a block statement. If it wasn't, everything would happen in the context of the surrounding scope, the global scope.
+Looking at the code you can see that there was one scope created in addition to the surrounding global scope, but that was only because the loop body was in a block statement. If it wasn't, everything would happen in the context of the surrounding scope.
+
+It's worth noting that the `i` variable is the same variable in each iteration. When the first iteration runs, the `i` variable it sees is the same `i` variable seen in the second iteration. This changes when declaring the variable with `let`.
 
 ## Implementation with `let`
 
-With one simple change to the previous loop, changing the `var` to `let` in the initialization, we'll see some substantial changes to our implementation.
+With one simple change to the previous loop, changing the `var` to `let` in the initialization, we'll see some fairly substantial changes to our implementation.
 
 ```javascript
 for (let i = 0; i < 3; i++) {
@@ -201,11 +203,11 @@ This loop produces the same output as the respective `var` version:
 2
 ```
 
-The difference in this version is that each iteration of the loop is given its own, unique `i` variable defined in a scope specific to that literation. We'll see just how that works in the implementation.
+The difference in this version is that each iteration of the loop is given its own, unique `i` variable defined in a new scope that is also unique to that iteration. Just how that works with the afterthought being able to still increment those variables despite them being different can be seen in the implementation.
 
 ### Implementation
 
-This is the JavaScript implementation of the JavaScript `for` loop using `let`.
+The JavaScript implementation of the JavaScript `for` loop using `let`.
 
 ```javascript
 // A variable to track the currently active scope as we go through
@@ -339,9 +341,9 @@ As expected, the result of running this code is the same:
 2
 ```
 
-But there's quite a bit more going on here than in the previous implementation. Notably there are a number of additional scopes created - 5 in fact. This includes the initial loop scope that has its iteration variables (only `i` in this case) initialized with the initializer code through `forInit()`. There's the 3 scopes created for each iteration of the loop. Then, finally, there's the scope created for the would-be fourth iteration of the loop, but that iteration fails to run because the condition defined by `forTest()` returns false.
+But there's quite a bit more going on here than in the previous implementation. Notably there are a number of additional scopes created - 5 in fact. This includes the initial `loopScope` scope that has its iteration variables (only `i` in this case) initialized with the initializer code through `forInit()`. There's the 3 `iterationScope` scopes created for each iteration of the loop. Then, finally, there's the final `iterationScope` scope created for the would-be fourth iteration of the loop, but that iteration fails to run because the condition defined by `forTest()` returns false.
 
-In order for these scopes to be able to have increasing values for `i` without their own value for `i` changing, a new step for copying the `i` values from the previous scope into the next iteration scope is used. This copying happens before the afterthought so the variable used in the next iteration can have the incremented value without changing the previous iteration's variable's value.
+In order for these scopes to be able to have increasing values for `i` without their own value for `i` changing, a new step for copying the `i` values from the previous scope into the next iteration scope is used. This copying happens before the afterthought so the variable used in the next iteration can have the incremented value without changing the previous iteration's variable's value.  So the first iteration's `i` will be 0. Then that 0 gets copied over into the second iteration's `i`. And that is then followed up by the afterthought that gets incremented to 1 before the body runs.  That version of `i` will remain 1 even after the loop completes because it will never get incremented again, the next increment getting applied to the next iteration scope's `i`.
 
 ## Implementation with Closures
 
