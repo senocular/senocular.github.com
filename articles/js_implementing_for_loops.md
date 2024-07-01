@@ -4,11 +4,11 @@
 
 # Implementing `for` Loops
 
-It seems such a trivial thing, but for loops can get complicated when it comes to their implementation, especially when it comes to scopes and lexical declarations (e.g. `let`). Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch in JavaScript. The JavaScript implementations of JavaScript `for` loops will focus on what scopes are created and how variables are stored in those scopes.
+`for` loops can get surprisingly complex when it comes to their implementation, especially when it comes to scopes and the use of lexical declarations (e.g. `let`). Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch in JavaScript. The JavaScript implementations of these `for` loops will focus on what scopes are created and how variables are handled within those scopes.
 
 ## Components of a `for` Loop
 
-First, a little refresher on the `for` loop itself. There are 4 components of a `for` loop: the initialization, the condition, the afterthought, and finally the body statement on which the `for` loop operates.
+There are 4 components of a `for` loop: the initialization, the condition, the afterthought, and finally the body statement on which the `for` loop operates.
 
 ```
 for (initialization; condition; afterthought)
@@ -17,7 +17,7 @@ for (initialization; condition; afterthought)
 
 The initialization is run once to set up the loop. The condition is run at the start of each loop iteration to determine whether or not the loop should continue or complete. And the afterthought is run at the end of each iteration. In between the condition and the afterthought, the loop body statement is run.
 
-More information: [for statement on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for).
+For more information see: [for statement on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for).
 
 The most important part for the implementation is the initialization. What happens there determines what is needed to make the loop function correctly. Specifically, its the initialization that determines what extra scopes need to be created (if any) and how variables in those scopes are handled.
 
@@ -94,7 +94,7 @@ class Scope {
 
 ## Implementation with `var`
 
-`for` loop initializations using `var` require the least amount of work for the implementation. When `var` declarations are used in the initialization of a `for` loop, those declarations are added to the surrounding scope and no other special attention is needed to manage how `for` loop variables are being used.
+`for` loop initializations using `var` require the least amount of work for the implementation. When `var` declarations are used in the initialization of a `for` loop, those declarations are added to the surrounding scope and no additional scopes are created for `for` loop declarations.
 
 Our implementation using `var` will be for the following loop:
 
@@ -139,8 +139,7 @@ const forInc = () => currentScope.setVariableValue("i", currentScope.getVariable
 const forBody = () => console.log(currentScope.getVariableValue("i"))
 
 // Run the initialization for the loop setting the initial value of
-// the i variable to 0. For now this is happening in the loop's scope
-// and not for any specific loop iteration.
+// the i variable to 0.
 forInit()
 
 // Perform the looping. 
@@ -152,17 +151,17 @@ while (true) {
     break;
   }
 
-  // Because the loop had a block for its body, a new scope is
+  // Because the loop had a block for its body, a new block scope is
   // created for that block.
   const blockOuterScope = currentScope
   const blockScope = new Scope(blockOuterScope)
   currentScope = blockScope
 
-  // Run the body of the loop which in this case logs the value of i.
+  // Run the body of the loop which, in this case, logs the value of i.
   forBody()
 
   // At the end of the body, its block scope is restored to the
-  // previous scope which was globalScope.
+  // previous scope (globalScope).
   currentScope = blockOuterScope
 
   // Finally the afterthought can run updating the value of i. This
@@ -172,7 +171,7 @@ while (true) {
 }
 ```
 
-Running this code produces the following output, the same output as the original JavaScript loop this is implementing:
+Running this code produces the following output, the same output as the original JavaScript loop this is code is implementing:
 
 ```
 0
@@ -180,11 +179,11 @@ Running this code produces the following output, the same output as the original
 2
 ```
 
-TODO: follow up
+What's important to note is that there is only one additional scope created when running this `for` loop, and that scope was only created because the loop body was in a block statement. If it wasn't, everything would happen in the context of the surrounding scope, the global scope.
 
 ## Implementation with `let`
 
-TODO: introduction
+With one simple change to the previous loop, changing the `var` to `let` in the initialization, we'll see some substantial changes to our implementation.
 
 ```javascript
 for (let i = 0; i < 3; i++) {
@@ -192,7 +191,20 @@ for (let i = 0; i < 3; i++) {
 }
 ```
 
+This loop produces the same output as the respective `var` version:
+
+```
+0
+1
+2
+```
+
+The difference in this version is that in each iteration of the loop, the `i` variable is a different `i` variable within a scope specific to that literation. We'll see just how that works in the implementation.
+
+
 ### Implementation
+
+This is the JavaScript implementation of the JavaScript `for` loop using `let`.
 
 ```javascript
 // A variable to track the currently active scope as we go through
@@ -204,18 +216,16 @@ let currentScope
 const globalScope = new Scope()
 currentScope = globalScope
 
-// Here is when the loop is encountered. The first step is to
-// remember the starting scope.
+// Here is when the loop is encountered. The first step, given a let
+// is recognized in the initialization, is to create a new scope for
+// the loop that is a child of the current scope.
 const loopOuterScope = currentScope
-
-// Next, a new scope is created for the loop that is a child scope of
-// the previous scope.
 const loopScope = new Scope(loopOuterScope)
 
-// For the loop we keep track of all the variables created in the
-// loop initialization expression. This will most commonly just be a
-// single variable, though you could have more if for example your
-// loop was something like:
+// We also need to keep track of all the variables created in the
+// loop initialization expression. This will most likely just be a
+// list with a single variable as seen here with ["i"]. You could
+// have more if, for example, your loop was defined as:
 // for (let i = 0, n = 3; i < n; i++) ...
 // In the above case the variable list would be ["i", "n"].
 const iterationVariables = ["i"]
@@ -229,9 +239,9 @@ for (const varName of iterationVariables) {
   loopScope.createVariable(varName)
 }
 
-// Functions representing the code run in each part of the for loop
-// declaration: initialization (init), condition (test), afterthought
-// (inc), and statement (body).
+// The following functions encapsulate the code run in each part of
+// the for loop declaration: initialization (init), condition (test),
+// afterthought (inc), and statement (body).
 const forInit = () => currentScope.setVariableValue("i", 0)
 const forTest = () => currentScope.getVariableValue("i") < 3
 const forInc = () => currentScope.setVariableValue("i", currentScope.getVariableValue("i") + 1)
@@ -241,21 +251,22 @@ const forBody = () => console.log(currentScope.getVariableValue("i"))
 currentScope = loopScope
 
 // Run the initialization for the loop setting the initial value of
-// the i variable to 0. For now this is happening in the loop's scope
-// and not for any specific loop iteration.
+// the i variable to 0. For now this is happening in loopScope and
+// not for any specific loop iteration.
 forInit()
 
-// This variable tracks the current iteration's scope as we go
-// through each loop iteration.
+// A variable tracks the current iteration's scope as we go through
+// each loop iteration.
 let iterationScope
 
 // This is the first iteration scope. Despite being created after
-// loopScope, it gets created under loopScope's parent (global)
-// rather than loopScope itself. Once it's created, it creates
-// variables for each of the tracked iterationVariables and sets them
-// to an initial value of the variable of the same name from the
-// current scope, which in this case is loopScope and the values they
-// currently have are the values initialized from forInit().
+// loopScope, it gets created under loopScope's parent (global) as a
+// sibling to loopScope rather than under loopScope itself. Once it's
+// created it creates variables for each of the tracked
+// iterationVariables list and sets them to an initial value of the
+// variable of the same name from the current scope, which right now
+// is loopScope and the values they currently have are the
+// values initialized from forInit().
 iterationScope = new Scope(currentScope.outer)
 for (const varName of iterationVariables) {
   const lastValue = currentScope.getVariableValue(varName)
@@ -288,13 +299,13 @@ while (true) {
   // previous scope which was iterationScope.
   currentScope = blockOuterScope
 
-  // Finally the next iteration's scope is created. Like with the
+  // Next the next iteration's scope is created. Like with the
   // first iteration, variables from iterationVariables are created
   // for this scope, but in this case their initial values are coming
   // from the previous iterationScope rather than loopScope since the
   // previous iterationScope is now currentScope. Also, as before,
   // this scope is a child of the parent of currentScope (global)
-  // rather than currentScope (iterationScope) directly.
+  // rather than currentScope (iterationScope).
   iterationScope = new Scope(currentScope.outer)
   for (const varName of iterationVariables) {
     const lastValue = currentScope.getVariableValue(varName)
@@ -306,8 +317,9 @@ while (true) {
   currentScope = iterationScope
 
   // With the new iterationScope available, the afterthought can run
-  // updating the value of i for the new scope. This will be the
-  // seen when the loop continues and runs forTest().
+  // updating the value of i for the new scope. This will be what's
+  // seen when the loop continues and runs forTest() for the next
+  // iteration.
   forInc()
 }
 
