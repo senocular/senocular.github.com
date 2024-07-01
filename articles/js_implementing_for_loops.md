@@ -4,11 +4,11 @@
 
 # Implementing `for` Loops
 
-It seems like such a trivial thing, but for loops can get complicated when it comes to their implementation, especially when it comes to scopes and lexical declarations (e.g. `let`). Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch in JavaScript.
+It seems such a trivial thing, but for loops can get complicated when it comes to their implementation, especially when it comes to scopes and lexical declarations (e.g. `let`). Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch in JavaScript. The JavaScript implementations of JavaScript `for` loops will focus on what scopes are created and how variables are stored in those scopes.
 
 ## Components of a `for` Loop
 
-First, a little about the `for` loop itself. There are 4 components of a `for` loop: the initialization, the condition, the afterthought, and then the body statement on which the `for` loop operates.
+First, a little refresher on the `for` loop itself. There are 4 components of a `for` loop: the initialization, the condition, the afterthought, and finally the body statement on which the `for` loop operates.
 
 ```
 for (initialization; condition; afterthought)
@@ -17,11 +17,13 @@ for (initialization; condition; afterthought)
 
 The initialization is run once to set up the loop. The condition is run at the start of each loop iteration to determine whether or not the loop should continue or complete. And the afterthought is run at the end of each iteration. In between the condition and the afterthought, the loop body statement is run.
 
-The most important part for the implementation is initialization. What happens here determines what is needed to make the loop function correctly. Specifically, its the initialization that determines what extra scopes need to be created (if any) and how variables in those scopes are handled.
+More information: [for statement on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for).
+
+The most important part for the implementation is the initialization. What happens there determines what is needed to make the loop function correctly. Specifically, its the initialization that determines what extra scopes need to be created (if any) and how variables in those scopes are handled.
 
 ## Defining Scope
 
-Scope plays an important role in what happens in a for loop. To represent scope in our `for` loop implementations, a Scope class will be used.  This class will represent each scope, storing the variables and variable values defined in that scope. Each scope also refers to its outer scope so when we look up variable values, we can do so through the entire scope chain.
+Scope plays an important role in what happens in a `for` loop. To represent scope in our `for` loop implementations, a Scope class will be used.  This class will be used to represent each scope, and be responsible storing the variables and variable values within that scope. Each scope also refers to its outer scope so when we look up variable values, we can do so through the entire scope chain.
 
 ```javascript
 /**
@@ -92,7 +94,7 @@ class Scope {
 
 ## Implementation with `var`
 
-`for` loop initializations using `var` require the least amount of work for the implementation. `var` declarations in the initialization are added to the current scope and no other special attention is needed to manage how `for` loop variables are being used. 
+`for` loop initializations using `var` require the least amount of work for the implementation. When `var` declarations are used in the initialization of a `for` loop, those declarations are added to the surrounding scope and no other special attention is needed to manage how `for` loop variables are being used.
 
 Our implementation using `var` will be for the following loop:
 
@@ -102,7 +104,7 @@ for (var i = 0; i < 3; i++) {
 }
 ```
 
-Its a simple loop with 3 iterations, each of which logs the value of `i`. The output of running this code is:
+Its a simple loop with 3 iterations, each of which logs the value of `i`. The output of running this loop is:
 
 ```
 0
@@ -163,9 +165,9 @@ while (true) {
   // previous scope which was globalScope.
   currentScope = blockOuterScope
 
-  // With the new iterationScope available, the afterthought can run
-  // updating the value of i for the new scope. This will be the
-  // seen when the loop continues and runs forTest().
+  // Finally the afterthought can run updating the value of i. This
+  // new value will be the seen when the loop continues and runs
+  // forTest() in the next iteration.
   forInc()
 }
 ```
