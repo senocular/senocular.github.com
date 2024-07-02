@@ -1,6 +1,6 @@
 # Implementing `for` Loops
 
-Have you ever wondered how JavaScript `for` loops work internally and why using `let` instead of `var` suddenly fixes some things? Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch _in_ JavaScript. The JavaScript implementations will focus on what scopes are created and how variables are handled within those scopes.
+Have you ever wondered how JavaScript `for` loops work internally and why using `let` instead of `var` suddenly fixes some things? Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch _in_ JavaScript. Two implementations will be created, one for a loop using `var` and one for a loop using `let`. The implementations will focus on what scopes are created for the loop and how variables are handled within those scopes.
 
 ## Components of a `for` Loop
 
@@ -10,8 +10,6 @@ There are 4 components of a `for` loop: the initialization, the condition, the a
 for (initialization; condition; afterthought)
   statement
 ```
-
-The initialization is run once to set up the loop. The condition is run at the start of each loop iteration to determine whether or not the loop should continue or complete. And the afterthought is run at the end of each iteration. In between the condition and the afterthought, the loop body statement is run.
 
 For more information on `for` loops in general see: [for statement on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for).
 
@@ -108,7 +106,7 @@ Its a simple loop with 3 iterations, each of which logs the value of `i`. The ou
 2
 ```
 
-The JavaScript implementation of the JavaScript `for` loop using `var`:
+The JavaScript implementation of a JavaScript `for` loop using `var`:
 
 ```javascript
 // A variable to track the currently active scope as we go through
@@ -183,13 +181,15 @@ It's worth noting that because the `i` variable was defined in the outer scope, 
 
 With one simple change to the previous loop, changing the `var` to `let` in the initialization, we'll see some fairly substantial changes to our implementation.
 
+The implementation using `let` will be for the following loop:
+
 ```javascript
 for (let i = 0; i < 3; i++) {
   console.log(i)
 }
 ```
 
-This loop produces the same output as the respective `var` version:
+When run this loop produces the same output as the previous `var` version:
 
 ```
 0
@@ -197,9 +197,9 @@ This loop produces the same output as the respective `var` version:
 2
 ```
 
-The difference in this version is that each iteration of the loop is given its own, unique `i` variable defined in a new scope that is also unique to that iteration. Just how that works with the afterthought being able to still increment those variables despite them being different can be seen in the implementation.
+The difference in this version, though you can't really tell, is that each iteration of the loop is given its own, unique `i` variable defined in a new scope that is also unique to that iteration. Just how that works with the afterthought being able to still increment those variables despite them being different will be made apparent in the implementation.
 
-The JavaScript implementation of the JavaScript `for` loop using `let`:
+The JavaScript implementation of a JavaScript `for` loop using `let`:
 
 ```javascript
 // A variable to track the currently active scope as we go through
@@ -333,9 +333,9 @@ As expected, the result of running this code is the same:
 2
 ```
 
-But there's quite a bit more going on here than in the previous implementation. Notably there are a number of additional scopes created - 5 in fact. This includes the initial `loopScope` scope that has its iteration variables (only `i` in this case) initialized with the initializer code through `forInit()`. There's the 3 `iterationScope` scopes created for each iteration of the loop. Then, finally, there's the final `iterationScope` scope created for the would-be fourth iteration of the loop, but that iteration fails to run fully because the condition defined by `forTest()` returns false exiting the loop.
+But there's quite a bit more going on here than in the previous implementation. Notably there are a number of additional scopes created - 5 in fact. This includes the initial `loopScope` scope that has its iteration variables (only `i` in this case) initialized with the initializer code through `forInit()`. There's the 3 `iterationScope` scopes created for each iteration of the loop. Then, finally, there's the 5th and final `iterationScope` scope created for the would-be fourth iteration of the loop, but that iteration fails to run fully because the condition defined by `forTest()` returns false exiting the loop.
 
-In order for these scopes to be able to have increasing values for `i` without their own value for `i` changing, a new step for copying the `i` values from the previous scope into the next iteration scope is used. This copying happens before the afterthought so the variable used in the next iteration can have the incremented value without changing the previous iteration's variable's value.  So the first iteration's `i` will be 0. Then that 0 gets copied over into the second iteration's `i`. And that is then followed up by the afterthought that gets incremented to 1 before the body runs.  That version of `i` will remain 1 even after the loop completes because it will never get incremented again, the next increment getting applied to the next iteration scope's `i`.
+In order for these scopes to be able to have increasing values for `i` without their own value for `i` changing, a new step for copying the `i` values from the previous scope into the next iteration scope is used. This copying happens before the afterthought so the variable used in the next iteration can have the incremented value without changing the previous iteration's variable's value.
 
 ## Implementation with Closures
 
@@ -355,7 +355,7 @@ setTimeout(() => console.log(i))
 
 This creates a closure inside the loop that the `setTimeout()` will then call at a later time after the loop is complete.
 
-The only thing that changes in the previous implementations is how `forBody()` is defined.  With the `setTimeout()` and closure, it would now look like this:
+The only thing that changes in the previous implementations is how `forBody()` is defined.  Now with the `setTimeout()` and closure, it would look like the following:
 
 ```javascript
 const forBody = () => {
@@ -402,7 +402,7 @@ const forBody = () => {
 
 What's most revealing about this new code is how closures work. When a function is created it gets associated with its surrounding scope. This scope in combination with the function is what makes up the closure. Then, when the function is called, the closure scope is used as the parent scope of the local scope created for the function call.  This is what allows functions to have access to the variables in the scope where it was created rather than where it was called.
 
-First, we'll take this `forBody()` and replace it in the `var` loop implementation.
+To start, we'll take this new `forBody()` and replace it in the `var` loop implementation.
 
 Complete code with Scope class using `var`: [for-with-var-with-closure.js](js_implementing_for_loops/for-with-var-with-closure.js).
 
@@ -414,7 +414,7 @@ The output is the same as what the original JavaScript version would produce.
 3
 ```
 
-Given the implementation, it should be easy to see why.  When the closures are created, they capture a scope chain that includes an `i` variable in the global scope.  When each function runs, they each see the same `i` variable in the global scope, its value (3) the last value it became before the `forTest()` returned false. While they do each have their own block scope in the scope chain they're holding on to, that's not where the `i` variable lives. The `i` lives in the global scope which is the same global scope seen in each of the closure's scope chains.
+Given the implementation, it should be easy to see why.  When the closures are created, they capture a scope chain that includes an `i` variable in the global scope.  When each function runs, they each see the same `i` variable in the global scope, its value (3) the last value it became before the `forTest()` returned false. While they do each have their own block scope (from the body) in the scope chain they're holding on to, that's not where the `i` variable lives. The `i` lives in the global scope which is the same global scope seen in each of the closures.
 
 Next we can compare that to the `let` implementation.
 
@@ -428,8 +428,62 @@ The output of this code is now:
 2
 ```
 
-We're back to seeing the values of `i` for each iteration. Even though each function is being called after the completion of the loop, the scope chain held on to by their respective closure scope captures the `i` variable in a scope that is unique to that function's own loop iteration. This value of `i` does not change as the shared `i` variable in the `var` loop does so each function only sees the value of `i` as it was when they were created. This is all thanks to the extra scopes created for `for` loops when a `let` declaration is used in the initialization.
+We're back to seeing the values of `i` for each iteration. Even though each function is still being called after the completion of the loop, the scope chain held on to by their respective closure scope captures the `i` variable in a scope that is unique to that function's own loop iteration. This value of `i` does not change as the shared `i` variable in the `var` loop does so each function only sees the value of `i` as it was when they were created. This is all thanks to the extra scopes created for `for` loops when a `let` declaration is used in the initialization.
 
-## Reference
+## Conclusion
 
-These implementations are largely based on the behavior defined for `for` loops in the ECMAScript spec. To read these exact steps as defined in the specification, see: [14.7.4.2 Runtime Semantics: ForLoopEvaluation](https://tc39.es/ecma262/#sec-runtime-semantics-forloopevaluation).
+Quite a bit of extra work is needed for a `for` loop simply by changing a variable declaration from a `var` to a `let`. The loop goes from creating no extra scopes to creating loop-count scopes plus 2 and also has to include extra plumbing to copy values from each prior scope to the next.
+
+You might be able to get a better idea of what's happening if we map out the individual scopes for each of the loops. First the `var` version of the loop looks something like this, not much different than the original source code:
+
+```
+{
+  // global scope
+  var i
+  for (var i = 0; i < 3; i++)
+  // repeat x3:
+  {
+    // body block scope
+  }
+}
+```
+
+Compare that to the `let` version where our extra scopes are added:
+
+```
+{
+  // global scope
+  for (let i = 0; i < 3; i++)
+  {
+    // loop scope
+    let i
+  }
+  // repeat x3:
+  {
+    // iteration scope
+    let i
+    {
+      // body block scope
+    }
+  }
+  {
+    // iteration scope
+    let i
+  }
+}
+```
+
+It's thanks to these extra scopes which allow closures to hold on to the correct iteration value of `i`. 
+
+But it does come at a cost. As convenient as it may be, if you're goal is having a performant loop, and you don't need or can otherwise get around having individual iteration variables, you may want to stick to using `var` or declaring your increment variable outside the loop, e.g.:
+
+```
+let i
+for (i = 0; i < 3; i++) {
+  // ...
+}
+```
+
+This version of the loop would also not create extra scopes and copy values between them. It's likely the impact of this in most cases is negligible, but in extreme cases, it's possible it could help.
+
+Note: The implementations presented here are based on the behavior defined for `for` loops in the ECMAScript specification. To read these exact steps as defined in the specification, see: [14.7.4.2 Runtime Semantics: ForLoopEvaluation](https://tc39.es/ecma262/#sec-runtime-semantics-forloopevaluation). 
