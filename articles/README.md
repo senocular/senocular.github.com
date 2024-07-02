@@ -4,6 +4,7 @@
 
 A collection of articles covering JavaScript-related topics.
 
+- [Implementing for Loops](js_implementing_for_loops.md)
 - [Quick Reference for Changes in Strict Mode](js_strict_mode.md)
 - [Pitfalls of Proxy](js_pitfalls_of_proxy.md)
 - [JavaScript's Private Parts](js_private_parts.md)
