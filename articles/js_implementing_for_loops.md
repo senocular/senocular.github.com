@@ -428,7 +428,7 @@ The output of this code is now:
 2
 ```
 
-We're back to seeing the values of `i` for each iteration. Even though each function is being called after the completion of the loop, the scope chain held on to by their respective closure scope captures the `i` variable in a scope that is unique to that function's own loop iteration. This value of `i` does not change as the shared `i` variable in the `var` loop does so each function only sees the value of `i` as it was when they were created.
+We're back to seeing the values of `i` for each iteration. Even though each function is being called after the completion of the loop, the scope chain held on to by their respective closure scope captures the `i` variable in a scope that is unique to that function's own loop iteration. This value of `i` does not change as the shared `i` variable in the `var` loop does so each function only sees the value of `i` as it was when they were created. This is all thanks to the extra scopes created for `for` loops when a `let` declaration is used in the initialization.
 
 ## Reference
 
