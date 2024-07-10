@@ -2,7 +2,7 @@
 | --- |
 | Work in progress |
 
-# The Hidden Properties of Properties
+# Properties vs. Variables
 
 Properties are variables assigned to objects. They consist of a key-value pair where the key is the identifier used to represent the property in the object and the value is the value returned from that property when accessed.
 
