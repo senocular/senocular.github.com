@@ -2,6 +2,8 @@
 
 Have you ever wondered how JavaScript `for` loops work internally and why using `let` instead of `var` suddenly fixes some things? Here we'll look at what happens when running `for` loops with JavaScript and how to implement them from scratch _in_ JavaScript. Two implementations will be created, one for a loop using `var` and one for a loop using `let`. The implementations will focus on what scopes are created for the loop and how variables are handled within those scopes.
 
+Note: The implementations presented here are based on the behavior defined for `for` loops in the ECMAScript specification. To read these exact steps as defined in the specification, see: [14.7.4.2 Runtime Semantics: ForLoopEvaluation](https://tc39.es/ecma262/#sec-runtime-semantics-forloopevaluation). 
+
 ## Components of a `for` Loop
 
 There are 4 components of a `for` loop: the initialization, the condition, the afterthought, and finally the body statement on which the `for` loop operates.
@@ -485,5 +487,3 @@ for (i = 0; i < 3; i++) {
 ```
 
 This version of the loop would also not create extra scopes and copy values between them. It's likely the impact of this in most cases is negligible, but in extreme cases, it's possible it could help.
-
-Note: The implementations presented here are based on the behavior defined for `for` loops in the ECMAScript specification. To read these exact steps as defined in the specification, see: [14.7.4.2 Runtime Semantics: ForLoopEvaluation](https://tc39.es/ecma262/#sec-runtime-semantics-forloopevaluation). 
