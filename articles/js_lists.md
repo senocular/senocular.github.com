@@ -293,11 +293,11 @@ There can be ambiguity between operations when starting a line with the followin
 | --- | --- | --- |
 | `[` | Array literal | Array access |
 | `(` | Grouping | Function call |
-| `/` | RegExp literal | Division |
 | `` ` `` | Template literal | Tagged template literal |
 | `+` | Unary `+` | Addition |
 | `-` | Unary `-` | Subtraction |
 | `*` | Generator method | Multiplication (of preceding field initializer) |
+| `/` | RegExp literal | Division |
 
 # Deprecated
 
