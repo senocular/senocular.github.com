@@ -406,6 +406,12 @@ What's most revealing about this new code is how closures work. When a function 
 
 To start, we'll take this new `forBody()` and replace it in the `var` loop implementation.
 
+```javascript
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i))
+}
+```
+
 Complete code with Scope class using `var`: [for-with-var-with-closure.js](js_implementing_for_loops/for-with-var-with-closure.js).
 
 The output is the same as what the original JavaScript version would produce.
@@ -419,6 +425,12 @@ The output is the same as what the original JavaScript version would produce.
 Given the implementation, it should be easy to see why.  When the closures are created, they capture a scope chain that includes an `i` variable in the global scope.  When each function runs, they each see the same `i` variable in the global scope, its value (3) the last value it became before the `forTest()` returned false. While they do each have their own block scope (from the body) in the scope chain they're holding on to, that's not where the `i` variable lives. The `i` lives in the global scope which is the same global scope seen in each of the closures.
 
 Next we can compare that to the `let` implementation.
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i))
+}
+```
 
 Complete code with Scope class using `let`: [for-with-let-with-closure.js](js_implementing_for_loops/for-with-let-with-closure.js).
 
