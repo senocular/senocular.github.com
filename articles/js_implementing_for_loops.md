@@ -481,21 +481,10 @@ Compare that to the `let` version where our extra scopes are added:
     }
   }
   {
-    // iteration scope
+    // (final) iteration scope
     let i
   }
 }
 ```
 
-It's thanks to these extra scopes which allow closures to hold on to the correct iteration value of `i`. 
-
-But it does come at a cost. As convenient as it may be, if you're goal is having a performant loop, and you don't need or can otherwise get around having individual iteration variables, you may want to stick to using `var` or declaring your increment variable outside the loop, e.g.:
-
-```
-let i
-for (i = 0; i < 3; i++) {
-  // ...
-}
-```
-
-This version of the loop would also not create extra scopes and copy values between them. It's likely the impact of this in most cases is negligible, but in extreme cases, it's possible it could help.
+It's thanks to these extra scopes that closures are able hold on to the correct iteration value of `i`. 
