@@ -271,6 +271,7 @@ Where `value` is an ordinary object.
 | ---: | --- | --- | --- | --- |
 | `'' == value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
 | `'' + value` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
+| `new Date(value)` | `Symbol.toPrimitive` | "default" | `valueOf` | `toString` |
 | `1 > value` (or other relational operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `1 * value` (or other arithmetic operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
 | `1 ^ value` (or other bitwise operation) | `Symbol.toPrimitive` | "number" | `valueOf` | `toString` |
