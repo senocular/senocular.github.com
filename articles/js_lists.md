@@ -286,6 +286,47 @@ Where `value` is an ordinary object.
 | `value in object` | `Symbol.toPrimitive` | "string" | `toString` | `valueOf` |
 
 
+## Use of Braces in Syntax
+
+Use parentheses `()` for:
+
+* [grouping](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Grouping)
+* [function parameter lists](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions#function_parameters)
+* [function calling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#calling_functions)
+* [if conditions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else)
+* [while conditions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/while)
+* [for setup](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for) ([for...in](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in), [for...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of), [for await...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of))
+* [switch expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
+* [with expression (deprecated)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with)
+* [catch exception identifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+
+Use square braces `[]` for:
+
+* [property access](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_Accessors)
+* [array literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#array_literals)
+* [array destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#array_destructuring)
+* [computed properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names)
+
+Use curly braces `{}` for:
+
+* [code blocks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block)
+* [try catch blocks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+* [function bodies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#defining_functions)
+* [class bodies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_Classes#declaring_a_class)
+* [class static blocks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Static_initialization_blocks)
+* [object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#object_literals)
+* [object destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring)
+* [string interpolation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#string_interpolation)
+* [unicode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#escape_sequences)
+* [named imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#named_import)
+* [named exports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export#using_named_exports)
+
+Each of these also have special meaning when used in [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions):
+
+* `()`: [assertions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Assertions), [groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Backreferences)
+* `[]`: [character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes),
+* `{}`: [character classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes), [quantifiers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Quantifiers), [unicode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Unicode_Property_Escapes)
+
 ## ASI Considerations
 
 There can be ambiguity between operations when starting a line with the following characters where ASI (Automatic Semicolon Insertion) will not insert a semicolon to terminate the previous line's expression.
