@@ -71,7 +71,7 @@ Without the workaround, you'd also see "get: anotherMethod" getting logged. Howe
 
 As with private member access, internal slot access will also fail when done through a proxy. Internal slots are internal properties not accessible to JavaScript directly.
 
-Maps and Sets use an internal slot called `[[MapData]]` to store the values within their collections.  If this is accessed through a proxy, it will throw an error.
+Sets, for example, use an internal slot called `[[SetData]]` to store the values within their collections.  If this is accessed through a proxy, it will throw an error.
 
 ```javascript
 const set = new Set();
