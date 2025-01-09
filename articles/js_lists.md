@@ -299,6 +299,8 @@ Use parentheses `()` for:
 * [switch expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
 * [with expression (deprecated)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with)
 * [catch exception identifier](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+* [super() call syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super)
+* [dynamic import() syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)
 
 Use square braces `[]` for:
 
