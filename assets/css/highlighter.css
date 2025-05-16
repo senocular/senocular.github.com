@@ -6,3 +6,12 @@ private member hash sigils as errors
 pre.highlight .err {
   background: none;
 }
+/*
+Some other simple adjustments to help
+*/
+pre.highlight .k {
+  color: #cf222e;
+}
+pre.highlight .kd {
+  color: #0550ae;
+}
