@@ -30,7 +30,7 @@ Notes:
   - defineProperty defaults: {writable: false, enumerable: false, configurable: false}
 
 - a property of objects for object properties
-  - preventExtensions ([[Extensible]])
+  - preventExtensions ([[Extensible]] = false)
     - Object.preventExtensions(), Object.isExtensible()
   - seal ([[Extensible]] = false + all props: non-configurable)
     - Object.seal(), Object.isSealed()
