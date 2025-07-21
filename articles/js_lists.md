@@ -225,8 +225,8 @@ Square brackets (`[]`) represent optional keywords or names whereas angle bracke
 | --- | --- |
 | Function Declaration or Expression | `[async] function [*] [name] () {}` |
 | Arrow Function | `[async] () => {}` |
-| Class Declaration or Expression |  `[@<decorator>] class [name] [extends <expression>] {}` |
-| Class Method | `class { [@<decorator>] [static] [async] [get] [set] [*] [#]<name> () {} }` |
+| Class Declaration or Expression |  `class [name] [extends <expression>] {}` |
+| Class Method | `class { [static] [async] [get] [set] [*] [#]<name> () {} }` |
 | Object Method (Shorthand) | `{ [async] [get] [set] [*] <name> () {} }` |
 
 ## Calling Functions
