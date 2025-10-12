@@ -2,6 +2,8 @@
 
 The following is a quick reference containing a list of changes made in JavaScript's strict mode. For more information on how and when strict mode is enabled, refer to [MDN's page on strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). That page also includes much (but not all) that's listed below in greater detail.
 
+## Changes in strict mode
+
 ### Reserved words
 
 ```js
