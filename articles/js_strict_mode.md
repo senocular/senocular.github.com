@@ -2,7 +2,7 @@
 
 The following is a quick reference containing a list of changes made in JavaScript's strict mode. For more information on how and when strict mode is enabled, refer to [MDN's page on strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). That page also includes much (but not all) that's listed below in greater detail.
 
-Reserved words
+## Reserved words
 
 ```js
 let implements
@@ -19,7 +19,7 @@ let yield
 // strict: Error
 ```
 
-Assign undeclared
+## Assign undeclared
 
 ```js
 doesNotExist = 0;
@@ -28,7 +28,7 @@ doesNotExist = 0;
 // strict: Error
 ```
 
-Assign built-in globals
+## Assign built-in globals
 
 ```js
 undefined = 0;
@@ -39,7 +39,7 @@ NaN = 0;
 // strict: Error
 ```
 
-Assign getter
+## Assign getter
 
 ```js
 const hasGetter = {
@@ -51,7 +51,7 @@ hasGetter.getter = 0;
 // strict: Error
 ```
 
-Assign non-writable
+## Assign non-writable
 
 ```js
 const hasReadOnly = {};
@@ -62,7 +62,7 @@ hasReadOnly.readOnly = 0;
 // strict: Error
 ```
 
-Assign to non-extensible
+## Assign to non-extensible
 
 ```js
 const nonExtensible = Object.preventExtensions({});
@@ -72,7 +72,7 @@ nonExtensible.any = 0;
 // strict: Error
 ```
 
-Assign primitive properties
+## Assign primitive properties
 
 ```js
 "string".prop = 0;
@@ -83,7 +83,7 @@ true.prop = 0;
 // strict: Error
 ```
 
-Delete non-configurable
+## Delete non-configurable
 
 ```js
 const hasNonConfig = {};
@@ -94,7 +94,7 @@ delete hasNonConfig.nonConfig;
 // strict: Error
 ```
 
-Delete unqualified identifier
+## Delete unqualified identifier
 
 ```js
 delete identifier;
@@ -104,7 +104,7 @@ delete identifier;
 // strict: Error
 ```
 
-Delete from proxy with trap returning falsy
+## Delete from proxy with trap returning falsy
 
 ```js
 const hasDeleteTrap = new Proxy(
@@ -131,7 +131,7 @@ with ({}) {
 // strict: Error
 ```
 
-Initializers in `for-in` variable declarations
+## Initializers in `for-in` variable declarations
 
 ```js
 for (var x = 0 in {}) {}
@@ -140,7 +140,7 @@ for (var x = 0 in {}) {}
 // strict: Error
 ```
 
-0-prefixed numeric literals
+## 0-prefixed numeric literals
 
 ```js
 01;
@@ -150,7 +150,7 @@ for (var x = 0 in {}) {}
 // strict: Error
 ```
 
-Octal escapes in string literals
+## Octal escapes in string literals
 
 ```js
 "\7";
@@ -159,7 +159,7 @@ Octal escapes in string literals
 // strict: Error
 ```
 
-No in-scope declarations with `eval`
+## No in-scope declarations with `eval`
 
 ```js
 eval("var fromEval = 0");
@@ -168,7 +168,7 @@ eval("var fromEval = 0");
 // strict: Declaration does not get added to current scope
 ```
 
-`eval` rebinding
+## `eval` rebinding
 
 ```js
 eval = 0;
@@ -180,7 +180,7 @@ function fn(eval) {}
 // strict: Error
 ```
 
-Assign function expression name
+## Assign function expression name
 
 ```js
 const fn = function name() {
@@ -191,7 +191,7 @@ const fn = function name() {
 // strict: Error
 ```
 
-Labeled function declarations
+## Labeled function declarations
 
 ```js
 label: function fn() {}
@@ -200,7 +200,7 @@ label: function fn() {}
 // strict: Error
 ```
 
-Block-scope function declarations
+## Block-scope function declarations
 
 ```js
 function outer() {
@@ -214,7 +214,7 @@ function outer() {
 // strict: Inner function scoped to block and cannot be called outside of block
 ```
 
-Duplicate parameter names
+## Duplicate parameter names
 
 ```js
 function fn(a, a) {}
@@ -223,7 +223,7 @@ function fn(a, a) {}
 // strict: Error
 ```
 
-Function `caller`, `arguments` properties
+## Function `caller`, `arguments` properties
 
 ```js
 function fn() {
@@ -235,7 +235,7 @@ function fn() {
 // strict: Error
 ```
 
-Arguments `callee` property
+## Arguments `callee` property
 
 ```js
 function fn() {
@@ -246,7 +246,7 @@ function fn() {
 // strict: Error
 ```
 
-Parameters mapped to `arguments`
+## Parameters mapped to `arguments`
 
 ```js
 function assignArg(param) {
@@ -258,7 +258,7 @@ function assignArg(param) {
 // strict: Assignments do not change other values
 ```
 
-`arguments` rebinding
+## `arguments` rebinding
 
 ```js
 arguments = 0;
@@ -270,7 +270,7 @@ function fn(arguments) {}
 // strict: Error
 ```
 
-`this` in function calls
+## `this` in function calls
 
 ```js
 function fn() {
@@ -281,7 +281,7 @@ function fn() {
 // strict: Function sees `this` as undefined
 ```
 
-Nullish primitive `this` in function calls
+## Nullish primitive `this` in function calls
 
 ```js
 function fn() {
@@ -294,7 +294,7 @@ fn.call(undefined);
 // strict: Function sees `this` as original primitive
 ```
 
-Non-nullish primitive `this` in function calls
+## Non-nullish primitive `this` in function calls
 
 ```js
 function fn() {
@@ -314,7 +314,7 @@ fn.call(0);
 
 ECMAScript modules are always in strict mode, but there are some additional changes that are specific to modules that do not apply to strict mode in other contexts.
 
-Reserved words
+### Reserved words
 
 ```js
 let await;
@@ -323,7 +323,7 @@ let await;
 // modules: Error
 ```
 
-Duplicate function declarations
+### Duplicate function declarations
 
 ```js
 function fn() {}
@@ -337,7 +337,7 @@ function fn() {}
 
 Features used within parameter lists can also impact how JavaScript behaves with some strict mode-like behaviors observable in sloppy mode depending on how a parameter list is defined. These changes are seen when parameter lists contains any advanced features such as default parameters, rest parameters, or destructured parameters.
 
-Duplicate parameter names
+### Duplicate parameter names
 
 ```js
 function simple(a, a) {}
@@ -347,7 +347,7 @@ function nonSimple(a, a = 0) {}
 // non-simple parameter list: Error
 ```
 
-"use strict" directive
+### "use strict" directive
 
 ```js
 function simple(a) {
@@ -361,7 +361,7 @@ function nonSimple(a = 0) {
 // non-simple parameter list: Error
 ```
 
-Parameters mapped to `arguments`
+### Parameters mapped to `arguments`
 
 ```js
 function simple(param) {
