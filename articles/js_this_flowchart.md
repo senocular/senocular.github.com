@@ -29,7 +29,7 @@ Variables are used to represent values used by the flowchart for decision points
     - Root eval scopes: scopes defined be eval strings. Note that while non-strict direct eval calls are effectively evaluating code in the current scope, the root of the eval string is still considered a scope for the purposes of the flowchart.
     - Class body scopes: scopes defined by the block representing the contents of a class defined with `class` syntax. This does not include `constructor` or method scopes as they are considered function scopes.
 
-        Other scopes not matching these descriptions would refer to the closest scope higher in the scope chain that do.
+        Other scopes not matching these descriptions would refer to the closest scope higher in the scope chain that do. A block scope in a function, for example, would be considered in a function scope for the purposes of this flow chart.
 
 - **function**: A function object. This is usually the function defining the current surrounding scope in which `this` is being used though may change throughout decision points in the flowchart.
 - **target**: A JavaScript value that is used in the context of a function call to determine the value of `this`
