@@ -53,7 +53,7 @@ When calling eval directly in any context, it executes a string as code as thoug
 
 ```js
 const outerThis = this;
-console.info(eval("this") === outerThis); // true
+console.log(eval("this") === outerThis); // true
 ```
 
 Docs:
@@ -65,7 +65,7 @@ Docs:
 Anytime eval is called indirectly, whether through an alias or optional chaining, it does not evaluate code in the current scope. Instead it gets evaluated in the global scope.
 
 ```js
-console.info(eval?.("this") === globalThis); // true
+console.log(eval?.("this") === globalThis); // true
 ```
 
 Docs:
@@ -78,7 +78,7 @@ Docs:
 In global scripts, `this` is the global object. While in other contexts `this` in strict mode changes from the global object to `undefined`, it is always the global object in the top-level global scope.
 
 ```js
-console.info(this === globalThis); // true
+console.log(this === globalThis); // true
 ```
 
 Docs:
@@ -91,7 +91,7 @@ Docs:
 CJS modules are not native to JavaScript but they used to be the only module system available in NodeJS so felt worth including. CJS modules are unique in that within the top-level module scope the value of `this` refers to the `module.exports` object, an object provided by CJS modules indicating the externally available values coming from that module.
 
 ```js
-console.info(this === module.exports); // true
+console.log(this === module.exports); // true
 ```
 
 Docs:
@@ -104,7 +104,7 @@ Docs:
 ECMAScript modules (ESM) are modules native to JavaScript. While they are considered top-level code, a module's scope is still a child scope of the global scope. ESM are always in strict mode and `this` in their own top-level scope `this` is `undefined`.
 
 ```js
-console.info(this === undefined); // true
+console.log(this === undefined); // true
 ```
 
 Docs:
@@ -120,7 +120,7 @@ Computed class properties are evaluated for a class before the class is defined.
 ```js
 const outerThis = this;
 class Example {
-    [console.info(this === outerThis)]; // true
+    [console.log(this === outerThis)]; // true
 }
 ```
 
@@ -138,7 +138,7 @@ let initializerThis;
 class Example {
     field = (initializerThis = this);
     constructor() {
-        console.info(initializerThis === this); // true
+        console.log(initializerThis === this); // true
     }
 }
 new Example();
@@ -155,7 +155,7 @@ As with instance field initializers, static initializers are run as static metho
 
 ```js
 class Example {
-    static field = console.info(this === Example); // true
+    static field = console.log(this === Example); // true
 }
 ```
 
@@ -172,7 +172,7 @@ Static blocks are run in the context of the class with a `this` of the class its
 ```js
 class Example {
     static {
-        console.info(this === Example); // true
+        console.log(this === Example); // true
     }
 }
 ```
@@ -191,8 +191,8 @@ Functions called with `new` are treated as constructors and create new objects t
 ```js
 function Example() {
     // New object
-    console.info(Object.getPrototypeOf(this) === Example.prototype); // true
-    console.info(new.target === Example); // true
+    console.log(Object.getPrototypeOf(this) === Example.prototype); // true
+    console.log(new.target === Example); // true
 }
 new Example();
 ```
@@ -213,8 +213,8 @@ Classes are specialized functions which are meant only for construction. Their i
 class Example {
     constructor() {
         // New object
-        console.info(Object.getPrototypeOf(this) === Example.prototype); // true
-        console.info(new.target === Example); // true
+        console.log(Object.getPrototypeOf(this) === Example.prototype); // true
+        console.log(new.target === Example); // true
     }
 }
 new Example();
@@ -235,8 +235,8 @@ When one class extends another class, in the context of the base class, which is
 class Base {
     constructor() {
         // New object
-        console.info(Object.getPrototypeOf(this) === Derived.prototype); // true
-        console.info(new.target === Derived); // true
+        console.log(Object.getPrototypeOf(this) === Derived.prototype); // true
+        console.log(new.target === Derived); // true
     }
 }
 class Derived extends Base {
@@ -265,7 +265,7 @@ class Example extends Object {
             this;
             console.assert(false, "Unreachable code");
         } catch (error) {
-            console.info(error instanceof ReferenceError); // true
+            console.log(error instanceof ReferenceError); // true
         }
         super();
     }
@@ -294,7 +294,7 @@ class Base {
 class Derived extends Base {
     constructor() {
         super();
-        console.info(this === returnedObject); // true
+        console.log(this === returnedObject); // true
     }
 }
 new Derived();
@@ -314,8 +314,8 @@ Docs:
 class Example {
     constructor() {
         // New object
-        console.info(Object.getPrototypeOf(this) === Example.prototype); // true
-        console.info(new.target === Example); // true
+        console.log(Object.getPrototypeOf(this) === Example.prototype); // true
+        console.log(new.target === Example); // true
     }
 }
 Reflect.construct(Example, []);
@@ -334,8 +334,8 @@ class Target {}
 class Example {
     constructor() {
         // New object
-        console.info(Object.getPrototypeOf(this) === Target.prototype); // true
-        console.info(new.target === Target); // true
+        console.log(Object.getPrototypeOf(this) === Target.prototype); // true
+        console.log(new.target === Target); // true
     }
 }
 Reflect.construct(Example, [], Target);
@@ -353,8 +353,8 @@ When a function is constructed, if it was created with `bind()` construction wil
 class Example {
     constructor() {
         // New object
-        console.info(Object.getPrototypeOf(this) === Example.prototype); // true
-        console.info(new.target === Example); // true
+        console.log(Object.getPrototypeOf(this) === Example.prototype); // true
+        console.log(new.target === Example); // true
     }
 }
 const Bound = Example.bind({});
@@ -374,7 +374,7 @@ Normal, non-arrow functions called as stand-alone functions will use see the glo
 
 ```js
 function example() {
-    console.info(this === globalThis); // true
+    console.log(this === globalThis); // true
 }
 example();
 ```
@@ -392,7 +392,7 @@ In strict mode, normal, non-arrow functions called as stand-alone functions will
 ```js
 "use strict";
 function example() {
-    console.info(this === undefined); // true
+    console.log(this === undefined); // true
 }
 example();
 ```
@@ -410,7 +410,7 @@ Object methods called from the object will have a `this` set to the object. The 
 ```js
 const object = {
     method() {
-        console.info(this === object); // true
+        console.log(this === object); // true
     },
 };
 object.method();
@@ -428,7 +428,7 @@ When object methods are called as normal, unqualified functions rather than from
 ```js
 const object = {
     method() {
-        console.info(this === globalThis); // true
+        console.log(this === globalThis); // true
     },
 };
 const detachedMethod = object.method;
@@ -447,7 +447,7 @@ When a normal, non-method function is assigned to an object and called from that
 ```js
 const object = {};
 function example() {
-    console.info(this === object); // true
+    console.log(this === object); // true
 }
 object.attachedExample = example;
 object.attachedExample();
@@ -466,7 +466,7 @@ Functions created from `bind()` have a `this` value equal to the `thisArg` argum
 ```js
 const bindObject = {};
 function example() {
-    console.info(this === bindObject); // true
+    console.log(this === bindObject); // true
 }
 const bound = example.bind(bindObject);
 bound();
@@ -486,7 +486,7 @@ Object methods created from `bind()` have a `this` value equal to the `thisArg` 
 const bindObject = {};
 const object = {
     method() {
-        console.info(this === bindObject); // true
+        console.log(this === bindObject); // true
     },
 };
 object.boundMethod = object.method.bind(bindObject);
@@ -506,7 +506,7 @@ A function from a call to `bind()` cannot have it's `this` value change from ano
 const firstBindObject = {};
 const secondBindObject = {};
 function example() {
-    console.info(this === firstBindObject); // true
+    console.log(this === firstBindObject); // true
 }
 const firstBound = example.bind(firstBindObject);
 const secondBound = firstBound.bind(secondBindObject);
@@ -526,7 +526,7 @@ The `call()` method of functions is used to call a function with a specific `thi
 ```js
 const callObject = {};
 function example() {
-    console.info(this === callObject); // true
+    console.log(this === callObject); // true
 }
 example.call(callObject);
 ```
@@ -544,7 +544,7 @@ The `apply()` method of functions is used to call a function with a specific `th
 ```js
 const applyObject = {};
 function example() {
-    console.info(this === applyObject); // true
+    console.log(this === applyObject); // true
 }
 example.apply(applyObject);
 ```
@@ -562,7 +562,7 @@ The `Reflect.apply()` function is used to call a function with a specific `this`
 ```js
 const applyObject = {};
 function example() {
-    console.info(this === applyObject); // true
+    console.log(this === applyObject); // true
 }
 Reflect.apply(example, applyObject, []);
 ```
@@ -581,7 +581,7 @@ Methods used to call a function (e.g. `call()`, `apply()`, `Reflect.apply()`) do
 const bindObject = {};
 const callObject = {};
 function example() {
-    console.info(this === bindObject); // true
+    console.log(this === bindObject); // true
 }
 const bound = example.bind(bindObject);
 bound.call(callObject);
@@ -601,8 +601,8 @@ Method calls in non-strict mode for non-nullish primitive values will create a n
 ```js
 function example() {
     // this = Object(1)
-    console.info(typeof this === "object"); // true
-    console.info(this.valueOf() === 1); // true
+    console.log(typeof this === "object"); // true
+    console.log(this.valueOf() === 1); // true
 }
 example.call(1);
 ```
@@ -621,7 +621,7 @@ Method calls in non-strict mode for nullish primitive values will have a `this` 
 
 ```js
 function example() {
-    console.info(this === globalThis); // true
+    console.log(this === globalThis); // true
 }
 example.call(undefined);
 ```
@@ -639,7 +639,7 @@ Method calls in strict mode for primitive values will use the primitive value fo
 ```js
 "use strict";
 function example() {
-    console.info(this === 1); // true
+    console.log(this === 1); // true
 }
 example.call(1);
 ```
@@ -659,7 +659,7 @@ Methods called from the `super` keyword are largely treated as if the method wer
 let derivedThis;
 class Base {
     method() {
-        console.info(this === derivedThis); // true
+        console.log(this === derivedThis); // true
     }
 }
 class Derived extends Base {
@@ -685,7 +685,7 @@ Arrow functions use a lexical `this`, meaning they pull the `this` value from th
 ```js
 const outerThis = this;
 const arrow = () => {
-    console.info(this === outerThis); // true
+    console.log(this === outerThis); // true
 };
 arrow();
 ```
@@ -702,7 +702,7 @@ Arrow functions as methods (via fields) will use the surrounding scope for the v
 const outerThis = this;
 const obj = {
     arrowMethod: () => {
-        console.info(this === outerThis); // true
+        console.log(this === outerThis); // true
     },
 };
 obj.arrowMethod();
@@ -721,7 +721,7 @@ If a function created from `bind()` was called on an arrow function, that functi
 const outerThis = this;
 const bindObject = {};
 const arrow = () => {
-    console.info(this === outerThis); // true
+    console.log(this === outerThis); // true
 };
 const bound = arrow.bind(bindObject);
 bound();
@@ -739,8 +739,8 @@ Though not in the function body, expressions defining default parameters in a fu
 ```js
 const callObject = {};
 function example(param = this) {
-    console.info(this === callObject); // true
-    console.info(param === callObject); // true
+    console.log(this === callObject); // true
+    console.log(param === callObject); // true
 }
 example.call(callObject);
 ```
@@ -760,7 +760,7 @@ A proxy trap is used to define the implementation for a trapped behavior in a pr
 function target() {}
 const handler = {
     apply() {
-        console.info(this === handler); // true
+        console.log(this === handler); // true
     },
 };
 const proxiedTarget = new Proxy(target, handler);
@@ -779,7 +779,7 @@ The `with` statement is used to create an object scope. When an unqualified refe
 ```js
 const object = {
     method() {
-        console.info(this === object); // true
+        console.log(this === object); // true
     },
 };
 with (object) {
