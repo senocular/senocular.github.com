@@ -230,7 +230,7 @@ In JavaScript applications, you may have more than one global. Each iframe in a 
 const iframe = document.createElement("iframe");
 document.body.appendChild(iframe);
 
-console.log(iframe.contentWindow === Window); // false
+console.log(iframe.contentWindow === window); // false
 ```
 
 Different global objects have different global definitions. The global `Array` in one global is different from the `Array` in another. This can cause operators like `instanceof` to fail when working with instances from other global contexts.
