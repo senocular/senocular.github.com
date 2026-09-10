@@ -256,7 +256,7 @@ Docs:
 
 #### Accessing this before super
 
-If in a derived class you attempt to access this before `super()`, an error will be thrown because `this` will be uninitialized.
+If in a derived class you attempt to access `this` before `super()`, an error will be thrown because `this` will be uninitialized.
 
 ```js
 class Example extends Object {
