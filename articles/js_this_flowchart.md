@@ -694,9 +694,9 @@ Docs:
 
 - [MDN reference: arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 
-#### Arrow function method
+#### Arrow function object method
 
-Arrow functions as methods (via fields) will use the surrounding scope for the value of `this`. While the arrow function may be defined within an object literal initializer, those initializers do not define scopes. The scope seen by arrow function for the value of `this` will be the scope outside of the object's definition.
+Arrow functions as methods (via properties) will use the surrounding scope for the value of `this`. While the arrow function may be defined within an object literal initializer, those initializers do not define scopes. The scope seen by arrow function for the value of `this` will be the scope outside of the object's definition.
 
 ```js
 const outerThis = this;
@@ -710,8 +710,8 @@ obj.arrowMethod();
 
 Docs:
 
+- [MDN reference: object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
 - [MDN reference: arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
-- [MDN reference: public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)
 
 #### Bound arrow function
 
