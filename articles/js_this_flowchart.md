@@ -149,6 +149,26 @@ Docs:
 - [MDN reference: classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
 - [MDN reference: public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)
 
+#### Instance field arrow methods
+
+Because instance field initializers are run in a hidden method during construction, arrow functions defined as fields will pull the `this` from the hidden method's scope making `this` in the arrow function the instance constructed.
+
+```js
+class Example {
+    field = () => this;
+    constructor() {
+        console.log(this.field() === this); // true
+    }
+}
+new Example();
+```
+
+Docs:
+
+- [MDN reference: classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+- [MDN reference: public class fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Public_class_fields)
+- [MDN reference: arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+
 #### Static field initializer
 
 As with instance field initializers, static initializers are run as static methods of the class. Methods of the class have a `this` as the class itself.
