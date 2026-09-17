@@ -772,26 +772,6 @@ Docs:
 - [MDN reference: default parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters)
 - [MDN reference: call](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
 
-#### Proxy traps
-
-A proxy trap is used to define the implementation for a trapped behavior in a proxy object. Traps are called internally by the Proxy implementation and when they're called, they're treated as methods of the handler object provided to the proxy constructor. If a proxy trap is a trap for a function, the value of `this` in that method will be determined by the trap and if/how it provides or calls the original function.
-
-```js
-function target() {}
-const handler = {
-    apply() {
-        console.log(this === handler); // true
-    },
-};
-const proxiedTarget = new Proxy(target, handler);
-proxiedTarget();
-```
-
-Docs:
-
-- [MDN reference: Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-- [MDN reference: handler apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/apply)
-
 #### With object method
 
 The `with` statement is used to create an object scope. When an unqualified reference is made within a `with` object scope, it is seen as reference from the `with` object assuming that object has a property matching the name of that references. For method calls called as unqualified functions, `this` in the methods will be object used for the `with` scope.
@@ -812,3 +792,41 @@ Docs:
 - [MDN reference: object initializer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
 - [MDN reference: method definitions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions)
 - [MDN reference: with](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with)
+
+#### Accessor properties (getters/setters)
+
+Accessor property methods are called with a `this` of the object for which they define the property. This is the case even with unqualified access either because its a global property or a property accessed within a `with` scope, and irrespective of strict mode.
+
+```js
+const object = {
+    get property() {
+        console.log(this === object); // true
+    },
+};
+object.property;
+```
+
+Docs:
+
+- [MDN reference: function get](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN reference: function set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set)
+
+#### Proxy traps
+
+A proxy trap is used to define the implementation for a trapped behavior in a proxy object. Traps are called internally by the Proxy implementation and when they're called, they're treated as methods of the handler object provided to the proxy constructor. If a proxy trap is a trap for a function, the value of `this` in that method will be determined by the trap and if/how it provides or calls the original function.
+
+```js
+function target() {}
+const handler = {
+    apply() {
+        console.log(this === handler); // true
+    },
+};
+const proxiedTarget = new Proxy(target, handler);
+proxiedTarget();
+```
+
+Docs:
+
+- [MDN reference: Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- [MDN reference: handler apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/apply)
