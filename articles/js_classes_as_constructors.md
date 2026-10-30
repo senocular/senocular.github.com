@@ -98,7 +98,7 @@ MyClass.prototype.myMethod = function () {
 }
 
 MyClass.prototype.mySuperMethod = function mySuperMethod () {
-  const _super = Object.getPrototypeOf(mySuperMethod._homeObject)
+  const _super = Object.getPrototypeOf(MyClass.prototype.mySuperMethod._homeObject)
   return _super.mySuperMethod.call(this)
 }
 MyClass.prototype.mySuperMethod._homeObject = MyClass.prototype
